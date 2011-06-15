@@ -40,7 +40,7 @@ namespace Uncas.Core.Interop
 
         public static Process GetProcessAtWindowHandle(IntPtr windowHandle)
         {
-            return Process.GetProcesses().SingleOrDefault(
+            return Process.GetProcesses().FirstOrDefault(
                 p => p.MainWindowHandle == windowHandle);
         }
 
