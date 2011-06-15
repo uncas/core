@@ -13,7 +13,7 @@ namespace Uncas.Core.Interop
     /// http://www.developerfusion.com/code/4630/capture-a-screen-shot/
     /// http://stackoverflow.com/questions/1163761/c-capture-screenshot-of-active-window
     /// </remarks>
-    public class ScreenCapture
+    public class ScreenCapture : IScreenCapture
     {
         /// <summary>
         /// Creates an Image object containing a screen shot 
@@ -48,45 +48,45 @@ namespace Uncas.Core.Interop
             User32.GetWindowRect(handle, ref windowRect);
             int width = windowRect.right - windowRect.left;
             int height = windowRect.bottom - windowRect.top;
-            
+
             // create a device context we can copy to
             IntPtr hdcDest = GDI32.CreateCompatibleDC(hdcSrc);
-            
+
             // create a bitmap we can copy it to,
             // using GetDeviceCaps to get the width/height
             IntPtr hBitmap = GDI32.CreateCompatibleBitmap(
-                hdcSrc, 
-                width, 
+                hdcSrc,
+                width,
                 height);
-            
+
             // select the bitmap object
             IntPtr hOld = GDI32.SelectObject(hdcDest, hBitmap);
-            
+
             // bitblt over
             GDI32.BitBlt(
-                hdcDest, 
+                hdcDest,
                 0,
                 0,
-                width, 
+                width,
                 height,
                 hdcSrc,
-                0, 
-                0, 
+                0,
+                0,
                 GDI32.SRCCOPY);
-            
+
             // restore selection
             GDI32.SelectObject(hdcDest, hOld);
-            
+
             // clean up 
             GDI32.DeleteDC(hdcDest);
             User32.ReleaseDC(handle, hdcSrc);
-            
+
             // get a .NET image object for it
             Image img = Image.FromHbitmap(hBitmap);
-            
+
             // free up the Bitmap object
             GDI32.DeleteObject(hBitmap);
-            
+
             return img;
         }
 
@@ -97,8 +97,8 @@ namespace Uncas.Core.Interop
         /// <param name="filename"></param>
         /// <param name="format"></param>
         public void CaptureWindowToFile(
-            IntPtr handle, 
-            string filename, 
+            IntPtr handle,
+            string filename,
             ImageFormat format)
         {
             Image img = CaptureWindow(handle);
@@ -128,33 +128,33 @@ namespace Uncas.Core.Interop
             [DllImport("gdi32.dll")]
             public static extern bool BitBlt(
                 IntPtr hObject,
-                int nXDest, 
+                int nXDest,
                 int nYDest,
-                int nWidth, 
-                int nHeight, 
+                int nWidth,
+                int nHeight,
                 IntPtr hObjectSource,
-                int nXSrc, 
+                int nXSrc,
                 int nYSrc,
                 int dwRop);
-            
+
             [DllImport("gdi32.dll")]
             public static extern IntPtr CreateCompatibleBitmap(
                 IntPtr hDC,
                 int nWidth,
                 int nHeight);
-            
+
             [DllImport("gdi32.dll")]
             public static extern IntPtr CreateCompatibleDC(IntPtr hDC);
-            
+
             [DllImport("gdi32.dll")]
             public static extern bool DeleteDC(IntPtr hDC);
-            
+
             [DllImport("gdi32.dll")]
             public static extern bool DeleteObject(IntPtr hObject);
-            
+
             [DllImport("gdi32.dll")]
             public static extern IntPtr SelectObject(
-                IntPtr hDC, 
+                IntPtr hDC,
                 IntPtr hObject);
         }
 
@@ -171,18 +171,18 @@ namespace Uncas.Core.Interop
                 public int right;
                 public int bottom;
             }
- 
+
             [DllImport("user32.dll")]
             public static extern IntPtr GetDesktopWindow();
-            
+
             [DllImport("user32.dll")]
             public static extern IntPtr GetWindowDC(IntPtr hWnd);
-            
+
             [DllImport("user32.dll")]
             public static extern IntPtr ReleaseDC(
                 IntPtr hWnd,
                 IntPtr hDC);
-            
+
             [DllImport("user32.dll")]
             public static extern IntPtr GetWindowRect(
                 IntPtr hWnd,
