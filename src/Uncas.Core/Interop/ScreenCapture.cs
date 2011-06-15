@@ -24,6 +24,13 @@ namespace Uncas.Core.Interop
         {
             return CaptureWindow(User32.GetDesktopWindow());
         }
+
+        public Image CaptureForegroundWindow()
+        {
+            IntPtr foregroundWindow = ForegroundWindow.GetForegroundWindow();
+            return CaptureWindow(foregroundWindow);
+        }
+
         /// <summary>
         /// Creates an Image object containing a screen shot 
         /// of a specific window
@@ -82,6 +89,7 @@ namespace Uncas.Core.Interop
             
             return img;
         }
+
         /// <summary>
         /// Captures a screen shot of a specific window, and saves it to a file.
         /// </summary>
@@ -96,6 +104,7 @@ namespace Uncas.Core.Interop
             Image img = CaptureWindow(handle);
             img.Save(filename, format);
         }
+
         /// <summary>
         /// Captures a screen shot of the entire desktop, 
         /// and saves it to a file
