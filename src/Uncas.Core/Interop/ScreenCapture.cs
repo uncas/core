@@ -27,7 +27,7 @@ namespace Uncas.Core.Interop
 
         public Image CaptureForegroundWindow()
         {
-            IntPtr foregroundWindow = ForegroundWindow.GetForegroundPointer();
+            IntPtr foregroundWindow = ForegroundWindow.Current.Handle;
             return CaptureWindow(foregroundWindow);
         }
 

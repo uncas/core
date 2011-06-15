@@ -9,34 +9,54 @@ namespace Uncas.Core.Interop
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>
-    public static class ForegroundWindow
+    public class ForegroundWindow
     {
-        public static IntPtr GetForegroundPointer()
+        private IntPtr _handle;
+
+        private ForegroundWindow()
         {
-            return GetForegroundWindow();
+            _handle = GetForegroundWindow();
         }
 
-        public static string GetForegroundWindowTitle()
+        public static ForegroundWindow Current
         {
-            int chars = 256;
-            StringBuilder buff = new StringBuilder(chars);
-
-            // Obtain the handle of the active window.
-            IntPtr handle = GetForegroundWindow();
-
-            // Update the controls.
-            if (GetWindowText(handle, buff, chars) > 0)
+            get
             {
-                return buff.ToString();
+                return new ForegroundWindow();
             }
-
-            return null;
         }
 
-        public static Process GetForegroundWindowProcess()
+        public IntPtr Handle
         {
-            IntPtr foregroundWindowHandle = GetForegroundWindow();
-            return GetProcessAtWindowHandle(foregroundWindowHandle);
+            get
+            {
+                return _handle;
+            }
+        }
+
+        public string Title
+        {
+            get
+            {
+                int chars = 256;
+                StringBuilder buff = new StringBuilder(chars);
+
+                // Update the controls.
+                if (GetWindowText(_handle, buff, chars) > 0)
+                {
+                    return buff.ToString();
+                }
+
+                return null;
+            }
+        }
+
+        public Process Process
+        {
+            get
+            {
+                return GetProcessAtWindowHandle(_handle);
+            }
         }
 
         private static Process GetProcessAtWindowHandle(IntPtr windowHandle)
