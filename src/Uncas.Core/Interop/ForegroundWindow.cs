@@ -9,7 +9,7 @@ namespace Uncas.Core.Interop
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>
-    public class ForegroundWindow
+    public static class ForegroundWindow
     {
         public static IntPtr GetForegroundPointer()
         {
@@ -33,16 +33,16 @@ namespace Uncas.Core.Interop
             return null;
         }
 
-        public static Process GetProcessAtWindowHandle(IntPtr windowHandle)
-        {
-            return Process.GetProcesses().FirstOrDefault(
-                p => p.MainWindowHandle == windowHandle);
-        }
-
         public static Process GetForegroundWindowProcess()
         {
             IntPtr foregroundWindowHandle = GetForegroundWindow();
             return GetProcessAtWindowHandle(foregroundWindowHandle);
+        }
+
+        private static Process GetProcessAtWindowHandle(IntPtr windowHandle)
+        {
+            return Process.GetProcesses().FirstOrDefault(
+                p => p.MainWindowHandle == windowHandle);
         }
 
         [DllImport("user32.dll")]
