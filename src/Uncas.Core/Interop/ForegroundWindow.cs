@@ -11,15 +11,10 @@ namespace Uncas.Core.Interop
     /// </remarks>
     public class ForegroundWindow
     {
-        // Declare external functions.
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowText(
-            IntPtr hWnd,
-            StringBuilder text,
-            int count);
+        public static IntPtr GetForegroundPointer()
+        {
+            return GetForegroundWindow();
+        }
 
         public static string GetForegroundWindowTitle()
         {
@@ -49,5 +44,14 @@ namespace Uncas.Core.Interop
             IntPtr foregroundWindowHandle = GetForegroundWindow();
             return GetProcessAtWindowHandle(foregroundWindowHandle);
         }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowText(
+            IntPtr hWnd,
+            StringBuilder text,
+            int count);
     }
 }
