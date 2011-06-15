@@ -120,7 +120,7 @@ namespace Uncas.Core.Interop
         /// <summary>
         /// Helper class containing Gdi32 API functions
         /// </summary>
-        private class GDI32
+        private static class GDI32
         {
             // BitBlt dwRop parameter
             public const int SRCCOPY = 0x00CC0020;
@@ -161,7 +161,7 @@ namespace Uncas.Core.Interop
         /// <summary>
         /// Helper class containing User32 API functions
         /// </summary>
-        private class User32
+        private static class User32
         {
             [StructLayout(LayoutKind.Sequential)]
             public struct RECT
