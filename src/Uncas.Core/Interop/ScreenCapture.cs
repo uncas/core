@@ -27,8 +27,10 @@ namespace Uncas.Core.Interop
 
         public Image CaptureForegroundWindow()
         {
-            IntPtr foregroundWindow = ForegroundWindow.Current.Handle;
-            return CaptureWindow(foregroundWindow);
+            IntPtr handle;
+            using (var foregroundWindow = ForegroundWindow.Current)
+                handle = foregroundWindow.Handle;
+            return CaptureWindow(handle);
         }
 
         /// <summary>
@@ -93,28 +95,28 @@ namespace Uncas.Core.Interop
         /// <summary>
         /// Captures a screen shot of a specific window, and saves it to a file.
         /// </summary>
-        /// <param name="handle"></param>
-        /// <param name="filename"></param>
-        /// <param name="format"></param>
+        /// <param name="handle">The handle.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="format">The format.</param>
         public void CaptureWindowToFile(
             IntPtr handle,
-            string filename,
+            string fileName,
             ImageFormat format)
         {
             Image img = CaptureWindow(handle);
-            img.Save(filename, format);
+            img.Save(fileName, format);
         }
 
         /// <summary>
-        /// Captures a screen shot of the entire desktop, 
+        /// Captures a screen shot of the entire desktop,
         /// and saves it to a file
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="format"></param>
-        public void CaptureScreenToFile(string filename, ImageFormat format)
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="format">The format.</param>
+        public void CaptureScreenToFile(string fileName, ImageFormat format)
         {
             Image img = CaptureScreen();
-            img.Save(filename, format);
+            img.Save(fileName, format);
         }
 
         /// <summary>

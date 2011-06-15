@@ -9,13 +9,22 @@ namespace Uncas.Core.Interop
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>
-    public class ForegroundWindow
+    public class ForegroundWindow : IDisposable
     {
         private IntPtr _handle;
+        private string _title;
+        private Process _process;
 
         private ForegroundWindow()
         {
             _handle = GetForegroundWindow();
+            _title = GetTitle();
+            _process = GetProcessAtWindowHandle(_handle);
+        }
+
+        ~ForegroundWindow()
+        {
+            Dispose(false);
         }
 
         public static ForegroundWindow Current
@@ -26,43 +35,50 @@ namespace Uncas.Core.Interop
             }
         }
 
-        public IntPtr Handle
+        public IntPtr Handle { get { return _handle; } }
+        public string Title { get { return _title; } }
+        public Process Process { get { return _process; } }
+
+        public void Dispose()
         {
-            get
-            {
-                return _handle;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public string Title
+        protected virtual void Dispose(bool disposing)
         {
-            get
+            if (disposing)
             {
-                int chars = 256;
-                StringBuilder buff = new StringBuilder(chars);
-
-                // Update the controls.
-                if (GetWindowText(_handle, buff, chars) > 0)
+                // Gets rid of managed resources:
+                _title = null;
+                if (_process != null)
                 {
-                    return buff.ToString();
+                    _process.Dispose();
+                    _process = null;
                 }
-
-                return null;
             }
-        }
 
-        public Process Process
-        {
-            get
-            {
-                return GetProcessAtWindowHandle(_handle);
-            }
+            // Gets rid of unmanaged resources: none so far...
         }
 
         private static Process GetProcessAtWindowHandle(IntPtr windowHandle)
         {
             return Process.GetProcesses().FirstOrDefault(
                 p => p.MainWindowHandle == windowHandle);
+        }
+
+        private string GetTitle()
+        {
+            int chars = 256;
+            StringBuilder buff = new StringBuilder(chars);
+
+            // Update the controls.
+            if (GetWindowText(_handle, buff, chars) > 0)
+            {
+                return buff.ToString();
+            }
+
+            return null;
         }
 
         [DllImport("user32.dll")]

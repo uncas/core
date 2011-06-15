@@ -8,8 +8,8 @@ namespace Uncas.Core.Interop
     {
         Image CaptureForegroundWindow();
         Image CaptureScreen();
-        void CaptureScreenToFile(string filename, ImageFormat format);
+        void CaptureScreenToFile(string fileName, ImageFormat format);
         Image CaptureWindow(IntPtr handle);
-        void CaptureWindowToFile(IntPtr handle, string filename, ImageFormat format);
+        void CaptureWindowToFile(IntPtr handle, string fileName, ImageFormat format);
     }
 }
