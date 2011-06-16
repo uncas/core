@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interop\ForegroundWindow.cs" />
+    <Compile Include="Interop\InteropException.cs" />
     <Compile Include="Interop\IScreenCapture.cs" />
     <Compile Include="Interop\ScreenCapture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

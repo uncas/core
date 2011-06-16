@@ -46,8 +46,17 @@ namespace Uncas.Core.Interop
             IntPtr hdcSrc = SafeNativeMethods.User32.GetWindowDC(handle);
 
             // get the size
-            SafeNativeMethods.User32.RECT windowRect = new SafeNativeMethods.User32.RECT();
-            SafeNativeMethods.User32.GetWindowRect(handle, ref windowRect);
+            SafeNativeMethods.User32.RECT windowRect =
+                new SafeNativeMethods.User32.RECT();
+            int windowRectResult =
+                SafeNativeMethods.User32.GetWindowRect(handle, ref windowRect);
+            if (windowRectResult != 1)
+            {
+                throw new InteropException(
+                    "Error getting window rectangle",
+                    windowRectResult);
+            }
+
             int width = windowRect.right - windowRect.left;
             int height = windowRect.bottom - windowRect.top;
 
@@ -81,7 +90,14 @@ namespace Uncas.Core.Interop
 
             // clean up 
             SafeNativeMethods.GDI32.DeleteDC(hdcDest);
-            SafeNativeMethods.User32.ReleaseDC(handle, hdcSrc);
+            int releaseDCResult =
+                SafeNativeMethods.User32.ReleaseDC(handle, hdcSrc);
+            if (releaseDCResult != 1)
+            {
+                throw new InteropException(
+                    "Error releasing DC",
+                    releaseDCResult);
+            }
 
             // get a .NET image object for it
             Image img = Image.FromHbitmap(hBitmap);
