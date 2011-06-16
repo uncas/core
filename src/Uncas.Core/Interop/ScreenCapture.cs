@@ -25,6 +25,12 @@ namespace Uncas.Core.Interop
             return CaptureWindow(SafeNativeMethods.User32.GetDesktopWindow());
         }
 
+        /// <summary>
+        /// Captures the foreground window.
+        /// </summary>
+        /// <returns>
+        /// The image containing the foreground window.
+        /// </returns>
         public Image CaptureForegroundWindow()
         {
             IntPtr handle;
@@ -138,6 +144,9 @@ namespace Uncas.Core.Interop
             img.Save(fileName, format);
         }
 
+        /// <summary>
+        /// Holds safe native methods used by the containing class.
+        /// </summary>
         private static class SafeNativeMethods
         {
             /// <summary>
@@ -205,6 +214,9 @@ namespace Uncas.Core.Interop
                     IntPtr hWnd,
                     ref RECT rect);
 
+                /// <summary>
+                /// Struct that represents a rectangle of a window.
+                /// </summary>
                 [StructLayout(LayoutKind.Sequential)]
                 public struct RECT
                 {

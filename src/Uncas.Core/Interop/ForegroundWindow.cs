@@ -30,6 +30,10 @@ namespace Uncas.Core.Interop
             Dispose(false);
         }
 
+        /// <summary>
+        /// Gets the current foreground window.
+        /// </summary>
+        /// <value>The current foreground window.</value>
         public static ForegroundWindow Current
         {
             get
@@ -38,27 +42,46 @@ namespace Uncas.Core.Interop
             }
         }
 
+        /// <summary>
+        /// Gets the handle.
+        /// </summary>
+        /// <value>The handle.</value>
         public IntPtr Handle
         {
             get { return _handle; }
         }
 
+        /// <summary>
+        /// Gets the title.
+        /// </summary>
+        /// <value>The title.</value>
         public string Title
         {
             get { return _title; }
         }
 
+        /// <summary>
+        /// Gets the process.
+        /// </summary>
+        /// <value>The process.</value>
         public Process Process
         {
             get { return _process; }
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing">Set to <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -95,6 +118,9 @@ namespace Uncas.Core.Interop
             return null;
         }
 
+        /// <summary>
+        /// Holds safe native methods used by the containing class.
+        /// </summary>
         private static class SafeNativeMethods
         {
             [DllImport("user32.dll")]
