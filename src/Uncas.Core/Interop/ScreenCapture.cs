@@ -181,12 +181,12 @@ namespace Uncas.Core.Interop
             public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
             [DllImport("user32.dll")]
-            public static extern IntPtr ReleaseDC(
+            public static extern int ReleaseDC(
                 IntPtr hWnd,
                 IntPtr hDC);
 
             [DllImport("user32.dll")]
-            public static extern IntPtr GetWindowRect(
+            public static extern int GetWindowRect(
                 IntPtr hWnd,
                 ref RECT rect);
         }
