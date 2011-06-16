@@ -17,7 +17,7 @@ namespace Uncas.Core.Interop
 
         private ForegroundWindow()
         {
-            _handle = GetForegroundWindow();
+            _handle = SafeNativeMethods.GetForegroundWindow();
             _title = GetTitle();
             _process = GetProcessAtWindowHandle(_handle);
         }
@@ -73,7 +73,7 @@ namespace Uncas.Core.Interop
             StringBuilder buff = new StringBuilder(chars);
 
             // Update the controls.
-            if (GetWindowText(_handle, buff, chars) > 0)
+            if (SafeNativeMethods.GetWindowText(_handle, buff, chars) > 0)
             {
                 return buff.ToString();
             }
@@ -81,13 +81,16 @@ namespace Uncas.Core.Interop
             return null;
         }
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
+        private static class SafeNativeMethods
+        {
+            [DllImport("user32.dll")]
+            internal static extern IntPtr GetForegroundWindow();
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int GetWindowText(
-            IntPtr hWnd,
-            StringBuilder text,
-            int count);
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            internal static extern int GetWindowText(
+                IntPtr hWnd,
+                StringBuilder text,
+                int count);
+        }
     }
 }
