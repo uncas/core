@@ -35,9 +35,20 @@ namespace Uncas.Core.Interop
             }
         }
 
-        public IntPtr Handle { get { return _handle; } }
-        public string Title { get { return _title; } }
-        public Process Process { get { return _process; } }
+        public IntPtr Handle
+        {
+            get { return _handle; }
+        }
+
+        public string Title
+        {
+            get { return _title; }
+        }
+
+        public Process Process
+        {
+            get { return _process; }
+        }
 
         public void Dispose()
         {

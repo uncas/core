@@ -29,7 +29,10 @@ namespace Uncas.Core.Interop
         {
             IntPtr handle;
             using (var foregroundWindow = ForegroundWindow.Current)
+            {
                 handle = foregroundWindow.Handle;
+            }
+
             return CaptureWindow(handle);
         }
 
@@ -186,15 +189,6 @@ namespace Uncas.Core.Interop
             /// </summary>
             internal static class User32
             {
-                [StructLayout(LayoutKind.Sequential)]
-                public struct RECT
-                {
-                    public int left;
-                    public int top;
-                    public int right;
-                    public int bottom;
-                }
-
                 [DllImport("user32.dll")]
                 public static extern IntPtr GetDesktopWindow();
 
@@ -210,6 +204,15 @@ namespace Uncas.Core.Interop
                 public static extern int GetWindowRect(
                     IntPtr hWnd,
                     ref RECT rect);
+
+                [StructLayout(LayoutKind.Sequential)]
+                public struct RECT
+                {
+                    public int left;
+                    public int top;
+                    public int right;
+                    public int bottom;
+                }
             }
         }
     }
