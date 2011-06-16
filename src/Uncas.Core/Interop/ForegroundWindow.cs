@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Uncas.Core.Interop
 {
+    /// <summary>
+    /// Represents the foreground window among all windows.
+    /// </summary>
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>

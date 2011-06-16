@@ -19,7 +19,7 @@ namespace Uncas.Core.Interop
         /// Creates an Image object containing a screen shot 
         /// of the entire desktop.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The image containing the screen shot.</returns>
         public Image CaptureScreen()
         {
             return CaptureWindow(SafeNativeMethods.User32.GetDesktopWindow());
@@ -38,11 +38,11 @@ namespace Uncas.Core.Interop
 
         /// <summary>
         /// Creates an Image object containing a screen shot 
-        /// of a specific window
+        /// of a specific window.
         /// </summary>
-        /// <param name="handle">The handle to the window. 
-        /// (In windows forms, this is obtained by the Handle property.)</param>
-        /// <returns></returns>
+        /// <param name="handle">The handle to the window
+        /// (in windows forms, this is obtained by the Handle property).</param>
+        /// <returns>The image containing the capture of the window.</returns>
         public Image CaptureWindow(IntPtr handle)
         {
             // get te hDC of the target window
@@ -128,7 +128,7 @@ namespace Uncas.Core.Interop
 
         /// <summary>
         /// Captures a screen shot of the entire desktop,
-        /// and saves it to a file
+        /// and saves it to a file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="format">The format.</param>
@@ -141,7 +141,7 @@ namespace Uncas.Core.Interop
         private static class SafeNativeMethods
         {
             /// <summary>
-            /// Helper class containing Gdi32 API functions
+            /// Helper class containing Gdi32 API functions.
             /// </summary>
             internal static class GDI32
             {
@@ -185,7 +185,7 @@ namespace Uncas.Core.Interop
             }
 
             /// <summary>
-            /// Helper class containing User32 API functions
+            /// Helper class containing User32 API functions.
             /// </summary>
             internal static class User32
             {
