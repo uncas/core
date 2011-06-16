@@ -63,6 +63,7 @@ namespace Uncas.Core.Interop
         /// <summary>
         /// Gets the error code.
         /// </summary>
+        /// <value>The error code.</value>
         public int ErrorCode { get; private set; }
 
         /// <summary>
