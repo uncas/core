@@ -42,7 +42,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interop\ForegroundWindow.cs" />
+    <Compile Include="Interop\Window.cs" />
     <Compile Include="Interop\InteropException.cs" />
     <Compile Include="Interop\IScreenCapture.cs" />
     <Compile Include="Interop\ScreenCapture.cs" />

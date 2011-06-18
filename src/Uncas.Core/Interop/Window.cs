@@ -7,25 +7,29 @@ using System.Text;
 namespace Uncas.Core.Interop
 {
     /// <summary>
-    /// Represents the foreground window among all windows.
+    /// Wraps a window in Microsoft Windows.
     /// </summary>
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>
-    public class ForegroundWindow : IDisposable
+    public class Window : IDisposable
     {
-        private IntPtr _handle;
-        private string _title;
-        private Process _process;
+        private readonly IntPtr _handle;
+        private readonly string _title;
+        private readonly Process _process;
 
-        private ForegroundWindow()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Window"/> class.
+        /// </summary>
+        /// <param name="handle">The window handle.</param>
+        public Window(IntPtr handle)
         {
-            _handle = SafeNativeMethods.GetForegroundWindow();
-            _title = GetTitle();
-            _process = GetProcessAtWindowHandle(_handle);
+            _handle = handle;
+            _title = GetTitle(handle);
+            _process = GetProcessAtWindowHandle(handle);
         }
 
-        ~ForegroundWindow()
+        ~Window()
         {
             Dispose(false);
         }
@@ -34,36 +38,36 @@ namespace Uncas.Core.Interop
         /// Gets the current foreground window.
         /// </summary>
         /// <value>The current foreground window.</value>
-        public static ForegroundWindow Current
+        public static Window CurrentForeground
         {
             get
             {
-                return new ForegroundWindow();
+                return new Window(SafeNativeMethods.GetForegroundWindow());
             }
         }
 
         /// <summary>
-        /// Gets the handle.
+        /// Gets the handle of the window.
         /// </summary>
-        /// <value>The handle.</value>
+        /// <value>The handle of the window.</value>
         public IntPtr Handle
         {
             get { return _handle; }
         }
 
         /// <summary>
-        /// Gets the title.
+        /// Gets the title of the window.
         /// </summary>
-        /// <value>The title.</value>
+        /// <value>The title of the window.</value>
         public string Title
         {
             get { return _title; }
         }
 
         /// <summary>
-        /// Gets the process.
+        /// Gets the process related to the window.
         /// </summary>
-        /// <value>The process.</value>
+        /// <value>The process related to the window.</value>
         public Process Process
         {
             get { return _process; }
@@ -87,30 +91,33 @@ namespace Uncas.Core.Interop
             if (disposing)
             {
                 // Gets rid of managed resources:
-                _title = null;
                 if (_process != null)
                 {
                     _process.Dispose();
-                    _process = null;
                 }
             }
 
             // Gets rid of unmanaged resources: none so far...
         }
 
-        private static Process GetProcessAtWindowHandle(IntPtr windowHandle)
+        private static Process GetProcessAtWindowHandle(
+            IntPtr windowHandle)
         {
             return Process.GetProcesses().FirstOrDefault(
                 p => p.MainWindowHandle == windowHandle);
         }
 
-        private string GetTitle()
+        private static string GetTitle(
+            IntPtr windowHandle)
         {
             int chars = 256;
             StringBuilder buff = new StringBuilder(chars);
-
-            // Update the controls.
-            if (SafeNativeMethods.GetWindowText(_handle, buff, chars) > 0)
+            int getWindowTextResult =
+                SafeNativeMethods.GetWindowText(
+                windowHandle,
+                buff,
+                chars);
+            if (getWindowTextResult > 0)
             {
                 return buff.ToString();
             }
