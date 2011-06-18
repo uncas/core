@@ -12,11 +12,11 @@ namespace Uncas.Core.Interop
     /// <remarks>
     /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
     /// </remarks>
-    public class Window : IDisposable
+    public class Window
     {
         private readonly IntPtr _handle;
         private readonly string _title;
-        private readonly Process _process;
+        private readonly string _processName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Window"/> class.
@@ -26,12 +26,7 @@ namespace Uncas.Core.Interop
         {
             _handle = handle;
             _title = GetTitle(handle);
-            _process = GetProcessAtWindowHandle(handle);
-        }
-
-        ~Window()
-        {
-            Dispose(false);
+            _processName = GetProcessName(handle);
         }
 
         /// <summary>
@@ -65,15 +60,6 @@ namespace Uncas.Core.Interop
         }
 
         /// <summary>
-        /// Gets the process related to the window.
-        /// </summary>
-        /// <value>The process related to the window.</value>
-        public Process Process
-        {
-            get { return _process; }
-        }
-
-        /// <summary>
         /// Gets the name of the process.
         /// </summary>
         /// <value>
@@ -83,35 +69,19 @@ namespace Uncas.Core.Interop
         {
             get
             {
-                return Process != null ? Process.ProcessName : null;
+                return _processName;
             }
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+        private static string GetProcessName(IntPtr handle)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing">Set to <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
+            using (Process process =
+                GetProcessAtWindowHandle(handle))
             {
-                // Gets rid of managed resources:
-                if (_process != null)
-                {
-                    _process.Dispose();
-                }
+                return process != null ?
+                    process.ProcessName :
+                    null;
             }
-
-            // Gets rid of unmanaged resources: none so far...
         }
 
         private static Process GetProcessAtWindowHandle(

@@ -33,12 +33,7 @@ namespace Uncas.Core.Interop
         /// </returns>
         public Image CaptureForegroundWindow()
         {
-            IntPtr handle;
-            using (var foregroundWindow = Window.CurrentForeground)
-            {
-                handle = foregroundWindow.Handle;
-            }
-
+            IntPtr handle = Window.CurrentForeground.Handle;
             return CaptureWindow(handle);
         }
 
