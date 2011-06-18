@@ -74,6 +74,20 @@ namespace Uncas.Core.Interop
         }
 
         /// <summary>
+        /// Gets the name of the process.
+        /// </summary>
+        /// <value>
+        /// The name of the process.
+        /// </value>
+        public string ProcessName
+        {
+            get
+            {
+                return Process != null ? Process.ProcessName : null;
+            }
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
