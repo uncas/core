@@ -39,9 +39,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\OleDbContext.cs" />
     <Compile Include="Drawing\ImageHandler.cs" />
     <Compile Include="Drawing\ImageResizing\IResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ProcessedImagesInfo.cs" />
