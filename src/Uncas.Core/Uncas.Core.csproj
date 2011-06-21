@@ -38,12 +38,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationWrapper.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\OleDbContext.cs" />
     <Compile Include="Drawing\ImageHandler.cs" />
