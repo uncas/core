@@ -16,7 +16,7 @@ namespace Uncas.Core.Data
         }
 
         public DataTable GetData(string commandText,
-            params OleDbParameter[] parameters)
+            params DbParameter[] parameters)
         {
             DataTable dt = new DataTable("uncas-data");
             dt.Locale = CultureInfo.InvariantCulture;
@@ -24,9 +24,9 @@ namespace Uncas.Core.Data
             {
                 using (OleDbCommand command = new OleDbCommand(commandText, connection))
                 {
-                    foreach (OleDbParameter parameter in parameters)
+                    foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
-                    using (OleDbDataAdapter adapter = new OleDbDataAdapter(command))
+                    using (DbDataAdapter adapter = new OleDbDataAdapter(command))
                     {
                         connection.Open();
                         adapter.Fill(dt);
@@ -38,26 +38,25 @@ namespace Uncas.Core.Data
         }
 
         public DbDataReader GetReader(string commandText,
-            params OleDbParameter[] parameters)
+            params DbParameter[] parameters)
         {
             OleDbConnection connection = new OleDbConnection(_connectionString);
-            OleDbCommand command = new OleDbCommand(commandText, connection);
-            foreach (OleDbParameter parameter in parameters)
+            DbCommand command = new OleDbCommand(commandText, connection);
+            foreach (DbParameter parameter in parameters)
                 command.Parameters.Add(parameter);
             connection.Open();
-            OleDbDataReader reader = command.ExecuteReader(CommandBehavior.CloseConnection);
-            return reader;
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
         public int ModifyData(string commandText,
-            params OleDbParameter[] parameters)
+            params DbParameter[] parameters)
         {
             int iOut = 0;
             using (OleDbConnection connection = new OleDbConnection(_connectionString))
             {
-                using (OleDbCommand command = new OleDbCommand(commandText, connection))
+                using (DbCommand command = new OleDbCommand(commandText, connection))
                 {
-                    foreach (OleDbParameter parameter in parameters)
+                    foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
                     connection.Open();
                     iOut = command.ExecuteNonQuery();
@@ -68,23 +67,118 @@ namespace Uncas.Core.Data
         }
 
         public int? GetInt32(string commandText,
-            params OleDbParameter[] parameters)
+            params DbParameter[] parameters)
         {
-            int? iOut = null;
-            using (OleDbConnection connection = new OleDbConnection(_connectionString))
+            return GetScalar<int?>(commandText, parameters);
+        }
+
+        public T GetScalar<T>(string commandText,
+            params DbParameter[] parameters)
+        {
+            using (OleDbConnection connection =
+                new OleDbConnection(_connectionString))
             {
-                using (OleDbCommand command = new OleDbCommand(commandText, connection))
+                using (DbCommand command =
+                    new OleDbCommand(commandText, connection))
                 {
-                    foreach (OleDbParameter parameter in parameters)
+                    foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
                     connection.Open();
-                    object o = command.ExecuteScalar();
-                    if (!(o is DBNull))
-                        iOut = (int)o;
-                    connection.Close();
+                    object databaseValue = command.ExecuteScalar();
+                    if (!(databaseValue is DBNull))
+                        return (T)databaseValue;
+                    return default(T);
                 }
             }
-            return iOut;
+        }
+
+        public static OleDbParameter GetInt32Parameter(string name, int? value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.Integer);
+            if (value.HasValue)
+                par.Value = value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetInt64Parameter(string name, long? value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.BigInt);
+            if (value.HasValue)
+                par.Value = value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetDateTimeParameter(string name, DateTime? value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.Date);
+            if (value.HasValue)
+                par.Value = value.Value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetBooleanParameter(string name, bool value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.Boolean);
+            par.Value = value;
+            return par;
+        }
+
+        public static OleDbParameter GetDecimalParameter(string name,
+            decimal? value, byte precision, byte scale)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.Decimal);
+            par.Precision = precision;
+            par.Scale = scale;
+            if (value.HasValue)
+                par.Value = value.Value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetSingleParameter(string name, Single? value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.Single);
+            if (value.HasValue)
+                par.Value = value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetStringParameter(string name,
+            string value)
+        {
+            return GetStringParameter(name, value, 50);
+        }
+
+        public static OleDbParameter GetStringParameter(string name,
+            string value, int size)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.VarChar);
+            par.Size = size;
+            if (!string.IsNullOrEmpty(value))
+                par.Value = value;
+            else
+                par.Value = DBNull.Value;
+            return par;
+        }
+
+        public static OleDbParameter GetNoteParameter(string name,
+            string value)
+        {
+            OleDbParameter par = new OleDbParameter(name, OleDbType.LongVarChar);
+            if (!string.IsNullOrEmpty(value))
+                par.Value = value;
+            else
+                par.Value = DBNull.Value;
+            return par;
         }
     }
 }
