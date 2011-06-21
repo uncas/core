@@ -11,14 +11,25 @@ namespace Uncas.Core
     public class BaseBootstrapper
     {
         private IIocContainer _container;
+        private Assembly _assembly;
+
+        [Obsolete]
+        public BaseBootstrapper(
+            IIocContainer container)
+            : this(container, Assembly.GetEntryAssembly())
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        public BaseBootstrapper(IIocContainer container)
+        public BaseBootstrapper(
+            IIocContainer container,
+            Assembly assembly)
         {
             _container = container;
+            _assembly = assembly;
             RegisterAutomagically();
         }
 
@@ -36,18 +47,43 @@ namespace Uncas.Core
 
         private void RegisterAutomagically()
         {
-            Assembly entryAssembly = Assembly.GetEntryAssembly();
             RegisterImplementationsInAssembly(
-                entryAssembly);
-            IEnumerable<AssemblyName> referencedAssemblyNames =
-                entryAssembly.GetReferencedAssemblies()
-                .Where(x => x.Name.StartsWith("Uncas.", StringComparison.OrdinalIgnoreCase));
-            foreach (var referencedAssemblyName in referencedAssemblyNames)
+                _assembly);
+            IEnumerable<AssemblyName> uncasReferencedAssemblyNames =
+                GetReferencedAssemblies(_assembly);
+            foreach (var referencedAssemblyName in uncasReferencedAssemblyNames)
             {
                 Assembly referencedAssembly =
                     Assembly.Load(referencedAssemblyName);
                 RegisterImplementationsInAssembly(
                     referencedAssembly);
+            }
+        }
+
+        private static IEnumerable<AssemblyName> GetReferencedAssemblies(
+            Assembly assembly)
+        {
+            var result = new List<AssemblyName>();
+            var referencedAssemblies = assembly.GetReferencedAssemblies();
+            var uncas = referencedAssemblies
+                .Where(x => x.Name.StartsWith("Uncas.", StringComparison.OrdinalIgnoreCase));
+            result.AddRange(uncas);
+            foreach (var assemblyName in uncas)
+            {
+                AddAssemblies(result, GetReferencedAssemblies(Assembly.Load(assemblyName)));
+            }
+
+            return result;
+        }
+
+        private static void AddAssemblies(
+            List<AssemblyName> existing,
+            IEnumerable<AssemblyName> found)
+        {
+            foreach (var an in found)
+            {
+                if (!existing.Any(x => x.Name == an.Name))
+                    existing.Add(an);
             }
         }
 
