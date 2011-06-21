@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Uncas.TimeWatcher
+namespace Uncas.Core
 {
     /// <summary>
     /// Holds common bootstrapper logic.

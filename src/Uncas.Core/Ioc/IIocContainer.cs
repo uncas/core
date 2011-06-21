@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Uncas.TimeWatcher
+namespace Uncas.Core
 {
     /// <summary>
     /// Represents an inversion-of-control container.
