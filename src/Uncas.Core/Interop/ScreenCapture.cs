@@ -10,8 +10,8 @@ namespace Uncas.Core.Interop
     /// or a particular window, and save it to a file.
     /// </summary>
     /// <remarks>
-    /// http://www.developerfusion.com/code/4630/capture-a-screen-shot/
-    /// http://stackoverflow.com/questions/1163761/c-capture-screenshot-of-active-window
+    /// See http://www.developerfusion.com/code/4630/capture-a-screen-shot/.
+    /// See http://stackoverflow.com/questions/1163761/c-capture-screenshot-of-active-window.
     /// </remarks>
     public class ScreenCapture : IScreenCapture
     {

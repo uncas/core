@@ -10,7 +10,7 @@ namespace Uncas.Core.Interop
     /// Wraps a window in Microsoft Windows.
     /// </summary>
     /// <remarks>
-    /// http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c
+    /// See http://stackoverflow.com/questions/115868/how-do-i-get-the-title-of-the-current-active-window-using-c.
     /// </remarks>
     public class Window
     {
