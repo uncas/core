@@ -46,6 +46,8 @@
     <Compile Include="Interop\InteropException.cs" />
     <Compile Include="Interop\IScreenCapture.cs" />
     <Compile Include="Interop\ScreenCapture.cs" />
+    <Compile Include="Ioc\BaseBootstrapper.cs" />
+    <Compile Include="Ioc\IIocContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
