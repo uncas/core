@@ -42,6 +42,13 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing\ImageHandler.cs" />
+    <Compile Include="Drawing\ImageResizing\IResizeImages.cs" />
+    <Compile Include="Drawing\ImageResizing\ProcessedImagesInfo.cs" />
+    <Compile Include="Drawing\ImageResizing\ResizeCompletedEventArgs.cs" />
+    <Compile Include="Drawing\ImageResizing\ResizeFailedEventArgs.cs" />
+    <Compile Include="Drawing\ImageResizing\ResizeImages.cs" />
+    <Compile Include="Drawing\ImageResizing\ResizeProgressEventArgs.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Interop\Window.cs" />
     <Compile Include="Interop\InteropException.cs" />
@@ -54,6 +61,7 @@
   <ItemGroup>
     <None Include="Properties\UncasCoreKey.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
