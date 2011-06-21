@@ -10,8 +10,11 @@ namespace Uncas.Core.Data
     {
         private readonly string _connectionString;
 
+        private readonly DbProviderFactory _factory;
+
         public OleDbContext(string connectionString)
         {
+            _factory = OleDbFactory.Instance;
             _connectionString = connectionString;
         }
 
@@ -20,28 +23,36 @@ namespace Uncas.Core.Data
         {
             DataTable dt = new DataTable("uncas-data");
             dt.Locale = CultureInfo.InvariantCulture;
-            using (OleDbConnection connection = new OleDbConnection(_connectionString))
+            using (DbConnection connection = _factory.CreateConnection())
             {
-                using (OleDbCommand command = new OleDbCommand(commandText, connection))
+                connection.ConnectionString = _connectionString;
+                using (DbCommand command = _factory.CreateCommand())
                 {
+                    command.CommandText = commandText;
+                    command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
-                    using (DbDataAdapter adapter = new OleDbDataAdapter(command))
+                    using (DbDataAdapter adapter = _factory.CreateDataAdapter())
                     {
+                        adapter.SelectCommand = command;
                         connection.Open();
                         adapter.Fill(dt);
                         connection.Close();
                     }
                 }
             }
+
             return dt;
         }
 
         public DbDataReader GetReader(string commandText,
             params DbParameter[] parameters)
         {
-            OleDbConnection connection = new OleDbConnection(_connectionString);
-            DbCommand command = new OleDbCommand(commandText, connection);
+            DbConnection connection = _factory.CreateConnection();
+            connection.ConnectionString = _connectionString;
+            DbCommand command = _factory.CreateCommand();
+            command.CommandText = commandText;
+            command.Connection = connection;
             foreach (DbParameter parameter in parameters)
                 command.Parameters.Add(parameter);
             connection.Open();
@@ -52,10 +63,13 @@ namespace Uncas.Core.Data
             params DbParameter[] parameters)
         {
             int iOut = 0;
-            using (OleDbConnection connection = new OleDbConnection(_connectionString))
+            using (DbConnection connection = _factory.CreateConnection())
             {
-                using (DbCommand command = new OleDbCommand(commandText, connection))
+                connection.ConnectionString = _connectionString;
+                using (DbCommand command = _factory.CreateCommand())
                 {
+                    command.CommandText = commandText;
+                    command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
                     connection.Open();
@@ -75,12 +89,13 @@ namespace Uncas.Core.Data
         public T GetScalar<T>(string commandText,
             params DbParameter[] parameters)
         {
-            using (OleDbConnection connection =
-                new OleDbConnection(_connectionString))
+            using (DbConnection connection =_factory.CreateConnection())
             {
-                using (DbCommand command =
-                    new OleDbCommand(commandText, connection))
+                connection.ConnectionString = _connectionString;
+                using (DbCommand command =_factory.CreateCommand())
                 {
+                    command.CommandText= commandText;
+                    command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
                         command.Parameters.Add(parameter);
                     connection.Open();
