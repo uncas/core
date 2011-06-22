@@ -12,11 +12,25 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </summary>
         /// <value>The total number of images.</value>
         public int TotalNumberOfImages { get; set; }
+
         /// <summary>
         /// Gets or sets the resized number of images.
         /// </summary>
         /// <value>The resized number of images.</value>
         public int ResizedNumberOfImages { get; set; }
+
+        /// <summary>
+        /// Gets the percentage.
+        /// </summary>
+        /// <value>The percentage.</value>
+        public int Percentage
+        {
+            get
+            {
+                return (int)((100d * this.ResizedNumberOfImages)
+                    / (1d * this.TotalNumberOfImages));
+            }
+        }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
@@ -30,19 +44,6 @@ namespace Uncas.Core.Drawing.ImageResizing
                 "{0}/{1}",
                 this.ResizedNumberOfImages,
                 this.TotalNumberOfImages);
-        }
-
-        /// <summary>
-        /// Gets the percentage.
-        /// </summary>
-        /// <value>The percentage.</value>
-        public int Percentage
-        {
-            get
-            {
-                return (int)((100d * this.ResizedNumberOfImages)
-                    / (1d * this.TotalNumberOfImages));
-            }
         }
     }
 }

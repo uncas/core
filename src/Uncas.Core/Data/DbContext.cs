@@ -33,7 +33,10 @@ namespace Uncas.Core.Data
                     command.CommandText = commandText;
                     command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
+                    {
                         command.Parameters.Add(parameter);
+                    }
+
                     using (DbDataAdapter adapter = _factory.CreateDataAdapter())
                     {
                         adapter.SelectCommand = command;
@@ -57,7 +60,10 @@ namespace Uncas.Core.Data
             command.CommandText = commandText;
             command.Connection = connection;
             foreach (DbParameter parameter in parameters)
+            {
                 command.Parameters.Add(parameter);
+            }
+
             connection.Open();
             return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
@@ -75,7 +81,10 @@ namespace Uncas.Core.Data
                     command.CommandText = commandText;
                     command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
+                    {
                         command.Parameters.Add(parameter);
+                    }
+
                     connection.Open();
                     iOut = command.ExecuteNonQuery();
                     connection.Close();
@@ -104,11 +113,17 @@ namespace Uncas.Core.Data
                     command.CommandText = commandText;
                     command.Connection = connection;
                     foreach (DbParameter parameter in parameters)
+                    {
                         command.Parameters.Add(parameter);
+                    }
+
                     connection.Open();
                     object databaseValue = command.ExecuteScalar();
                     if (!(databaseValue is DBNull))
+                    {
                         return (T)databaseValue;
+                    }
+
                     return default(T);
                 }
             }

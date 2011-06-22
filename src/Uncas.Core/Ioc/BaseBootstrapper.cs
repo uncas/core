@@ -83,7 +83,9 @@ namespace Uncas.Core
             foreach (var an in found)
             {
                 if (!existing.Any(x => x.Name == an.Name))
+                {
                     existing.Add(an);
+                }
             }
         }
 

@@ -14,9 +14,14 @@ namespace Uncas.Core.Data
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Integer);
             if (value.HasValue)
+            {
                 par.Value = value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
@@ -24,9 +29,14 @@ namespace Uncas.Core.Data
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.BigInt);
             if (value.HasValue)
+            {
                 par.Value = value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
@@ -34,9 +44,14 @@ namespace Uncas.Core.Data
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Date);
             if (value.HasValue)
+            {
                 par.Value = value.Value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
@@ -49,7 +64,7 @@ namespace Uncas.Core.Data
 
         public static OleDbParameter GetDecimalParameter(
             string name,
-            decimal? value, 
+            decimal? value,
             byte precision,
             byte scale)
         {
@@ -57,21 +72,31 @@ namespace Uncas.Core.Data
             par.Precision = precision;
             par.Scale = scale;
             if (value.HasValue)
+            {
                 par.Value = value.Value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
         public static OleDbParameter GetSingleParameter(
-            string name, 
+            string name,
             float? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Single);
             if (value.HasValue)
+            {
                 par.Value = value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
@@ -90,9 +115,14 @@ namespace Uncas.Core.Data
             OleDbParameter par = new OleDbParameter(name, OleDbType.VarChar);
             par.Size = size;
             if (!string.IsNullOrEmpty(value))
+            {
                 par.Value = value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
 
@@ -102,9 +132,14 @@ namespace Uncas.Core.Data
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.LongVarChar);
             if (!string.IsNullOrEmpty(value))
+            {
                 par.Value = value;
+            }
             else
+            {
                 par.Value = DBNull.Value;
+            }
+
             return par;
         }
     }

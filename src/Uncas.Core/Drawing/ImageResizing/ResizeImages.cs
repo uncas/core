@@ -85,9 +85,34 @@ namespace Uncas.Core.Drawing.ImageResizing
             string baseInputFolder,
             bool includeSubFolders)
         {
-            #region Getting the list of images
-            List<ImageToResize> imagesToResize
-                = new List<ImageToResize>();
+            // Gets the list of images to resize:
+            List<ImageToResize> imagesToResize =
+                GetListOfImages(
+                baseOutputFolder,
+                chooseFiles,
+                filePaths,
+                chooseFolder,
+                baseInputFolder,
+                includeSubFolders);
+
+            // Resizes the images:
+            SelectedImagesInfo sfi = new SelectedImagesInfo
+            {
+                ImagesToResize = imagesToResize,
+                MaxImageSize = maxImageSize
+            };
+            resizeWorker.RunWorkerAsync(sfi);
+        }
+
+        private List<ImageToResize> GetListOfImages(
+            string baseOutputFolder,
+            bool chooseFiles,
+            IEnumerable filePaths,
+            bool chooseFolder,
+            string baseInputFolder,
+            bool includeSubFolders)
+        {
+            var imagesToResize = new List<ImageToResize>();
             if (chooseFiles)
             {
                 imagesToResize
@@ -113,15 +138,8 @@ namespace Uncas.Core.Drawing.ImageResizing
                     HandleException(ex);
                 }
             }
-            #endregion
-            #region Resizing the images
-            SelectedImagesInfo sfi = new SelectedImagesInfo
-            {
-                ImagesToResize = imagesToResize,
-                MaxImageSize = maxImageSize
-            };
-            resizeWorker.RunWorkerAsync(sfi);
-            #endregion
+
+            return imagesToResize;
         }
 
         /// <summary>
@@ -158,12 +176,14 @@ namespace Uncas.Core.Drawing.ImageResizing
                     e.Cancel = true;
                     break;
                 }
+
                 ResizeImage(
                     itr.OriginalImagePath,
                     itr.ResizedImagePath,
                     sfi.MaxImageSize);
                 filesCompleted++;
             }
+
             pif.ResizedNumberOfImages = filesCompleted;
             e.Result = pif;
         }
@@ -217,6 +237,7 @@ namespace Uncas.Core.Drawing.ImageResizing
                     ResizedImagePath = smallerFilePath
                 });
             }
+
             return imagesToResize;
         }
 
@@ -233,6 +254,7 @@ namespace Uncas.Core.Drawing.ImageResizing
                 relativeInputFolderPath);
             DirectoryInfo diOutput
                 = new DirectoryInfo(outputFolderPath);
+
             // Getting images in this folder
             GetFilesByExtension(
                 imagesToResize,
@@ -293,7 +315,10 @@ namespace Uncas.Core.Drawing.ImageResizing
             foreach (FileInfo fi in di.GetFiles(extension))
             {
                 if (!diOutput.Exists)
+                {
                     diOutput.Create();
+                }
+
                 string originalImagePath = fi.FullName;
                 string resizedImagePath
                     = Path.Combine(outputFolderPath, fi.Name);
@@ -350,12 +375,14 @@ namespace Uncas.Core.Drawing.ImageResizing
         private class ImageToResize
         {
             public string OriginalImagePath { get; set; }
+
             public string ResizedImagePath { get; set; }
         }
 
         private class SelectedImagesInfo
         {
             public int MaxImageSize { get; set; }
+
             public List<ImageToResize> ImagesToResize { get; set; }
         }
 

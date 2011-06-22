@@ -8,6 +8,21 @@ namespace Uncas.Core.Drawing.ImageResizing
     public interface IResizeImages
     {
         /// <summary>
+        /// Occurs when resize completed.
+        /// </summary>
+        event EventHandler<ResizeCompletedEventArgs> ResizeCompleted;
+
+        /// <summary>
+        /// Occurs when resize failed.
+        /// </summary>
+        event EventHandler<ResizeFailedEventArgs> ResizeFailed;
+
+        /// <summary>
+        /// Occurs when resize progress changed.
+        /// </summary>
+        event EventHandler<ResizeProgressEventArgs> ResizeProgressChanged;
+
+        /// <summary>
         /// Cancels the resize work.
         /// </summary>
         void CancelResizeWork();
@@ -23,20 +38,5 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <param name="filePaths">The file paths.</param>
         /// <param name="maxImageSize">Maximum size of images.</param>
         void DoResizeWorkAsync(string baseOutputFolder, int maxImageSize, bool chooseFiles, System.Collections.IEnumerable filePaths, bool chooseFolder, string baseInputFolder, bool includeSubFolders);
-
-        /// <summary>
-        /// Occurs when resize completed.
-        /// </summary>
-        event EventHandler<ResizeCompletedEventArgs> ResizeCompleted;
-
-        /// <summary>
-        /// Occurs when resize failed.
-        /// </summary>
-        event EventHandler<ResizeFailedEventArgs> ResizeFailed;
-
-        /// <summary>
-        /// Occurs when resize progress changed.
-        /// </summary>
-        event EventHandler<ResizeProgressEventArgs> ResizeProgressChanged;
     }
 }

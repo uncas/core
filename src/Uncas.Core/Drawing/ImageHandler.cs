@@ -31,6 +31,7 @@ namespace Uncas.Core.Drawing
             {
                 img = Bitmap.FromStream(ms);
             }
+
             return img;
         }
 
@@ -47,6 +48,7 @@ namespace Uncas.Core.Drawing
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 bytes = ms.ToArray();
             }
+
             return bytes;
         }
 
@@ -80,6 +82,7 @@ namespace Uncas.Core.Drawing
                 originalSize = img.Size;
                 output = GetBytes(GetThumbnail(img, maxWidthAndHeight));
             }
+
             return output;
         }
 
@@ -116,6 +119,7 @@ namespace Uncas.Core.Drawing
                 originalSize = img.Size;
                 output = GetBytes(GetThumbnail(img, maxWidth, maxHeight));
             }
+
             return output;
         }
 
@@ -141,6 +145,7 @@ namespace Uncas.Core.Drawing
                 thumbHeight = maxWidthAndHeight;
                 thumbWidth = width * thumbHeight / height;
             }
+
             return GetThumbnail(img, new Size(thumbWidth, thumbHeight));
         }
 
@@ -167,6 +172,7 @@ namespace Uncas.Core.Drawing
                 thumbHeight = maxHeight;
                 thumbWidth = width * thumbHeight / height;
             }
+
             return GetThumbnail(img, new Size(thumbWidth, thumbHeight));
         }
 
@@ -185,9 +191,13 @@ namespace Uncas.Core.Drawing
                 thumbWidth = img.Width;
                 thumbHeight = img.Height;
             }
+
             Image bmp = new Bitmap(thumbWidth, thumbHeight);
             using (Graphics g = Graphics.FromImage(bmp))
+            {
                 g.DrawImage(img, 0, 0, thumbWidth, thumbHeight);
+            }
+
             return bmp;
         }
     }
