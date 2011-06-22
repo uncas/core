@@ -11,6 +11,7 @@ namespace Uncas.Core
     public class BaseBootstrapper
     {
         private IIocContainer _container;
+
         private Assembly _assembly;
 
         [Obsolete]
@@ -45,21 +46,6 @@ namespace Uncas.Core
             return _container.Resolve<T>();
         }
 
-        private void RegisterAutomagically()
-        {
-            RegisterImplementationsInAssembly(
-                _assembly);
-            IEnumerable<AssemblyName> uncasReferencedAssemblyNames =
-                GetReferencedAssemblies(_assembly);
-            foreach (var referencedAssemblyName in uncasReferencedAssemblyNames)
-            {
-                Assembly referencedAssembly =
-                    Assembly.Load(referencedAssemblyName);
-                RegisterImplementationsInAssembly(
-                    referencedAssembly);
-            }
-        }
-
         private static IEnumerable<AssemblyName> GetReferencedAssemblies(
             Assembly assembly)
         {
@@ -86,6 +72,21 @@ namespace Uncas.Core
                 {
                     existing.Add(an);
                 }
+            }
+        }
+
+        private void RegisterAutomagically()
+        {
+            RegisterImplementationsInAssembly(
+                _assembly);
+            IEnumerable<AssemblyName> uncasReferencedAssemblyNames =
+                GetReferencedAssemblies(_assembly);
+            foreach (var referencedAssemblyName in uncasReferencedAssemblyNames)
+            {
+                Assembly referencedAssembly =
+                    Assembly.Load(referencedAssemblyName);
+                RegisterImplementationsInAssembly(
+                    referencedAssembly);
             }
         }
 

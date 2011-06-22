@@ -104,44 +104,6 @@ namespace Uncas.Core.Drawing.ImageResizing
             resizeWorker.RunWorkerAsync(sfi);
         }
 
-        private List<ImageToResize> GetListOfImages(
-            string baseOutputFolder,
-            bool chooseFiles,
-            IEnumerable filePaths,
-            bool chooseFolder,
-            string baseInputFolder,
-            bool includeSubFolders)
-        {
-            var imagesToResize = new List<ImageToResize>();
-            if (chooseFiles)
-            {
-                imagesToResize
-                    = GetSelectedImages(
-                    baseOutputFolder,
-                    filePaths);
-            }
-            else if (chooseFolder)
-            {
-                DirectoryInfo diBase
-                    = new DirectoryInfo(baseInputFolder);
-                try
-                {
-                    GetImagesInSelectedFolder(
-                        ref imagesToResize,
-                        diBase.Name,
-                        baseOutputFolder,
-                        diBase,
-                        includeSubFolders);
-                }
-                catch (IOException ex)
-                {
-                    HandleException(ex);
-                }
-            }
-
-            return imagesToResize;
-        }
-
         /// <summary>
         /// Cancels the resize work.
         /// </summary>
@@ -152,71 +114,55 @@ namespace Uncas.Core.Drawing.ImageResizing
 
         #endregion
 
-        #region Private methods
+        #region IDisposable Members
 
-        #region Running in background thread
-
-        private void resizeWorker_DoWork(
-            object sender,
-            DoWorkEventArgs e)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
-            SelectedImagesInfo sfi = (SelectedImagesInfo)e.Argument;
-            int filesCompleted = 0;
-            ProcessedImagesInfo pif = new ProcessedImagesInfo
-            {
-                TotalNumberOfImages = sfi.ImagesToResize.Count,
-                ResizedNumberOfImages = filesCompleted
-            };
-            foreach (ImageToResize itr in sfi.ImagesToResize)
-            {
-                pif.ResizedNumberOfImages = filesCompleted;
-                resizeWorker.ReportProgress(pif.Percentage, pif);
-                if (resizeWorker.CancellationPending)
-                {
-                    e.Cancel = true;
-                    break;
-                }
-
-                ResizeImage(
-                    itr.OriginalImagePath,
-                    itr.ResizedImagePath,
-                    sfi.MaxImageSize);
-                filesCompleted++;
-            }
-
-            pif.ResizedNumberOfImages = filesCompleted;
-            e.Result = pif;
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void resizeWorker_ProgressChanged(
-            object sender,
-            ProgressChangedEventArgs e)
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
-            ProcessedImagesInfo pif
-                = (ProcessedImagesInfo)e.UserState;
-            if (ResizeProgressChanged != null)
+            if (disposing)
             {
-                ResizeProgressChanged(
-                    this,
-                    new ResizeProgressEventArgs(pif));
-            }
-        }
-
-        private void resizeWorker_RunWorkerCompleted(
-            object sender,
-            RunWorkerCompletedEventArgs e)
-        {
-            if (this.ResizeCompleted != null)
-            {
-                this.ResizeCompleted(
-                    this,
-                    new ResizeCompletedEventArgs(
-                        e.Cancelled,
-                        (ProcessedImagesInfo)e.Result));
+                this.resizeWorker.Dispose();
             }
         }
 
         #endregion
+
+        private static void GetFilesByExtension(
+            List<ImageToResize> imagesToResize,
+            DirectoryInfo di,
+            string outputFolderPath,
+            DirectoryInfo diOutput,
+            string extension)
+        {
+            foreach (FileInfo fi in di.GetFiles(extension))
+            {
+                if (!diOutput.Exists)
+                {
+                    diOutput.Create();
+                }
+
+                string originalImagePath = fi.FullName;
+                string resizedImagePath
+                    = Path.Combine(outputFolderPath, fi.Name);
+                imagesToResize.Add(new ImageToResize
+                {
+                    OriginalImagePath = originalImagePath,
+                    ResizedImagePath = resizedImagePath
+                });
+            }
+        }
 
         #region The actual resizing methods
 
@@ -305,31 +251,6 @@ namespace Uncas.Core.Drawing.ImageResizing
             }
         }
 
-        private static void GetFilesByExtension(
-            List<ImageToResize> imagesToResize,
-            DirectoryInfo di,
-            string outputFolderPath,
-            DirectoryInfo diOutput,
-            string extension)
-        {
-            foreach (FileInfo fi in di.GetFiles(extension))
-            {
-                if (!diOutput.Exists)
-                {
-                    diOutput.Create();
-                }
-
-                string originalImagePath = fi.FullName;
-                string resizedImagePath
-                    = Path.Combine(outputFolderPath, fi.Name);
-                imagesToResize.Add(new ImageToResize
-                {
-                    OriginalImagePath = originalImagePath,
-                    ResizedImagePath = resizedImagePath
-                });
-            }
-        }
-
         private void ResizeImage(
             string originalImagePath,
             string resizedImagePath,
@@ -368,9 +289,109 @@ namespace Uncas.Core.Drawing.ImageResizing
             }
         }
 
+        #region Running in background thread
+
+        private void resizeWorker_DoWork(
+            object sender,
+            DoWorkEventArgs e)
+        {
+            SelectedImagesInfo sfi = (SelectedImagesInfo)e.Argument;
+            int filesCompleted = 0;
+            ProcessedImagesInfo pif = new ProcessedImagesInfo
+            {
+                TotalNumberOfImages = sfi.ImagesToResize.Count,
+                ResizedNumberOfImages = filesCompleted
+            };
+            foreach (ImageToResize itr in sfi.ImagesToResize)
+            {
+                pif.ResizedNumberOfImages = filesCompleted;
+                resizeWorker.ReportProgress(pif.Percentage, pif);
+                if (resizeWorker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
+                ResizeImage(
+                    itr.OriginalImagePath,
+                    itr.ResizedImagePath,
+                    sfi.MaxImageSize);
+                filesCompleted++;
+            }
+
+            pif.ResizedNumberOfImages = filesCompleted;
+            e.Result = pif;
+        }
+
+        private void resizeWorker_ProgressChanged(
+            object sender,
+            ProgressChangedEventArgs e)
+        {
+            ProcessedImagesInfo pif
+                = (ProcessedImagesInfo)e.UserState;
+            if (ResizeProgressChanged != null)
+            {
+                ResizeProgressChanged(
+                    this,
+                    new ResizeProgressEventArgs(pif));
+            }
+        }
+
+        private void resizeWorker_RunWorkerCompleted(
+            object sender,
+            RunWorkerCompletedEventArgs e)
+        {
+            if (this.ResizeCompleted != null)
+            {
+                this.ResizeCompleted(
+                    this,
+                    new ResizeCompletedEventArgs(
+                        e.Cancelled,
+                        (ProcessedImagesInfo)e.Result));
+            }
+        }
+
         #endregion
 
-        #region Private classes
+        private List<ImageToResize> GetListOfImages(
+            string baseOutputFolder,
+            bool chooseFiles,
+            IEnumerable filePaths,
+            bool chooseFolder,
+            string baseInputFolder,
+            bool includeSubFolders)
+        {
+            var imagesToResize = new List<ImageToResize>();
+            if (chooseFiles)
+            {
+                imagesToResize
+                    = GetSelectedImages(
+                    baseOutputFolder,
+                    filePaths);
+            }
+            else if (chooseFolder)
+            {
+                DirectoryInfo diBase
+                    = new DirectoryInfo(baseInputFolder);
+                try
+                {
+                    GetImagesInSelectedFolder(
+                        ref imagesToResize,
+                        diBase.Name,
+                        baseOutputFolder,
+                        diBase,
+                        includeSubFolders);
+                }
+                catch (IOException ex)
+                {
+                    HandleException(ex);
+                }
+            }
+
+            return imagesToResize;
+        }
+
+        #region Nested types
 
         private class ImageToResize
         {
@@ -384,31 +405,6 @@ namespace Uncas.Core.Drawing.ImageResizing
             public int MaxImageSize { get; set; }
 
             public List<ImageToResize> ImagesToResize { get; set; }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.resizeWorker.Dispose();
-            }
         }
 
         #endregion
