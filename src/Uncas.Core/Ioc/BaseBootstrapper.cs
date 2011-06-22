@@ -14,6 +14,10 @@ namespace Uncas.Core
 
         private Assembly _assembly;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
         [Obsolete]
         public BaseBootstrapper(
             IIocContainer container)

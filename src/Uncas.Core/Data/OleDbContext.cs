@@ -3,13 +3,26 @@ using System.Data.OleDb;
 
 namespace Uncas.Core.Data
 {
+    /// <summary>
+    /// Represents a database context for Ole Db access.
+    /// </summary>
     public class OleDbContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OleDbContext"/> class.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
         public OleDbContext(string connectionString)
             : base(OleDbFactory.Instance, connectionString)
         {
         }
 
+        /// <summary>
+        /// Gets the int32 parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetInt32Parameter(string name, int? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Integer);
@@ -25,6 +38,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the int64 parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetInt64Parameter(string name, long? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.BigInt);
@@ -40,6 +59,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the date time parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetDateTimeParameter(string name, DateTime? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Date);
@@ -55,6 +80,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the boolean parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        /// <returns></returns>
         public static OleDbParameter GetBooleanParameter(string name, bool value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Boolean);
@@ -62,6 +93,14 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the decimal parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="precision">The precision.</param>
+        /// <param name="scale">The scale.</param>
+        /// <returns></returns>
         public static OleDbParameter GetDecimalParameter(
             string name,
             decimal? value,
@@ -83,6 +122,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the single parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetSingleParameter(
             string name,
             float? value)
@@ -107,6 +152,13 @@ namespace Uncas.Core.Data
             return GetStringParameter(name, value, 50);
         }
 
+        /// <summary>
+        /// Gets the string parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
         public static OleDbParameter GetStringParameter(
             string name,
             string value,
@@ -126,6 +178,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the note parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetNoteParameter(
             string name,
             string value)
