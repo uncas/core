@@ -69,7 +69,9 @@ namespace Uncas.Core.Drawing
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
         /// <param name="originalSize">Size of the original.</param>
         /// <returns></returns>
-        public byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight,
+        public byte[] GetThumbnail(
+            byte[] buffer,
+            int maxWidthAndHeight,
             out Size originalSize)
         {
             byte[] output = null;
@@ -102,8 +104,11 @@ namespace Uncas.Core.Drawing
         /// <param name="maxHeight">Height of the max.</param>
         /// <param name="originalSize">Size of the original.</param>
         /// <returns></returns>
-        public byte[] GetThumbnail(byte[] buffer, int maxWidth, int maxHeight,
-             out Size originalSize)
+        public byte[] GetThumbnail(
+            byte[] buffer,
+            int maxWidth,
+            int maxHeight,
+            out Size originalSize)
         {
             byte[] output = null;
             using (Image img = GetImage(buffer))

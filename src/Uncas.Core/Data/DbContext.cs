@@ -19,7 +19,8 @@ namespace Uncas.Core.Data
             _connectionString = connectionString;
         }
 
-        public DataTable GetData(string commandText,
+        public DataTable GetData(
+            string commandText,
             params DbParameter[] parameters)
         {
             DataTable dt = new DataTable("uncas-data");
@@ -46,7 +47,8 @@ namespace Uncas.Core.Data
             return dt;
         }
 
-        public DbDataReader GetReader(string commandText,
+        public DbDataReader GetReader(
+            string commandText,
             params DbParameter[] parameters)
         {
             DbConnection connection = _factory.CreateConnection();
@@ -60,7 +62,8 @@ namespace Uncas.Core.Data
             return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
-        public int ModifyData(string commandText,
+        public int ModifyData(
+            string commandText,
             params DbParameter[] parameters)
         {
             int iOut = 0;
@@ -82,13 +85,15 @@ namespace Uncas.Core.Data
             return iOut;
         }
 
-        public int? GetInt32(string commandText,
+        public int? GetInt32(
+            string commandText,
             params DbParameter[] parameters)
         {
             return GetScalar<int?>(commandText, parameters);
         }
 
-        public T GetScalar<T>(string commandText,
+        public T GetScalar<T>(
+            string commandText,
             params DbParameter[] parameters)
         {
             using (DbConnection connection = _factory.CreateConnection())

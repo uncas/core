@@ -26,9 +26,10 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}/{1}"
-                , this.ResizedNumberOfImages
-                , this.TotalNumberOfImages);
+            return string.Format(
+                "{0}/{1}",
+                this.ResizedNumberOfImages,
+                this.TotalNumberOfImages);
         }
 
         /// <summary>

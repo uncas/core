@@ -47,8 +47,11 @@ namespace Uncas.Core.Data
             return par;
         }
 
-        public static OleDbParameter GetDecimalParameter(string name,
-            decimal? value, byte precision, byte scale)
+        public static OleDbParameter GetDecimalParameter(
+            string name,
+            decimal? value, 
+            byte precision,
+            byte scale)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Decimal);
             par.Precision = precision;
@@ -60,7 +63,9 @@ namespace Uncas.Core.Data
             return par;
         }
 
-        public static OleDbParameter GetSingleParameter(string name, Single? value)
+        public static OleDbParameter GetSingleParameter(
+            string name, 
+            float? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Single);
             if (value.HasValue)
@@ -70,14 +75,17 @@ namespace Uncas.Core.Data
             return par;
         }
 
-        public static OleDbParameter GetStringParameter(string name,
+        public static OleDbParameter GetStringParameter(
+            string name,
             string value)
         {
             return GetStringParameter(name, value, 50);
         }
 
-        public static OleDbParameter GetStringParameter(string name,
-            string value, int size)
+        public static OleDbParameter GetStringParameter(
+            string name,
+            string value,
+            int size)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.VarChar);
             par.Size = size;
@@ -88,7 +96,8 @@ namespace Uncas.Core.Data
             return par;
         }
 
-        public static OleDbParameter GetNoteParameter(string name,
+        public static OleDbParameter GetNoteParameter(
+            string name,
             string value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.LongVarChar);

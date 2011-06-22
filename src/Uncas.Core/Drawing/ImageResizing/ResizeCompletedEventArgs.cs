@@ -12,9 +12,9 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </summary>
         /// <param name="canceled">if set to <c>true</c> [canceled].</param>
         /// <param name="processedImages">The processed images.</param>
-        public ResizeCompletedEventArgs
-            (bool canceled
-            , ProcessedImagesInfo processedImages)
+        public ResizeCompletedEventArgs(
+            bool canceled,
+            ProcessedImagesInfo processedImages)
         {
             this.Canceled = canceled;
             this.ProcessedImages = processedImages;

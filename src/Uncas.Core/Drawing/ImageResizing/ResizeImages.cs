@@ -33,11 +33,9 @@ namespace Uncas.Core.Drawing.ImageResizing
             this.resizeWorker.DoWork
                 += new DoWorkEventHandler(resizeWorker_DoWork);
             this.resizeWorker.ProgressChanged
-                += new ProgressChangedEventHandler
-                    (resizeWorker_ProgressChanged);
+                += new ProgressChangedEventHandler(resizeWorker_ProgressChanged);
             this.resizeWorker.RunWorkerCompleted
-                += new RunWorkerCompletedEventHandler
-                    (resizeWorker_RunWorkerCompleted);
+                += new RunWorkerCompletedEventHandler(resizeWorker_RunWorkerCompleted);
 
             this.ih = new ImageHandler();
         }
@@ -78,15 +76,14 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <param name="includeSubFolders">if set to <c>true</c> [include sub folders].</param>
         /// <param name="filePaths">The file paths.</param>
         /// <param name="maxImageSize">Maximum size of images.</param>
-        public void DoResizeWorkAsync
-            (string baseOutputFolder
-            , int maxImageSize
-            , bool chooseFiles
-            , IEnumerable filePaths
-            , bool chooseFolder
-            , string baseInputFolder
-            , bool includeSubFolders
-            )
+        public void DoResizeWorkAsync(
+            string baseOutputFolder,
+            int maxImageSize,
+            bool chooseFiles,
+            IEnumerable filePaths,
+            bool chooseFolder,
+            string baseInputFolder,
+            bool includeSubFolders)
         {
             #region Getting the list of images
             List<ImageToResize> imagesToResize
@@ -94,9 +91,9 @@ namespace Uncas.Core.Drawing.ImageResizing
             if (chooseFiles)
             {
                 imagesToResize
-                    = GetSelectedImages
-                    (baseOutputFolder
-                    , filePaths);
+                    = GetSelectedImages(
+                    baseOutputFolder,
+                    filePaths);
             }
             else if (chooseFolder)
             {
@@ -104,12 +101,12 @@ namespace Uncas.Core.Drawing.ImageResizing
                     = new DirectoryInfo(baseInputFolder);
                 try
                 {
-                    GetImagesInSelectedFolder
-                        (ref imagesToResize
-                        , diBase.Name
-                        , baseOutputFolder
-                        , diBase
-                        , includeSubFolders);
+                    GetImagesInSelectedFolder(
+                        ref imagesToResize,
+                        diBase.Name,
+                        baseOutputFolder,
+                        diBase,
+                        includeSubFolders);
                 }
                 catch (IOException ex)
                 {
@@ -141,9 +138,9 @@ namespace Uncas.Core.Drawing.ImageResizing
 
         #region Running in background thread
 
-        private void resizeWorker_DoWork
-            (object sender
-            , DoWorkEventArgs e)
+        private void resizeWorker_DoWork(
+            object sender,
+            DoWorkEventArgs e)
         {
             SelectedImagesInfo sfi = (SelectedImagesInfo)e.Argument;
             int filesCompleted = 0;
@@ -161,39 +158,41 @@ namespace Uncas.Core.Drawing.ImageResizing
                     e.Cancel = true;
                     break;
                 }
-                ResizeImage(itr.OriginalImagePath
-                    , itr.ResizedImagePath
-                    , sfi.MaxImageSize);
+                ResizeImage(
+                    itr.OriginalImagePath,
+                    itr.ResizedImagePath,
+                    sfi.MaxImageSize);
                 filesCompleted++;
             }
             pif.ResizedNumberOfImages = filesCompleted;
             e.Result = pif;
         }
 
-        private void resizeWorker_ProgressChanged
-            (object sender
-            , ProgressChangedEventArgs e)
+        private void resizeWorker_ProgressChanged(
+            object sender,
+            ProgressChangedEventArgs e)
         {
             ProcessedImagesInfo pif
                 = (ProcessedImagesInfo)e.UserState;
             if (ResizeProgressChanged != null)
             {
-                ResizeProgressChanged
-                    (this
-                    , new ResizeProgressEventArgs(pif));
+                ResizeProgressChanged(
+                    this,
+                    new ResizeProgressEventArgs(pif));
             }
         }
 
-        private void resizeWorker_RunWorkerCompleted
-            (object sender
-            , RunWorkerCompletedEventArgs e)
+        private void resizeWorker_RunWorkerCompleted(
+            object sender,
+            RunWorkerCompletedEventArgs e)
         {
             if (this.ResizeCompleted != null)
             {
-                this.ResizeCompleted(this
-                    , new ResizeCompletedEventArgs
-                        (e.Cancelled
-                        , (ProcessedImagesInfo)e.Result));
+                this.ResizeCompleted(
+                    this,
+                    new ResizeCompletedEventArgs(
+                        e.Cancelled,
+                        (ProcessedImagesInfo)e.Result));
             }
         }
 
@@ -201,9 +200,9 @@ namespace Uncas.Core.Drawing.ImageResizing
 
         #region The actual resizing methods
 
-        private static List<ImageToResize> GetSelectedImages
-            (string baseOutputFolder
-            , IEnumerable filePaths)
+        private static List<ImageToResize> GetSelectedImages(
+            string baseOutputFolder,
+            IEnumerable filePaths)
         {
             List<ImageToResize> imagesToResize
                 = new List<ImageToResize>();
@@ -221,74 +220,75 @@ namespace Uncas.Core.Drawing.ImageResizing
             return imagesToResize;
         }
 
-        private void GetImagesInSelectedFolder
-            (ref List<ImageToResize> imagesToResize
-            , string relativeInputFolderPath
-            , string baseOutputFolder
-            , DirectoryInfo di
-            , bool includeSubFolders)
+        private void GetImagesInSelectedFolder(
+            ref List<ImageToResize> imagesToResize,
+            string relativeInputFolderPath,
+            string baseOutputFolder,
+            DirectoryInfo di,
+            bool includeSubFolders)
         {
             string outputFolderPath
-                = Path.Combine(baseOutputFolder
-                , relativeInputFolderPath);
+                = Path.Combine(
+                baseOutputFolder,
+                relativeInputFolderPath);
             DirectoryInfo diOutput
                 = new DirectoryInfo(outputFolderPath);
             // Getting images in this folder
-            GetFilesByExtension
-                (imagesToResize
-                , di
-                , outputFolderPath
-                , diOutput
-                , "*.jpg");
-            GetFilesByExtension
-                (imagesToResize
-                , di
-                , outputFolderPath
-                , diOutput
-                , "*.jpeg");
-            GetFilesByExtension
-                (imagesToResize
-                , di
-                , outputFolderPath
-                , diOutput
-                , "*.bmp");
-            GetFilesByExtension
-                (imagesToResize
-                , di
-                , outputFolderPath
-                , diOutput
-                , "*.png");
-            GetFilesByExtension
-                (imagesToResize
-                , di
-                , outputFolderPath
-                , diOutput
-                , "*.gif");
+            GetFilesByExtension(
+                imagesToResize,
+                di,
+                outputFolderPath,
+                diOutput,
+                "*.jpg");
+            GetFilesByExtension(
+                imagesToResize,
+                di,
+                outputFolderPath,
+                diOutput,
+                "*.jpeg");
+            GetFilesByExtension(
+                imagesToResize,
+                di,
+                outputFolderPath,
+                diOutput,
+                "*.bmp");
+            GetFilesByExtension(
+                imagesToResize,
+                di,
+                outputFolderPath,
+                diOutput,
+                "*.png");
+            GetFilesByExtension(
+                imagesToResize,
+                di,
+                outputFolderPath,
+                diOutput,
+                "*.gif");
             if (includeSubFolders)
             {
                 // Resizing images in subfolders
                 foreach (DirectoryInfo diChild in di.GetDirectories())
                 {
                     string childRelativePath
-                        = Path.Combine
-                        (relativeInputFolderPath
-                        , diChild.Name);
-                    GetImagesInSelectedFolder
-                        (ref imagesToResize
-                        , childRelativePath
-                        , baseOutputFolder
-                        , diChild
-                        , includeSubFolders);
+                        = Path.Combine(
+                        relativeInputFolderPath,
+                        diChild.Name);
+                    GetImagesInSelectedFolder(
+                        ref imagesToResize,
+                        childRelativePath,
+                        baseOutputFolder,
+                        diChild,
+                        includeSubFolders);
                 }
             }
         }
 
-        private static void GetFilesByExtension
-            (List<ImageToResize> imagesToResize
-            , DirectoryInfo di
-            , string outputFolderPath
-            , DirectoryInfo diOutput
-            , string extension)
+        private static void GetFilesByExtension(
+            List<ImageToResize> imagesToResize,
+            DirectoryInfo di,
+            string outputFolderPath,
+            DirectoryInfo diOutput,
+            string extension)
         {
             foreach (FileInfo fi in di.GetFiles(extension))
             {
@@ -305,10 +305,10 @@ namespace Uncas.Core.Drawing.ImageResizing
             }
         }
 
-        private void ResizeImage
-            (string originalImagePath
-            , string resizedImagePath
-            , int maxImageSize)
+        private void ResizeImage(
+            string originalImagePath,
+            string resizedImagePath,
+            int maxImageSize)
         {
             try
             {
@@ -337,9 +337,9 @@ namespace Uncas.Core.Drawing.ImageResizing
         {
             if (this.ResizeFailed != null)
             {
-                this.ResizeFailed
-                    (this
-                    , new ResizeFailedEventArgs(ex));
+                this.ResizeFailed(
+                    this,
+                    new ResizeFailedEventArgs(ex));
             }
         }
 
