@@ -29,6 +29,7 @@ namespace Uncas.Core
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
+        /// <param name="assembly">The assembly.</param>
         public BaseBootstrapper(
             IIocContainer container,
             Assembly assembly)

@@ -84,7 +84,7 @@ namespace Uncas.Core.Data
         /// Gets the boolean parameter.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="value">if set to <c>true</c> [value].</param>
+        /// <param name="value">If set to <c>true</c> [value].</param>
         /// <returns></returns>
         public static OleDbParameter GetBooleanParameter(string name, bool value)
         {

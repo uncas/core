@@ -136,7 +136,7 @@ namespace Uncas.Core.Data
         /// <summary>
         /// Gets the scalar.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type of the scalar.</typeparam>
         /// <param name="commandText">The command text.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>

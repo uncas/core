@@ -10,7 +10,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <summary>
         /// Initializes a new instance of the <see cref="ResizeCompletedEventArgs"/> class.
         /// </summary>
-        /// <param name="canceled">if set to <c>true</c> [canceled].</param>
+        /// <param name="canceled">If set to <c>true</c> [canceled].</param>
         /// <param name="processedImages">The processed images.</param>
         public ResizeCompletedEventArgs(
             bool canceled,
