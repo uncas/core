@@ -10,10 +10,10 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <summary>
         /// Initializes a new instance of the <see cref="ResizeProgressEventArgs"/> class.
         /// </summary>
-        /// <param name="pif">The pif.</param>
-        public ResizeProgressEventArgs(ProcessedImagesInfo pif)
+        /// <param name="processedImagesInfo">Info about the processed images.</param>
+        public ResizeProgressEventArgs(ProcessedImagesInfo processedImagesInfo)
         {
-            this.ProcessedImages = pif;
+            ProcessedImages = processedImagesInfo;
         }
 
         /// <summary>

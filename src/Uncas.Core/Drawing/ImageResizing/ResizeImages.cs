@@ -13,9 +13,9 @@ namespace Uncas.Core.Drawing.ImageResizing
     {
         #region Private fields
 
-        private BackgroundWorker resizeWorker;
+        private BackgroundWorker _resizeWorker;
 
-        private ImageHandler ih;
+        private ImageHandler _imageHandler;
 
         #endregion
 
@@ -26,18 +26,18 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </summary>
         public ResizeImages()
         {
-            this.resizeWorker = new BackgroundWorker();
-            this.resizeWorker.WorkerReportsProgress = true;
-            this.resizeWorker.WorkerSupportsCancellation = true;
+            _resizeWorker = new BackgroundWorker();
+            _resizeWorker.WorkerReportsProgress = true;
+            _resizeWorker.WorkerSupportsCancellation = true;
 
-            this.resizeWorker.DoWork
+            _resizeWorker.DoWork
                 += new DoWorkEventHandler(resizeWorker_DoWork);
-            this.resizeWorker.ProgressChanged
+            _resizeWorker.ProgressChanged
                 += new ProgressChangedEventHandler(resizeWorker_ProgressChanged);
-            this.resizeWorker.RunWorkerCompleted
+            _resizeWorker.RunWorkerCompleted
                 += new RunWorkerCompletedEventHandler(resizeWorker_RunWorkerCompleted);
 
-            this.ih = new ImageHandler();
+            _imageHandler = new ImageHandler();
         }
 
         #endregion
@@ -101,7 +101,7 @@ namespace Uncas.Core.Drawing.ImageResizing
                 ImagesToResize = imagesToResize,
                 MaxImageSize = maxImageSize
             };
-            resizeWorker.RunWorkerAsync(sfi);
+            _resizeWorker.RunWorkerAsync(sfi);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </summary>
         public void CancelResizeWork()
         {
-            resizeWorker.CancelAsync();
+            _resizeWorker.CancelAsync();
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -133,7 +133,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         {
             if (disposing)
             {
-                this.resizeWorker.Dispose();
+                _resizeWorker.Dispose();
             }
         }
 
@@ -264,7 +264,7 @@ namespace Uncas.Core.Drawing.ImageResizing
                     byte[] originalBytes
                         = File.ReadAllBytes(originalImagePath);
                     byte[] resizedBytes
-                        = ih.GetThumbnail(originalBytes, maxImageSize);
+                        = _imageHandler.GetThumbnail(originalBytes, maxImageSize);
                     originalBytes = null;
                     File.WriteAllBytes(resizedImagePath, resizedBytes);
                     resizedBytes = null;
@@ -281,9 +281,9 @@ namespace Uncas.Core.Drawing.ImageResizing
 
         private void HandleException(Exception ex)
         {
-            if (this.ResizeFailed != null)
+            if (ResizeFailed != null)
             {
-                this.ResizeFailed(
+                ResizeFailed(
                     this,
                     new ResizeFailedEventArgs(ex));
             }
@@ -305,8 +305,8 @@ namespace Uncas.Core.Drawing.ImageResizing
             foreach (ImageToResize itr in sfi.ImagesToResize)
             {
                 pif.ResizedNumberOfImages = filesCompleted;
-                resizeWorker.ReportProgress(pif.Percentage, pif);
-                if (resizeWorker.CancellationPending)
+                _resizeWorker.ReportProgress(pif.Percentage, pif);
+                if (_resizeWorker.CancellationPending)
                 {
                     e.Cancel = true;
                     break;
@@ -341,9 +341,9 @@ namespace Uncas.Core.Drawing.ImageResizing
             object sender,
             RunWorkerCompletedEventArgs e)
         {
-            if (this.ResizeCompleted != null)
+            if (ResizeCompleted != null)
             {
-                this.ResizeCompleted(
+                ResizeCompleted(
                     this,
                     new ResizeCompletedEventArgs(
                         e.Cancelled,

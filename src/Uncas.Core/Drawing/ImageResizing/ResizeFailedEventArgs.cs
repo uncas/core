@@ -13,7 +13,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <param name="ex">The ex.</param>
         public ResizeFailedEventArgs(Exception ex)
         {
-            this.Exception = ex;
+            Exception = ex;
         }
 
         /// <summary>

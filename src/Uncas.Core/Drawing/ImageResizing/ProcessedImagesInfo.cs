@@ -27,8 +27,8 @@ namespace Uncas.Core.Drawing.ImageResizing
         {
             get
             {
-                return (int)((100d * this.ResizedNumberOfImages)
-                    / (1d * this.TotalNumberOfImages));
+                return (int)((100d * ResizedNumberOfImages)
+                    / (1d * TotalNumberOfImages));
             }
         }
 
@@ -42,8 +42,8 @@ namespace Uncas.Core.Drawing.ImageResizing
         {
             return string.Format(
                 "{0}/{1}",
-                this.ResizedNumberOfImages,
-                this.TotalNumberOfImages);
+                ResizedNumberOfImages,
+                TotalNumberOfImages);
         }
     }
 }

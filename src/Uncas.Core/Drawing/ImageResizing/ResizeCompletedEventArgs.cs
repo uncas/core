@@ -16,8 +16,8 @@ namespace Uncas.Core.Drawing.ImageResizing
             bool canceled,
             ProcessedImagesInfo processedImages)
         {
-            this.Canceled = canceled;
-            this.ProcessedImages = processedImages;
+            Canceled = canceled;
+            ProcessedImages = processedImages;
         }
 
         /// <summary>
