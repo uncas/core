@@ -145,6 +145,12 @@ namespace Uncas.Core.Data
             return par;
         }
 
+        /// <summary>
+        /// Gets the string parameter.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static OleDbParameter GetStringParameter(
             string name,
             string value)
