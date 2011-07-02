@@ -39,28 +39,19 @@ namespace Uncas.Core.Data
         {
             DataTable dt = new DataTable("uncas-data");
             dt.Locale = CultureInfo.InvariantCulture;
-            using (DbConnection connection = _factory.CreateConnection())
-            {
-                connection.ConnectionString = _connectionString;
-                using (DbCommand command = _factory.CreateCommand())
+            Action<DbCommand> commandAction =
+                (DbCommand command) =>
                 {
-                    command.CommandText = commandText;
-                    command.Connection = connection;
-                    foreach (DbParameter parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-
-                    connection.Open();
                     using (DbDataAdapter adapter = _factory.CreateDataAdapter())
                     {
                         adapter.SelectCommand = command;
                         adapter.Fill(dt);
-                        connection.Close();
                     }
-                }
-            }
-
+                };
+            OperateOnDbCommand(
+                commandAction,
+                commandText,
+                parameters);
             return dt;
         }
 
