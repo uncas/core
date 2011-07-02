@@ -113,7 +113,6 @@ namespace Uncas.Core.Data
 
                     connection.Open();
                     iOut = command.ExecuteNonQuery();
-                    connection.Close();
                 }
             }
 
