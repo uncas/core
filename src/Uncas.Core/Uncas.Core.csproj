@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Uncas.Core.XML</DocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Uncas.Core.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -51,6 +53,7 @@
     <Compile Include="ConfigurationWrapper.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\OleDbContext.cs" />
+    <Compile Include="Data\SqlDbContext.cs" />
     <Compile Include="Drawing\ImageHandler.cs" />
     <Compile Include="Drawing\ImageResizing\IResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ProcessedImagesInfo.cs" />
