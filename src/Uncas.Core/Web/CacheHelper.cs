@@ -9,6 +9,10 @@ namespace Uncas.Core.Web
     /// </summary>
     public class CacheHelper
     {
+        private const double CacheDuration = 60.0 * 5.0;
+
+        private string[] MasterCacheKeyArray = { string.Empty };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheHelper"/> class.
         /// </summary>
@@ -17,8 +21,6 @@ namespace Uncas.Core.Web
         {
             MasterCacheKeyArray = new string[1] { masterCacheKey };
         }
-
-        private const double CacheDuration = 60.0 * 5.0;
 
         /// <summary>
         /// Gets the cache item.
@@ -30,12 +32,6 @@ namespace Uncas.Core.Web
             return HttpRuntime.Cache[GetCacheKey(rawKey)];
         }
 
-        private string[] MasterCacheKeyArray = { "" };
-        private string GetCacheKey(string rawKey)
-        {
-            return string.Concat(MasterCacheKeyArray[0], "-", rawKey);
-        }
-
         /// <summary>
         /// Adds the cache item.
         /// </summary>
@@ -44,15 +40,25 @@ namespace Uncas.Core.Web
         public void AddCacheItem(string rawKey, object value)
         {
             if (value == null)
+            {
                 return;
+            }
+
             Cache dataCache = HttpRuntime.Cache;
-            // Make sure MasterCacheKeyArray[0] is in the cache - if not, add it 
+
+            // Make sure MasterCacheKeyArray[0] is in the cache - if not, add it.
             if (dataCache[MasterCacheKeyArray[0]] == null)
+            {
                 dataCache[MasterCacheKeyArray[0]] = DateTime.UtcNow;
+            }
+
             // Add a CacheDependency 
             CacheDependency dependency =
                 new CacheDependency(null, MasterCacheKeyArray);
-            dataCache.Insert(GetCacheKey(rawKey), value, dependency,
+            dataCache.Insert(
+                GetCacheKey(rawKey), 
+                value, 
+                dependency,
                 DateTime.UtcNow.AddSeconds(CacheDuration),
                 Cache.NoSlidingExpiration);
         }
@@ -64,6 +70,11 @@ namespace Uncas.Core.Web
         {
             // Remove the cache dependency 
             HttpRuntime.Cache.Remove(MasterCacheKeyArray[0]);
+        }
+
+        private string GetCacheKey(string rawKey)
+        {
+            return string.Concat(MasterCacheKeyArray[0], "-", rawKey);
         }
     }
 }
