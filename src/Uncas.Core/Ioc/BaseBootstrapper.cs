@@ -10,9 +10,9 @@ namespace Uncas.Core
     /// </summary>
     public class BaseBootstrapper
     {
-        private IIocContainer _container;
+        private readonly IIocContainer _container;
 
-        private Assembly _assembly;
+        private readonly Assembly _assembly;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
