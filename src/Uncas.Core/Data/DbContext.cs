@@ -51,10 +51,10 @@ namespace Uncas.Core.Data
                         command.Parameters.Add(parameter);
                     }
 
+                    connection.Open();
                     using (DbDataAdapter adapter = _factory.CreateDataAdapter())
                     {
                         adapter.SelectCommand = command;
-                        connection.Open();
                         adapter.Fill(dt);
                         connection.Close();
                     }
@@ -99,23 +99,10 @@ namespace Uncas.Core.Data
             params DbParameter[] parameters)
         {
             int iOut = 0;
-            using (DbConnection connection = _factory.CreateConnection())
-            {
-                connection.ConnectionString = _connectionString;
-                using (DbCommand command = _factory.CreateCommand())
-                {
-                    command.CommandText = commandText;
-                    command.Connection = connection;
-                    foreach (DbParameter parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-
-                    connection.Open();
-                    iOut = command.ExecuteNonQuery();
-                }
-            }
-
+            OperateOnDbCommand(
+                (DbCommand command) => iOut = command.ExecuteNonQuery(),
+                commandText,
+                parameters);
             return iOut;
         }
 
@@ -143,6 +130,24 @@ namespace Uncas.Core.Data
             string commandText,
             params DbParameter[] parameters)
         {
+            object databaseValue = null;
+            OperateOnDbCommand(
+                (DbCommand command) => databaseValue = command.ExecuteScalar(),
+                commandText,
+                parameters);
+            if (!(databaseValue is DBNull))
+            {
+                return (T)databaseValue;
+            }
+
+            return default(T);
+        }
+
+        private void OperateOnDbCommand(
+            Action<DbCommand> commandAction,
+            string commandText,
+            params DbParameter[] parameters)
+        {
             using (DbConnection connection = _factory.CreateConnection())
             {
                 connection.ConnectionString = _connectionString;
@@ -156,13 +161,7 @@ namespace Uncas.Core.Data
                     }
 
                     connection.Open();
-                    object databaseValue = command.ExecuteScalar();
-                    if (!(databaseValue is DBNull))
-                    {
-                        return (T)databaseValue;
-                    }
-
-                    return default(T);
+                    commandAction(command);
                 }
             }
         }
