@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Handles images.
@@ -66,8 +67,30 @@
         /// <returns></returns>
         public byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight)
         {
-            Size dummy = new Size();
-            return GetThumbnail(buffer, maxWidthAndHeight, out dummy);
+            return GetThumbnailResult(buffer, maxWidthAndHeight).GetBufferAsArray();
+        }
+
+        /// <summary>
+        /// Gets the thumbnail.
+        /// </summary>
+        /// <param name="buffer">The bytes of the original image.</param>
+        /// <param name="maxWidthAndHeight">Height of the max width and.</param>
+        /// <returns>
+        /// The thumbnail result.
+        /// </returns>
+        public ImageBufferResizeResult GetThumbnailResult(
+            byte[] buffer,
+            int maxWidthAndHeight)
+        {
+            byte[] output = null;
+            Size originalSize;
+            using (Image img = GetImage(buffer))
+            {
+                originalSize = img.Size;
+                output = GetBytes(GetThumbnail(img, maxWidthAndHeight));
+            }
+
+            return new ImageBufferResizeResult(output, originalSize);
         }
 
         /// <summary>
@@ -77,6 +100,7 @@
         /// <param name="maxWidthAndHeight">Max width and height of the requested thumbnail.</param>
         /// <param name="originalSize">The size of the original image.</param>
         /// <returns>The bytes of the thumbnail image.</returns>
+        [Obsolete("Use GetThumbnailResult instead.")]
         public byte[] GetThumbnail(
             byte[] buffer,
             int maxWidthAndHeight,
@@ -101,8 +125,30 @@
         /// <returns></returns>
         public byte[] GetThumbnail(byte[] buffer, int maxWidth, int maxHeight)
         {
-            Size dummy = new Size();
-            return GetThumbnail(buffer, maxWidth, maxHeight, out dummy);
+            return GetThumbnailResult(buffer, maxWidth, maxHeight).GetBufferAsArray();
+        }
+
+        /// <summary>
+        /// Gets the thumbnail.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="maxWidth">Width of the max.</param>
+        /// <param name="maxHeight">Height of the max.</param>
+        /// <returns></returns>
+        public ImageBufferResizeResult GetThumbnailResult(
+            byte[] buffer,
+            int maxWidth,
+            int maxHeight)
+        {
+            byte[] output = null;
+            Size originalSize;
+            using (Image img = GetImage(buffer))
+            {
+                originalSize = img.Size;
+                output = GetBytes(GetThumbnail(img, maxWidth, maxHeight));
+            }
+
+            return new ImageBufferResizeResult(output, originalSize);
         }
 
         /// <summary>
@@ -113,20 +159,19 @@
         /// <param name="maxHeight">The max height of the requested thumbnail.</param>
         /// <param name="originalSize">The size of the original image.</param>
         /// <returns>The bytes of the thumbnail image.</returns>
+        [Obsolete("Use GetThumbnailResult instead.")]
         public byte[] GetThumbnail(
             byte[] buffer,
             int maxWidth,
             int maxHeight,
             out Size originalSize)
         {
-            byte[] output = null;
-            using (Image img = GetImage(buffer))
-            {
-                originalSize = img.Size;
-                output = GetBytes(GetThumbnail(img, maxWidth, maxHeight));
-            }
-
-            return output;
+            var result = GetThumbnailResult(
+                buffer,
+                maxWidth,
+                maxHeight);
+            originalSize = result.OriginalSize;
+            return result.GetBufferAsArray();
         }
 
         /// <summary>
@@ -199,7 +244,7 @@
         /// <param name="thumbSize">Size of the thumb.</param>
         /// <returns></returns>
         [SuppressMessage(
-            "Microsoft.Reliability", 
+            "Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "The criteria for specific exceptions are absent.")]
         public Image GetThumbnail(Image image, Size thumbSize)

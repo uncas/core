@@ -8,13 +8,13 @@
     public class Logger : ILogger
     {
         /// <summary>
-        /// Logs the specified log type and message.
+        /// Logs the specified log type and description.
         /// </summary>
         /// <param name="logType">Type of the log.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="description">The description.</param>
         public void Log(
-            LogType logType, 
-            string message)
+            LogType logType,
+            string description)
         {
             throw new NotImplementedException();
         }
@@ -32,42 +32,42 @@
         }
 
         /// <summary>
-        /// Logs the specified log type, message and exception.
+        /// Logs the specified log type, description and exception.
         /// </summary>
         /// <param name="logType">Type of the log.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="description">The description.</param>
         /// <param name="exception">The exception.</param>
         public void Log(
             LogType logType,
-            string message,
+            string description,
             Exception exception)
         {
         }
 
         /// <summary>
-        /// Logs the specified log type, message and additional info.
+        /// Logs the specified log type, description and additional info.
         /// </summary>
         /// <param name="logType">Type of the log.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="description">The description.</param>
         /// <param name="additional">The additional.</param>
         public void Log(
             LogType logType,
-            string message,
+            string description,
             string additional)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Logs the specified log type, message, exception, and additional info.
+        /// Logs the specified log type, description, exception, and additional info.
         /// </summary>
         /// <param name="logType">Type of the log.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="description">The description.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="additional">The additional.</param>
         public void Log(
             LogType logType,
-            string message,
+            string description,
             Exception exception,
             string additional)
         {
