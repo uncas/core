@@ -7,6 +7,17 @@
     /// </summary>
     public class Logger : ILogger
     {
+        private readonly ILogRepository _logRepository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Logger"/> class.
+        /// </summary>
+        /// <param name="logRepository">The log repository.</param>
+        public Logger(ILogRepository logRepository)
+        {
+            _logRepository = logRepository;
+        }
+
         /// <summary>
         /// Logs the specified log type and description.
         /// </summary>
@@ -16,7 +27,11 @@
             LogType logType,
             string description)
         {
-            throw new NotImplementedException();
+            GenerateAndSaveLogEntry(
+                logType,
+                description,
+                null,
+                null);
         }
 
         /// <summary>
@@ -28,7 +43,12 @@
             LogType logType,
             Exception exception)
         {
-            throw new NotImplementedException();
+            GenerateAndSaveLogEntry(
+                logType,
+                null,
+                exception,
+                null);
+
         }
 
         /// <summary>
@@ -42,6 +62,11 @@
             string description,
             Exception exception)
         {
+            GenerateAndSaveLogEntry(
+                logType,
+                description,
+                exception,
+                null);
         }
 
         /// <summary>
@@ -55,7 +80,12 @@
             string description,
             string additional)
         {
-            throw new NotImplementedException();
+            GenerateAndSaveLogEntry(
+                logType,
+                description,
+                null,
+                additional);
+
         }
 
         /// <summary>
@@ -71,7 +101,30 @@
             Exception exception,
             string additional)
         {
-            throw new NotImplementedException();
+            GenerateAndSaveLogEntry(
+               logType,
+               description,
+               exception,
+               additional);
+        }
+
+        private void GenerateAndSaveLogEntry(
+            LogType logType,
+            string description,
+            Exception exception,
+            string additional)
+        {
+            var logEntry = new LogEntry(
+                logType,
+                description,
+                exception,
+                additional);
+            SaveLogEntry(logEntry);
+        }
+
+        private void SaveLogEntry(LogEntry logEntry)
+        {
+            _logRepository.Save(logEntry);
         }
     }
 }
