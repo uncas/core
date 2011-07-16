@@ -114,21 +114,6 @@
             return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
-        private static void AddParameters(
-            DbCommand command,
-            DbParameter[] parameters)
-        {
-            if (parameters == null)
-            {
-                return;
-            }
-
-            foreach (DbParameter parameter in parameters)
-            {
-                command.Parameters.Add(parameter);
-            }
-        }
-
         /// <summary>
         /// Gets the reader.
         /// </summary>
@@ -300,6 +285,21 @@
             return default(T);
         }
 
+        private static void AddParameters(
+                    DbCommand command,
+                    DbParameter[] parameters)
+        {
+            if (parameters == null)
+            {
+                return;
+            }
+
+            foreach (DbParameter parameter in parameters)
+            {
+                command.Parameters.Add(parameter);
+            }
+        }
+        
         private void OperateOnDbCommand(
             Action<DbCommand> commandAction,
             DbCommand command,

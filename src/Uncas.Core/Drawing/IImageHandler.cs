@@ -46,7 +46,11 @@
         /// <param name="maxHeight">Height of the max.</param>
         /// <param name="originalSize">Size of the original.</param>
         /// <returns></returns>
-        byte[] GetThumbnail(byte[] buffer, int maxWidth, int maxHeight, out Size originalSize);
+        byte[] GetThumbnail(
+            byte[] buffer,
+            int maxWidth,
+            int maxHeight,
+            out Size originalSize);
 
         /// <summary>
         /// Gets the thumbnail.
@@ -63,7 +67,10 @@
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
         /// <param name="originalSize">Size of the original.</param>
         /// <returns></returns>
-        byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight, out Size originalSize);
+        byte[] GetThumbnail(
+            byte[] buffer, 
+            int maxWidthAndHeight,
+            out Size originalSize);
 
         /// <summary>
         /// Gets the thumbnail.

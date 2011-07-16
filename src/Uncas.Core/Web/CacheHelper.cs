@@ -56,6 +56,7 @@
                 dataCache[MasterCacheKeyArray[0]] = DateTime.UtcNow;
             }
 
+            // TODO: Test what happens if I dispose this cache dependency after inserting in cache.
             // Add a CacheDependency 
             var dependency =
                 new CacheDependency(null, MasterCacheKeyArray);
