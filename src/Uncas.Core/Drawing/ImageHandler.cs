@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 
@@ -197,6 +198,10 @@ namespace Uncas.Core.Drawing
         /// <param name="image">The image.</param>
         /// <param name="thumbSize">Size of the thumb.</param>
         /// <returns></returns>
+        [SuppressMessage(
+            "Microsoft.Reliability", 
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The criteria for specific exceptions are absent.")]
         public Image GetThumbnail(Image image, Size thumbSize)
         {
             if (image == null)

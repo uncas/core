@@ -63,6 +63,7 @@
     <Compile Include="Drawing\ImageResizing\ResizeFailedEventArgs.cs" />
     <Compile Include="Drawing\ImageResizing\ResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ResizeProgressEventArgs.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogType.cs" />

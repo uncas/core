@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Caching;
 
@@ -37,6 +38,9 @@ namespace Uncas.Core.Web
         /// </summary>
         /// <param name="rawKey">The raw key.</param>
         /// <param name="value">The value.</param>
+        [SuppressMessage(
+            "Microsoft.Reliability", 
+            "CA2000:Dispose objects before losing scope")]
         public void AddCacheItem(string rawKey, object value)
         {
             if (value == null)
@@ -53,7 +57,7 @@ namespace Uncas.Core.Web
             }
 
             // Add a CacheDependency 
-            CacheDependency dependency =
+            var dependency =
                 new CacheDependency(null, MasterCacheKeyArray);
             dataCache.Insert(
                 GetCacheKey(rawKey), 

@@ -134,7 +134,7 @@ namespace Uncas.Core.Data
         /// </summary>
         /// <param name="commandText">The command text.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns>The data reader</returns>
+        /// <returns>The data reader.</returns>
         [SuppressMessage(
             "Microsoft.Security",
             "CA2100:Review SQL queries for security vulnerabilities",
