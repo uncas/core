@@ -34,7 +34,7 @@
     <DocumentationFile>bin\Release\Uncas.Core.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Uncas.Core.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\UncasCoreKey.snk" />
+    <None Include="Uncas.Core.ruleset" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

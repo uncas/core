@@ -75,7 +75,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <param name="filePaths">The file paths.</param>
         /// <param name="chooseFolder">If set to <c>true</c> [choose folder].</param>
         /// <param name="baseInputFolder">The base input folder.</param>
-        /// <param name="includeSubFolders">If set to <c>true</c> [include sub folders].</param>
+        /// <param name="includeSubfolders">If set to <c>true</c> [include sub folders].</param>
         public void DoResizeWorkAsync(
             string baseOutputFolder,
             int maxImageSize,
@@ -83,7 +83,7 @@ namespace Uncas.Core.Drawing.ImageResizing
             IEnumerable filePaths,
             bool chooseFolder,
             string baseInputFolder,
-            bool includeSubFolders)
+            bool includeSubfolders)
         {
             // Gets the list of images to resize:
             List<ImageToResize> imagesToResize =
@@ -93,7 +93,7 @@ namespace Uncas.Core.Drawing.ImageResizing
                 filePaths,
                 chooseFolder,
                 baseInputFolder,
-                includeSubFolders);
+                includeSubfolders);
 
             // Resizes the images:
             SelectedImagesInfo sfi = new SelectedImagesInfo

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace Uncas.Core.Drawing.ImageResizing
 {
@@ -36,7 +37,14 @@ namespace Uncas.Core.Drawing.ImageResizing
         /// <param name="filePaths">The file paths.</param>
         /// <param name="chooseFolder">If set to <c>true</c> [choose folder].</param>
         /// <param name="baseInputFolder">The base input folder.</param>
-        /// <param name="includeSubFolders">If set to <c>true</c> [include sub folders].</param>
-        void DoResizeWorkAsync(string baseOutputFolder, int maxImageSize, bool chooseFiles, System.Collections.IEnumerable filePaths, bool chooseFolder, string baseInputFolder, bool includeSubFolders);
+        /// <param name="includeSubfolders">If set to <c>true</c> [include sub folders].</param>
+        void DoResizeWorkAsync(
+            string baseOutputFolder, 
+            int maxImageSize, 
+            bool chooseFiles, 
+            IEnumerable filePaths, 
+            bool chooseFolder, 
+            string baseInputFolder, 
+            bool includeSubfolders);
     }
 }

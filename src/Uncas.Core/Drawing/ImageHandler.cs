@@ -26,31 +26,31 @@ namespace Uncas.Core.Drawing
         /// <returns></returns>
         public Image GetImage(byte[] buffer)
         {
-            Image img = null;
+            Image image = null;
             using (MemoryStream ms = new MemoryStream(buffer))
             {
-                img = Bitmap.FromStream(ms);
+                image = Bitmap.FromStream(ms);
             }
 
-            return img;
+            return image;
         }
 
         /// <summary>
         /// Gets the bytes.
         /// </summary>
-        /// <param name="img">The img.</param>
+        /// <param name="image">The image.</param>
         /// <returns></returns>
-        public byte[] GetBytes(Image img)
+        public byte[] GetBytes(Image image)
         {
-            if (img == null)
+            if (image == null)
             {
-                throw new ArgumentNullException("img");
+                throw new ArgumentNullException("image");
             }
 
             byte[] bytes = null;
             using (MemoryStream ms = new MemoryStream())
             {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 bytes = ms.ToArray();
             }
 
@@ -131,18 +131,18 @@ namespace Uncas.Core.Drawing
         /// <summary>
         /// Gets the thumbnail.
         /// </summary>
-        /// <param name="img">The img.</param>
+        /// <param name="image">The img.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
         /// <returns></returns>
-        public Image GetThumbnail(Image img, int maxWidthAndHeight)
+        public Image GetThumbnail(Image image, int maxWidthAndHeight)
         {
-            if (img == null)
+            if (image == null)
             {
-                throw new ArgumentNullException("img");
+                throw new ArgumentNullException("image");
             }
 
-            int width = img.Width;
-            int height = img.Height;
+            int width = image.Width;
+            int height = image.Height;
             int thumbWidth = 0;
             int thumbHeight = 0;
             if (width > height)
@@ -156,25 +156,25 @@ namespace Uncas.Core.Drawing
                 thumbWidth = width * thumbHeight / height;
             }
 
-            return GetThumbnail(img, new Size(thumbWidth, thumbHeight));
+            return GetThumbnail(image, new Size(thumbWidth, thumbHeight));
         }
 
         /// <summary>
         /// Gets the thumbnail.
         /// </summary>
-        /// <param name="img">The img.</param>
+        /// <param name="image">The img.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
         /// <returns></returns>
-        public Image GetThumbnail(Image img, int maxWidth, int maxHeight)
+        public Image GetThumbnail(Image image, int maxWidth, int maxHeight)
         {
-            if (img == null)
+            if (image == null)
             {
-                throw new ArgumentNullException("img");
+                throw new ArgumentNullException("image");
             }
 
-            int width = img.Width;
-            int height = img.Height;
+            int width = image.Width;
+            int height = image.Height;
             int thumbWidth = 0;
             int thumbHeight = 0;
             if (width * maxHeight > height * maxWidth)
@@ -188,34 +188,34 @@ namespace Uncas.Core.Drawing
                 thumbWidth = width * thumbHeight / height;
             }
 
-            return GetThumbnail(img, new Size(thumbWidth, thumbHeight));
+            return GetThumbnail(image, new Size(thumbWidth, thumbHeight));
         }
 
         /// <summary>
         /// Gets the thumbnail.
         /// </summary>
-        /// <param name="img">The img.</param>
+        /// <param name="image">The image.</param>
         /// <param name="thumbSize">Size of the thumb.</param>
         /// <returns></returns>
-        public Image GetThumbnail(Image img, Size thumbSize)
+        public Image GetThumbnail(Image image, Size thumbSize)
         {
-            if (img == null)
+            if (image == null)
             {
-                throw new ArgumentNullException("img");
+                throw new ArgumentNullException("image");
             }
 
             int thumbWidth = thumbSize.Width;
             int thumbHeight = thumbSize.Height;
-            if (thumbWidth > img.Width || thumbHeight > img.Height)
+            if (thumbWidth > image.Width || thumbHeight > image.Height)
             {
-                thumbWidth = img.Width;
-                thumbHeight = img.Height;
+                thumbWidth = image.Width;
+                thumbHeight = image.Height;
             }
 
             Image bmp = new Bitmap(thumbWidth, thumbHeight);
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                g.DrawImage(img, 0, 0, thumbWidth, thumbHeight);
+                g.DrawImage(image, 0, 0, thumbWidth, thumbHeight);
             }
 
             return bmp;
