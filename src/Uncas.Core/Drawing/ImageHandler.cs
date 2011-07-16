@@ -4,7 +4,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Handles images.

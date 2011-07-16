@@ -57,6 +57,7 @@
     <Compile Include="Data\OleDbContext.cs" />
     <Compile Include="Data\SqlDbContext.cs" />
     <Compile Include="Drawing\IImageHandler.cs" />
+    <Compile Include="Drawing\ImageBufferResizeResult.cs" />
     <Compile Include="Drawing\ImageHandler.cs" />
     <Compile Include="Drawing\ImageResizing\IResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ProcessedImagesInfo.cs" />
