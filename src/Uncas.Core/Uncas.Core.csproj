@@ -33,6 +33,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Uncas.Core.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -61,6 +63,9 @@
     <Compile Include="Drawing\ImageResizing\ResizeFailedEventArgs.cs" />
     <Compile Include="Drawing\ImageResizing\ResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ResizeProgressEventArgs.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LogType.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Interop\Window.cs" />
     <Compile Include="Interop\InteropException.cs" />
