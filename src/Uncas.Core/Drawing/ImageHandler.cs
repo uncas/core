@@ -1,14 +1,14 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.IO;
-
-namespace Uncas.Core.Drawing
+﻿namespace Uncas.Core.Drawing
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.IO;
+
     /// <summary>
     /// Handles images.
     /// </summary>
-    public class ImageHandler
+    public class ImageHandler : IImageHandler
     {
         /// <summary>
         /// Gets the image.
