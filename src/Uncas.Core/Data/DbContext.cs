@@ -285,9 +285,32 @@
             return default(T);
         }
 
+        /// <summary>
+        /// Creates the command.
+        /// </summary>
+        /// <returns>The database command.</returns>
+        protected DbCommand CreateCommand()
+        {
+            return _factory.CreateCommand();
+        }
+
+        /// <summary>
+        /// Adds the parameter.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        protected void AddParameter(DbCommand command, string name, object value)
+        {
+            DbParameter parameter = command.CreateParameter();
+            parameter.ParameterName = name;
+            parameter.Value = value;
+            command.Parameters.Add(parameter);
+        }
+
         private static void AddParameters(
-                    DbCommand command,
-                    DbParameter[] parameters)
+            DbCommand command,
+            DbParameter[] parameters)
         {
             if (parameters == null)
             {
