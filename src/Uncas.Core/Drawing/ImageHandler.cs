@@ -42,6 +42,11 @@ namespace Uncas.Core.Drawing
         /// <returns></returns>
         public byte[] GetBytes(Image img)
         {
+            if (img == null)
+            {
+                throw new ArgumentNullException("img");
+            }
+
             byte[] bytes = null;
             using (MemoryStream ms = new MemoryStream())
             {
@@ -131,6 +136,11 @@ namespace Uncas.Core.Drawing
         /// <returns></returns>
         public Image GetThumbnail(Image img, int maxWidthAndHeight)
         {
+            if (img == null)
+            {
+                throw new ArgumentNullException("img");
+            }
+
             int width = img.Width;
             int height = img.Height;
             int thumbWidth = 0;
@@ -158,6 +168,11 @@ namespace Uncas.Core.Drawing
         /// <returns></returns>
         public Image GetThumbnail(Image img, int maxWidth, int maxHeight)
         {
+            if (img == null)
+            {
+                throw new ArgumentNullException("img");
+            }
+
             int width = img.Width;
             int height = img.Height;
             int thumbWidth = 0;
@@ -184,6 +199,11 @@ namespace Uncas.Core.Drawing
         /// <returns></returns>
         public Image GetThumbnail(Image img, Size thumbSize)
         {
+            if (img == null)
+            {
+                throw new ArgumentNullException("img");
+            }
+
             int thumbWidth = thumbSize.Width;
             int thumbHeight = thumbSize.Height;
             if (thumbWidth > img.Width || thumbHeight > img.Height)

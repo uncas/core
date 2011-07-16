@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Uncas.Core.Drawing.ImageResizing
 {
@@ -41,6 +42,7 @@ namespace Uncas.Core.Drawing.ImageResizing
         public override string ToString()
         {
             return string.Format(
+                CultureInfo.InvariantCulture,
                 "{0}/{1}",
                 ResizedNumberOfImages,
                 TotalNumberOfImages);

@@ -101,16 +101,32 @@ namespace Uncas.Core.Data
             DbCommand command,
             params DbParameter[] parameters)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
             DbConnection connection = _factory.CreateConnection();
             connection.ConnectionString = _connectionString;
             command.Connection = connection;
+            AddParameters(command, parameters);
+            connection.Open();
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
+        }
+
+        private static void AddParameters(
+            DbCommand command,
+            DbParameter[] parameters)
+        {
+            if (parameters == null)
+            {
+                return;
+            }
+
             foreach (DbParameter parameter in parameters)
             {
                 command.Parameters.Add(parameter);
             }
-
-            connection.Open();
-            return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
         /// <summary>
@@ -133,11 +149,7 @@ namespace Uncas.Core.Data
             DbCommand command = _factory.CreateCommand();
             command.CommandText = commandText;
             command.Connection = connection;
-            foreach (DbParameter parameter in parameters)
-            {
-                command.Parameters.Add(parameter);
-            }
-
+            AddParameters(command, parameters);
             connection.Open();
             return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
@@ -177,6 +189,11 @@ namespace Uncas.Core.Data
             DbCommand command,
             params DbParameter[] parameters)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
             int iOut = 0;
             OperateOnDbCommand(
                 (DbCommand command2) => iOut = command2.ExecuteNonQuery(),
@@ -215,6 +232,11 @@ namespace Uncas.Core.Data
             DbCommand command,
             params DbParameter[] parameters)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
             return GetScalar<int?>(command, parameters);
         }
 
@@ -260,6 +282,11 @@ namespace Uncas.Core.Data
             DbCommand command,
             params DbParameter[] parameters)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+            
             object databaseValue = null;
             OperateOnDbCommand(
                 (DbCommand command2) => databaseValue = command2.ExecuteScalar(),
@@ -282,11 +309,7 @@ namespace Uncas.Core.Data
             {
                 connection.ConnectionString = _connectionString;
                 command.Connection = connection;
-                foreach (DbParameter parameter in parameters)
-                {
-                    command.Parameters.Add(parameter);
-                }
-
+                AddParameters(command, parameters);
                 connection.Open();
                 commandAction(command);
             }
