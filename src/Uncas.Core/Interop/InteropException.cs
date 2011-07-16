@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace Uncas.Core.Interop
+﻿namespace Uncas.Core.Interop
 {
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Represents an exception due to interoperability errors.
     /// </summary>

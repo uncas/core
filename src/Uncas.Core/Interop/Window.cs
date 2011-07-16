@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace Uncas.Core.Interop
+﻿namespace Uncas.Core.Interop
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
     /// <summary>
     /// Wraps a window in Microsoft Windows.
     /// </summary>

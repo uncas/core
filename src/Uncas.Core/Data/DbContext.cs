@@ -1,11 +1,11 @@
-﻿using System;
-using System.Data;
-using System.Data.Common;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
-namespace Uncas.Core.Data
+﻿namespace Uncas.Core.Data
 {
+    using System;
+    using System.Data;
+    using System.Data.Common;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+
     /// <summary>
     /// Represents a general db context.
     /// </summary>

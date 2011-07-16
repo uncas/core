@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-
-namespace Uncas.Core.Drawing.ImageResizing
+﻿namespace Uncas.Core.Drawing.ImageResizing
 {
+    using System;
+    using System.Collections;
+
     /// <summary>
     /// Resizes images.
     /// </summary>

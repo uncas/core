@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Uncas.Core
+﻿namespace Uncas.Core
 {
+    using System;
+
     /// <summary>
     /// Represents an inversion-of-control container.
     /// </summary>

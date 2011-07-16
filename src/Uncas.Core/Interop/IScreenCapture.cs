@@ -1,9 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace Uncas.Core.Interop
+﻿namespace Uncas.Core.Interop
 {
+    using System;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+
     /// <summary>
     /// Provides functions to capture the entire screen, 
     /// or a particular window, and save it to a file.

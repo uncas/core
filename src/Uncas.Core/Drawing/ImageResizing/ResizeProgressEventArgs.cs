@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Uncas.Core.Drawing.ImageResizing
+﻿namespace Uncas.Core.Drawing.ImageResizing
 {
+    using System;
+
     /// <summary>
     /// Contains event arguments for the resize progress.
     /// </summary>

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-
-namespace Uncas.Core.Drawing.ImageResizing
+﻿namespace Uncas.Core.Drawing.ImageResizing
 {
+    using System;
+    using System.Globalization;
+
     /// <summary>
     /// Contains info about processed images.
     /// </summary>

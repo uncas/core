@@ -1,7 +1,7 @@
-﻿using System.Data.SqlClient;
-
-namespace Uncas.Core.Data
+﻿namespace Uncas.Core.Data
 {
+    using System.Data.SqlClient;
+
     /// <summary>
     /// SQL db context.
     /// </summary>

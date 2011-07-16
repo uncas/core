@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-
-namespace Uncas.Core
+﻿namespace Uncas.Core
 {
+    using System.Configuration;
+
     /// <summary>
     /// Wraps configuration.
     /// </summary>

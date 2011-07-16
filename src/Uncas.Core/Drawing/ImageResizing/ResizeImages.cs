@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-
-namespace Uncas.Core.Drawing.ImageResizing
+﻿namespace Uncas.Core.Drawing.ImageResizing
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+
     /// <summary>
     /// Resizes images.
     /// </summary>

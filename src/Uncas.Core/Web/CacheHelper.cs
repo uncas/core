@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Web;
-using System.Web.Caching;
-
-namespace Uncas.Core.Web
+﻿namespace Uncas.Core.Web
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Web;
+    using System.Web.Caching;
+
     /// <summary>
     /// Cache helper.
     /// </summary>

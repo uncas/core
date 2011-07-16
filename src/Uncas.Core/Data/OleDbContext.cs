@@ -1,8 +1,8 @@
-﻿using System;
-using System.Data.OleDb;
-
-namespace Uncas.Core.Data
+﻿namespace Uncas.Core.Data
 {
+    using System;
+    using System.Data.OleDb;
+
     /// <summary>
     /// Represents a database context for Ole Db access.
     /// </summary>

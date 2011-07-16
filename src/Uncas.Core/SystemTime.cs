@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Uncas.Core
+﻿namespace Uncas.Core
 {
+    using System;
+
     /// <summary>
     /// Handles time in the system.
     /// </summary>
