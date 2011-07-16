@@ -65,12 +65,12 @@ namespace Uncas.Core.Drawing
         }
 
         /// <summary>
-        /// Gets the thumbnail.
+        /// Gets the thumbnail image as a byte array.
         /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <param name="originalSize">Size of the original.</param>
-        /// <returns></returns>
+        /// <param name="buffer">The bytes of the original image.</param>
+        /// <param name="maxWidthAndHeight">Max width and height of the requested thumbnail.</param>
+        /// <param name="originalSize">The size of the original image.</param>
+        /// <returns>The bytes of the thumbnail image.</returns>
         public byte[] GetThumbnail(
             byte[] buffer,
             int maxWidthAndHeight,
@@ -100,13 +100,13 @@ namespace Uncas.Core.Drawing
         }
 
         /// <summary>
-        /// Gets the thumbnail.
+        /// Gets the thumbnail image as a byte array.
         /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="maxWidth">Width of the max.</param>
-        /// <param name="maxHeight">Height of the max.</param>
-        /// <param name="originalSize">Size of the original.</param>
-        /// <returns></returns>
+        /// <param name="buffer">The bytes of the original image.</param>
+        /// <param name="maxWidth">The max width of the requested thumbnail.</param>
+        /// <param name="maxHeight">The max height of the requested thumbnail.</param>
+        /// <param name="originalSize">The size of the original image.</param>
+        /// <returns>The bytes of the thumbnail image.</returns>
         public byte[] GetThumbnail(
             byte[] buffer,
             int maxWidth,

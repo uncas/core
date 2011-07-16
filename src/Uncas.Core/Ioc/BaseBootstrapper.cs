@@ -18,7 +18,7 @@ namespace Uncas.Core
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        [Obsolete]
+        [Obsolete("Use other overload which takes assembly explicitly instead.")]
         public BaseBootstrapper(
             IIocContainer container)
             : this(container, Assembly.GetEntryAssembly())
