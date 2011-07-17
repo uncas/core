@@ -69,13 +69,13 @@
 
             // create a bitmap we can copy it to,
             // using GetDeviceCaps to get the width/height
-            IntPtr hBitmap = SafeNativeMethods.GDI32.CreateCompatibleBitmap(
+            IntPtr bitmapPointer = SafeNativeMethods.GDI32.CreateCompatibleBitmap(
                 hdcSrc,
                 width,
                 height);
 
             // select the bitmap object
-            IntPtr hOld = SafeNativeMethods.GDI32.SelectObject(hdcDest, hBitmap);
+            IntPtr oldBitmap = SafeNativeMethods.GDI32.SelectObject(hdcDest, bitmapPointer);
 
             // bitblt over
             SafeNativeMethods.GDI32.BitBlt(
@@ -90,7 +90,7 @@
                  SafeNativeMethods.GDI32.SRCCOPY);
 
             // restore selection
-            SafeNativeMethods.GDI32.SelectObject(hdcDest, hOld);
+            SafeNativeMethods.GDI32.SelectObject(hdcDest, oldBitmap);
 
             // clean up 
             SafeNativeMethods.GDI32.DeleteDC(hdcDest);
@@ -104,10 +104,10 @@
             }
 
             // get a .NET image object for it
-            Image img = Image.FromHbitmap(hBitmap);
+            Image img = Image.FromHbitmap(bitmapPointer);
 
             // free up the Bitmap object
-            SafeNativeMethods.GDI32.DeleteObject(hBitmap);
+            SafeNativeMethods.GDI32.DeleteObject(bitmapPointer);
 
             return img;
         }

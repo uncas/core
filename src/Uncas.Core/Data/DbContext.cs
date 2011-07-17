@@ -144,7 +144,7 @@
         /// </summary>
         /// <param name="commandText">The command text.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The number of affected rows.</returns>
         [Obsolete("Use overload with DbCommand instead.")]
         [SuppressMessage(
             "Microsoft.Security",
@@ -154,14 +154,14 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            int iOut = 0;
-            var dbCommand = _factory.CreateCommand();
-            dbCommand.CommandText = commandText;
+            int affectedRows = 0;
+            var command = _factory.CreateCommand();
+            command.CommandText = commandText;
             OperateOnDbCommand(
-                (DbCommand command) => iOut = command.ExecuteNonQuery(),
-                dbCommand,
+                (DbCommand command2) => affectedRows = command2.ExecuteNonQuery(),
+                command,
                 parameters);
-            return iOut;
+            return affectedRows;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The number of affected rows.</returns>
         public int ModifyData(
             DbCommand command,
             params DbParameter[] parameters)
@@ -179,12 +179,12 @@
                 throw new ArgumentNullException("command");
             }
 
-            int iOut = 0;
+            int affectedRows = 0;
             OperateOnDbCommand(
-                (DbCommand command2) => iOut = command2.ExecuteNonQuery(),
+                (DbCommand command2) => affectedRows = command2.ExecuteNonQuery(),
                 command,
                 parameters);
-            return iOut;
+            return affectedRows;
         }
 
         /// <summary>
@@ -242,11 +242,11 @@
             params DbParameter[] parameters)
         {
             object databaseValue = null;
-            DbCommand dbCommand = _factory.CreateCommand();
-            dbCommand.CommandText = commandText;
+            DbCommand command = _factory.CreateCommand();
+            command.CommandText = commandText;
             OperateOnDbCommand(
-                (DbCommand command) => databaseValue = command.ExecuteScalar(),
-                dbCommand,
+                (DbCommand command2) => databaseValue = command2.ExecuteScalar(),
+                command,
                 parameters);
             if (!(databaseValue is DBNull))
             {
@@ -271,7 +271,7 @@
             {
                 throw new ArgumentNullException("command");
             }
-            
+
             object databaseValue = null;
             OperateOnDbCommand(
                 (DbCommand command2) => databaseValue = command2.ExecuteScalar(),
@@ -300,11 +300,21 @@
         /// <param name="command">The command.</param>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        protected void AddParameter(DbCommand command, string name, object value)
+        protected static void AddParameter(DbCommand command, string name, object value)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             DbParameter parameter = command.CreateParameter();
             parameter.ParameterName = name;
-            parameter.Value = value;
+            parameter.Value = value != null ? value : DBNull.Value;
             command.Parameters.Add(parameter);
         }
 
@@ -322,7 +332,7 @@
                 command.Parameters.Add(parameter);
             }
         }
-        
+
         private void OperateOnDbCommand(
             Action<DbCommand> commandAction,
             DbCommand command,

@@ -31,7 +31,7 @@
                     "Log entry must be given.");
             }
 
-            const string commandText = @"
+            const string CommandText = @"
 INSERT INTO LogEntry
 (Created
     , StackTrace
@@ -61,7 +61,7 @@ VALUES
                 AddParameter(command, "ExceptionType", logEntry.ExceptionType);
                 AddParameter(command, "ExceptionMessage", logEntry.ExceptionMessage);
                 AddParameter(command, "Additional", logEntry.Additional);
-                command.CommandText = commandText;
+                command.CommandText = CommandText;
                 ModifyData(
                     command);
             }
@@ -69,11 +69,11 @@ VALUES
 
         private void InitializeDatabase()
         {
-            const string tableCountCommandText = @"
+            const string TableCountCommandText = @"
 SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntry'";
             using (var command = CreateCommand())
             {
-                command.CommandText = tableCountCommandText;
+                command.CommandText = TableCountCommandText;
                 int tableCount = (int)GetScalar<long>(command);
                 if (tableCount > 0)
                 {
@@ -81,7 +81,7 @@ SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntry'";
                 }
             }
 
-            const string createTableCommandText = @"
+            const string CreateTableCommandText = @"
 CREATE TABLE LogEntry
 (
     Id integer PRIMARY KEY ASC
@@ -96,7 +96,7 @@ CREATE TABLE LogEntry
 )";
             using (var command = CreateCommand())
             {
-                command.CommandText = createTableCommandText;
+                command.CommandText = CreateTableCommandText;
                 ModifyData(command);
             }
         }

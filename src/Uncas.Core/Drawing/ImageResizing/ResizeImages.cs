@@ -31,11 +31,11 @@
             _resizeWorker.WorkerSupportsCancellation = true;
 
             _resizeWorker.DoWork
-                += new DoWorkEventHandler(resizeWorker_DoWork);
+                += new DoWorkEventHandler(ResizeWorkerDoWork);
             _resizeWorker.ProgressChanged
-                += new ProgressChangedEventHandler(resizeWorker_ProgressChanged);
+                += new ProgressChangedEventHandler(ResizeWorkerProgressChanged);
             _resizeWorker.RunWorkerCompleted
-                += new RunWorkerCompletedEventHandler(resizeWorker_RunWorkerCompleted);
+                += new RunWorkerCompletedEventHandler(ResizeWorkerRunWorkerCompleted);
 
             _imageHandler = new ImageHandler();
         }
@@ -143,14 +143,14 @@
             List<ImageToResize> imagesToResize,
             DirectoryInfo di,
             string outputFolderPath,
-            DirectoryInfo diOutput,
+            DirectoryInfo outputDirectoryInfo,
             string extension)
         {
             foreach (FileInfo fi in di.GetFiles(extension))
             {
-                if (!diOutput.Exists)
+                if (!outputDirectoryInfo.Exists)
                 {
-                    diOutput.Create();
+                    outputDirectoryInfo.Create();
                 }
 
                 string originalImagePath = fi.FullName;
@@ -198,7 +198,7 @@
                 = Path.Combine(
                 baseOutputFolder,
                 relativeInputFolderPath);
-            DirectoryInfo diOutput
+            DirectoryInfo outputDirectoryInfo
                 = new DirectoryInfo(outputFolderPath);
 
             // Getting images in this folder
@@ -206,46 +206,46 @@
                 imagesToResize,
                 di,
                 outputFolderPath,
-                diOutput,
+                outputDirectoryInfo,
                 "*.jpg");
             GetFilesByExtension(
                 imagesToResize,
                 di,
                 outputFolderPath,
-                diOutput,
+                outputDirectoryInfo,
                 "*.jpeg");
             GetFilesByExtension(
                 imagesToResize,
                 di,
                 outputFolderPath,
-                diOutput,
+                outputDirectoryInfo,
                 "*.bmp");
             GetFilesByExtension(
                 imagesToResize,
                 di,
                 outputFolderPath,
-                diOutput,
+                outputDirectoryInfo,
                 "*.png");
             GetFilesByExtension(
                 imagesToResize,
                 di,
                 outputFolderPath,
-                diOutput,
+                outputDirectoryInfo,
                 "*.gif");
             if (includeSubFolders)
             {
                 // Resizing images in subfolders
-                foreach (DirectoryInfo diChild in di.GetDirectories())
+                foreach (DirectoryInfo childDirectoryInfo in di.GetDirectories())
                 {
                     string childRelativePath
                         = Path.Combine(
                         relativeInputFolderPath,
-                        diChild.Name);
+                        childDirectoryInfo.Name);
                     GetImagesInSelectedFolder(
                         ref imagesToResize,
                         childRelativePath,
                         baseOutputFolder,
-                        diChild,
+                        childDirectoryInfo,
                         includeSubFolders);
                 }
             }
@@ -291,7 +291,7 @@
 
         #region Running in background thread
 
-        private void resizeWorker_DoWork(
+        private void ResizeWorkerDoWork(
             object sender,
             DoWorkEventArgs e)
         {
@@ -323,7 +323,7 @@
             e.Result = pif;
         }
 
-        private void resizeWorker_ProgressChanged(
+        private void ResizeWorkerProgressChanged(
             object sender,
             ProgressChangedEventArgs e)
         {
@@ -337,7 +337,7 @@
             }
         }
 
-        private void resizeWorker_RunWorkerCompleted(
+        private void ResizeWorkerRunWorkerCompleted(
             object sender,
             RunWorkerCompletedEventArgs e)
         {
@@ -371,15 +371,15 @@
             }
             else if (chooseFolder)
             {
-                DirectoryInfo diBase
+                DirectoryInfo baseDirectoryInfo
                     = new DirectoryInfo(baseInputFolder);
                 try
                 {
                     GetImagesInSelectedFolder(
                         ref imagesToResize,
-                        diBase.Name,
+                        baseDirectoryInfo.Name,
                         baseOutputFolder,
-                        diBase,
+                        baseDirectoryInfo,
                         includeSubFolders);
                 }
                 catch (IOException ex)

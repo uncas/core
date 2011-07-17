@@ -12,7 +12,7 @@
     {
         private const double CacheDuration = 60.0 * 5.0;
 
-        private string[] MasterCacheKeyArray = { string.Empty };
+        private string[] _masterCacheKeyArray = { string.Empty };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheHelper"/> class.
@@ -20,7 +20,7 @@
         /// <param name="masterCacheKey">The master cache key.</param>
         public CacheHelper(string masterCacheKey)
         {
-            MasterCacheKeyArray = new string[1] { masterCacheKey };
+            _masterCacheKeyArray = new string[1] { masterCacheKey };
         }
 
         /// <summary>
@@ -52,15 +52,15 @@
             Cache dataCache = HttpRuntime.Cache;
 
             // Make sure MasterCacheKeyArray[0] is in the cache - if not, add it.
-            if (dataCache[MasterCacheKeyArray[0]] == null)
+            if (dataCache[_masterCacheKeyArray[0]] == null)
             {
-                dataCache[MasterCacheKeyArray[0]] = DateTime.UtcNow;
+                dataCache[_masterCacheKeyArray[0]] = DateTime.UtcNow;
             }
 
             // TODO: Test what happens if I dispose this cache dependency after inserting in cache.
             // Adding a cache dependency:
             var dependency =
-                new CacheDependency(null, MasterCacheKeyArray);
+                new CacheDependency(null, _masterCacheKeyArray);
             dataCache.Insert(
                 GetCacheKey(rawKey),
                 value,
@@ -75,12 +75,12 @@
         public void InvalidateCache()
         {
             // Remove the cache dependency 
-            HttpRuntime.Cache.Remove(MasterCacheKeyArray[0]);
+            HttpRuntime.Cache.Remove(_masterCacheKeyArray[0]);
         }
 
         private string GetCacheKey(string rawKey)
         {
-            return string.Concat(MasterCacheKeyArray[0], "-", rawKey);
+            return string.Concat(_masterCacheKeyArray[0], "-", rawKey);
         }
     }
 }
