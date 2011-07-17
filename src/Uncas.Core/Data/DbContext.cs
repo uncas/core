@@ -286,21 +286,15 @@
         }
 
         /// <summary>
-        /// Creates the command.
-        /// </summary>
-        /// <returns>The database command.</returns>
-        protected DbCommand CreateCommand()
-        {
-            return _factory.CreateCommand();
-        }
-
-        /// <summary>
         /// Adds the parameter.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        protected static void AddParameter(DbCommand command, string name, object value)
+        protected static void AddParameter(
+            DbCommand command,
+            string name, 
+            object value)
         {
             if (command == null)
             {
@@ -316,6 +310,15 @@
             parameter.ParameterName = name;
             parameter.Value = value != null ? value : DBNull.Value;
             command.Parameters.Add(parameter);
+        }
+
+        /// <summary>
+        /// Creates the command.
+        /// </summary>
+        /// <returns>The database command.</returns>
+        protected DbCommand CreateCommand()
+        {
+            return _factory.CreateCommand();
         }
 
         private static void AddParameters(

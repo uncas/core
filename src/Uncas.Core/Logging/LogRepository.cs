@@ -1,6 +1,7 @@
 ﻿namespace Uncas.Core.Logging
 {
     using System;
+    using System.Data.Common;
     using Uncas.Core.Data;
 
     /// <summary>
@@ -13,7 +14,7 @@
         /// </summary>
         /// <param name="logDbContext">The log db context.</param>
         public LogRepository(ILogDbContext logDbContext)
-            : base(logDbContext.Factory, logDbContext.ConnectionString)
+            : base(GetFactory(logDbContext), GetConnectionString(logDbContext))
         {
             InitializeDatabase();
         }
@@ -65,6 +66,28 @@ VALUES
                 ModifyData(
                     command);
             }
+        }
+
+        private static DbProviderFactory GetFactory(
+            ILogDbContext logDbContext)
+        {
+            if (logDbContext == null)
+            {
+                throw new ArgumentNullException("logDbContext");
+            }
+
+            return logDbContext.Factory;
+        }
+
+        private static string GetConnectionString(
+            ILogDbContext logDbContext)
+        {
+            if (logDbContext == null)
+            {
+                throw new ArgumentNullException("logDbContext");
+            }
+
+            return logDbContext.ConnectionString;
         }
 
         private void InitializeDatabase()
