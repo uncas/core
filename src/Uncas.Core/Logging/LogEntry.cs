@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Web;
 
     /// <summary>
     /// Represents a log entry.
@@ -36,6 +37,10 @@
 
             StackTrace = stackTrace.ToString();
             AssignFileNameAndLineNumber(stackTrace);
+            AssignHttpState();
+            AssignApplicationInfo();
+
+            // TODO: ServiceId.
         }
 
         /// <summary>
@@ -104,11 +109,41 @@
         /// <value>The message of the exception.</value>
         public string ExceptionMessage { get; private set; }
 
+        /// <summary>
+        /// Gets the state of the HTTP.
+        /// </summary>
+        /// <value>
+        /// The state of the HTTP.
+        /// </value>
+        public LogEntryHttpState HttpState { get; private set; }
+
+        /// <summary>
+        /// Gets the application info.
+        /// </summary>
+        public string ApplicationInfo { get; private set; }
+
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
         {
             var frame = stackTrace.GetFrame(0);
             FileName = frame.GetFileName();
             LineNumber = frame.GetFileLineNumber();
+        }
+
+        private void AssignHttpState()
+        {
+            var httpContext = HttpContext.Current;
+            if (httpContext == null)
+            {
+                return;
+            }
+
+            HttpState = new LogEntryHttpState(httpContext);
+        }
+
+        private void AssignApplicationInfo()
+        {
+            // TODO: Set application info on log entry.
+            ApplicationInfo = "NOT DEFINED YET";
         }
     }
 }

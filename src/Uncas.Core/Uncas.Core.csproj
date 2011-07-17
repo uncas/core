@@ -69,6 +69,7 @@
     <Compile Include="Logging\ILogDbContext.cs" />
     <Compile Include="Logging\ILogRepository.cs" />
     <Compile Include="Logging\LogEntry.cs" />
+    <Compile Include="Logging\LogEntryHttpState.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogRepository.cs" />
