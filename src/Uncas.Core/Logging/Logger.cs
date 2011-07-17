@@ -48,7 +48,6 @@
                 null,
                 exception,
                 null);
-
         }
 
         /// <summary>
@@ -85,7 +84,6 @@
                 description,
                 null,
                 additional);
-
         }
 
         /// <summary>

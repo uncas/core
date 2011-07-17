@@ -15,8 +15,8 @@
         /// <param name="description">The description.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="additional">The additional.</param>
-        public LogEntry
-            (LogType logType,
+        public LogEntry(
+            LogType logType,
             string description,
             Exception exception,
             string additional)
@@ -38,13 +38,6 @@
             AssignFileNameAndLineNumber(stackTrace);
         }
 
-        private void AssignFileNameAndLineNumber(StackTrace stackTrace)
-        {
-            var frame = stackTrace.GetFrame(0);
-            FileName = frame.GetFileName();
-            LineNumber = frame.GetFileLineNumber();
-        }
-
         /// <summary>
         /// Gets the type of the log.
         /// </summary>
@@ -56,26 +49,31 @@
         /// <summary>
         /// Gets the description.
         /// </summary>
+        /// <value>The description.</value>
         public string Description { get; private set; }
 
         /// <summary>
         /// Gets the exception.
         /// </summary>
+        /// <value>The exception.</value>
         public Exception Exception { get; private set; }
 
         /// <summary>
         /// Gets the additional.
         /// </summary>
+        /// <value>Any additional information.</value>
         public string Additional { get; private set; }
 
         /// <summary>
         /// Gets the created date and time.
         /// </summary>
+        /// <value>The time when the log entry was created.</value>
         public DateTime Created { get; private set; }
 
         /// <summary>
         /// Gets the stack trace.
         /// </summary>
+        /// <value>The stack trace.</value>
         public string StackTrace { get; private set; }
 
         /// <summary>
@@ -89,6 +87,7 @@
         /// <summary>
         /// Gets the line number.
         /// </summary>
+        /// <value>The line number.</value>
         public int LineNumber { get; private set; }
 
         /// <summary>
@@ -102,6 +101,14 @@
         /// <summary>
         /// Gets the exception message.
         /// </summary>
+        /// <value>The message of the exception.</value>
         public string ExceptionMessage { get; private set; }
+
+        private void AssignFileNameAndLineNumber(StackTrace stackTrace)
+        {
+            var frame = stackTrace.GetFrame(0);
+            FileName = frame.GetFileName();
+            LineNumber = frame.GetFileLineNumber();
+        }
     }
 }

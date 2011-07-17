@@ -57,7 +57,7 @@
             }
 
             // TODO: Test what happens if I dispose this cache dependency after inserting in cache.
-            // Add a CacheDependency 
+            // Adding a cache dependency:
             var dependency =
                 new CacheDependency(null, MasterCacheKeyArray);
             dataCache.Insert(
