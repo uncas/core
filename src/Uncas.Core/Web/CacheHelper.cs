@@ -39,8 +39,9 @@
         /// <param name="rawKey">The raw key.</param>
         /// <param name="value">The value.</param>
         [SuppressMessage(
-            "Microsoft.Reliability", 
-            "CA2000:Dispose objects before losing scope")]
+            "Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The cache dependency is stored in cache.")]
         public void AddCacheItem(string rawKey, object value)
         {
             if (value == null)
@@ -61,8 +62,8 @@
             var dependency =
                 new CacheDependency(null, MasterCacheKeyArray);
             dataCache.Insert(
-                GetCacheKey(rawKey), 
-                value, 
+                GetCacheKey(rawKey),
+                value,
                 dependency,
                 DateTime.UtcNow.AddSeconds(CacheDuration),
                 Cache.NoSlidingExpiration);
