@@ -40,8 +40,14 @@
             AssignHttpState();
             AssignApplicationInfo();
 
-            // TODO: ServiceId.
+            // TODO: Set ServiceId properly.
+            ServiceId = 0;
         }
+
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
+        public int? Id { get; private set; }
 
         /// <summary>
         /// Gets the type of the log.
@@ -121,6 +127,25 @@
         /// Gets the application info.
         /// </summary>
         public string ApplicationInfo { get; private set; }
+
+        /// <summary>
+        /// Gets the service id.
+        /// </summary>
+        public int ServiceId { get; private set; }
+
+        /// <summary>
+        /// Assigns the id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        internal void AssignId(int id)
+        {
+            if (id < 1)
+            {
+                throw new ArgumentOutOfRangeException("id", "Id must be positive");
+            }
+
+            Id = id;
+        }
 
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
         {

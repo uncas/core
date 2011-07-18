@@ -32,39 +32,11 @@
                     "Log entry must be given.");
             }
 
-            const string CommandText = @"
-INSERT INTO LogEntry
-(Created
-    , StackTrace
-    , FileName
-    , LineNumber
-    , Description
-    , ExceptionType
-    , ExceptionMessage
-    , Additional)
-VALUES
-(@Created
-    , @StackTrace
-    , @FileName
-    , @LineNumber
-    , @Description
-    , @ExceptionType
-    , @ExceptionMessage
-    , @Additional)
-";
-            using (var command = CreateCommand())
+            SaveLogEntry(logEntry);
+            logEntry.AssignId(GetId());
+            if (logEntry.HttpState != null)
             {
-                AddParameter(command, "Created", logEntry.Created);
-                AddParameter(command, "StackTrace", logEntry.StackTrace);
-                AddParameter(command, "FileName", logEntry.FileName);
-                AddParameter(command, "LineNumber", logEntry.LineNumber);
-                AddParameter(command, "Description", logEntry.Description);
-                AddParameter(command, "ExceptionType", logEntry.ExceptionType);
-                AddParameter(command, "ExceptionMessage", logEntry.ExceptionMessage);
-                AddParameter(command, "Additional", logEntry.Additional);
-                command.CommandText = CommandText;
-                ModifyData(
-                    command);
+                SaveHttpState(logEntry);
             }
         }
 
@@ -90,7 +62,109 @@ VALUES
             return logDbContext.ConnectionString;
         }
 
+        private int GetId()
+        {
+            const string CommandText = @"
+SELECT MAX(Id) FROM LogEntry
+";
+            using (var command = CreateCommand())
+            {
+                command.CommandText = CommandText;
+                return (int)GetScalar<long>(
+                    command);
+            }
+        }
+
+        private void SaveLogEntry(LogEntry logEntry)
+        {
+            const string CommandText = @"
+INSERT INTO LogEntry
+(Created
+    , LogType
+    , StackTrace
+    , FileName
+    , LineNumber
+    , Description
+    , ExceptionType
+    , ExceptionMessage
+    , Additional
+    , ApplicationInfo
+    , ServiceId)
+VALUES
+(@Created
+    , @LogType
+    , @StackTrace
+    , @FileName
+    , @LineNumber
+    , @Description
+    , @ExceptionType
+    , @ExceptionMessage
+    , @Additional
+    , @ApplicationInfo
+    , @ServiceId)
+";
+            using (var command = CreateCommand())
+            {
+                AddParameter(command, "Created", logEntry.Created);
+                AddParameter(command, "StackTrace", logEntry.StackTrace);
+                AddParameter(command, "FileName", logEntry.FileName);
+                AddParameter(command, "LineNumber", logEntry.LineNumber);
+                AddParameter(command, "Description", logEntry.Description);
+                AddParameter(command, "ExceptionType", logEntry.ExceptionType);
+                AddParameter(command, "ExceptionMessage", logEntry.ExceptionMessage);
+                AddParameter(command, "Additional", logEntry.Additional);
+                AddParameter(command, "ApplicationInfo", logEntry.ApplicationInfo);
+                AddParameter(command, "ServiceId", logEntry.ServiceId);
+                AddParameter(command, "LogType", logEntry.LogType);
+                command.CommandText = CommandText;
+                ModifyData(
+                    command);
+            }
+        }
+
+        private void SaveHttpState(LogEntry logEntry)
+        {
+            LogEntryHttpState logEntryHttpState = logEntry.HttpState;
+            const string CommandText = @"
+INSERT INTO LogEntryHttpState
+(LogEntryId
+    , StatusCode
+    , Url
+    , Referrer
+    , UserHostAddress
+    , Headers
+    , UserName)
+VALUES
+(@LogEntryId
+    , @StatusCode
+    , @Url
+    , @Referrer
+    , @UserHostAddress
+    , @Headers
+    , @UserName)
+";
+            using (var command = CreateCommand())
+            {
+                AddParameter(command, "LogEntryId", logEntry.Id);
+                AddParameter(command, "StatusCode", logEntryHttpState.StatusCode);
+                AddParameter(command, "Url", logEntryHttpState.Url);
+                AddParameter(command, "Referrer", logEntryHttpState.Referrer);
+                AddParameter(command, "UserHostAddress", logEntryHttpState.UserHostAddress);
+                AddParameter(command, "Headers", logEntryHttpState.Headers);
+                AddParameter(command, "UserName", logEntryHttpState.UserName);
+                command.CommandText = CommandText;
+                ModifyData(
+                    command);
+            }
+        }
+
         private void InitializeDatabase()
+        {
+            InitializeLogEntryTable();
+            InitializeLogEntryHttpStateTable();
+        }
+
+        private void InitializeLogEntryTable()
         {
             const string TableCountCommandText = @"
 SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntry'";
@@ -109,6 +183,7 @@ CREATE TABLE LogEntry
 (
     Id integer PRIMARY KEY ASC
     , Created datetime
+    , LogType integer
     , StackTrace text
     , FileName text
     , LineNumber integer
@@ -116,6 +191,41 @@ CREATE TABLE LogEntry
     , ExceptionType text
     , ExceptionMessage text
     , Additional text
+    , ApplicationInfo text
+    , ServiceId integer
+)";
+            using (var command = CreateCommand())
+            {
+                command.CommandText = CreateTableCommandText;
+                ModifyData(command);
+            }
+        }
+
+        private void InitializeLogEntryHttpStateTable()
+        {
+            const string TableCountCommandText = @"
+SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntryHttpState'";
+            using (var command = CreateCommand())
+            {
+                command.CommandText = TableCountCommandText;
+                int tableCount = (int)GetScalar<long>(command);
+                if (tableCount > 0)
+                {
+                    return;
+                }
+            }
+
+            const string CreateTableCommandText = @"
+CREATE TABLE LogEntryHttpState
+(
+    Id integer PRIMARY KEY ASC
+    , LogEntryId integer
+    , StatusCode integer
+    , Url text
+    , Referrer text
+    , UserHostAddress text
+    , Headers text
+    , UserName text
 )";
             using (var command = CreateCommand())
             {

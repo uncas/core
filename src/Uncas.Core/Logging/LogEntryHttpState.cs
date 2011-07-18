@@ -36,10 +36,15 @@
                     "httpContext");
             }
 
-            Url = request.Url.AbsoluteUri;
-            
-            // TODO: Set headers properly:
-            // Headers = request.Headers;
+            Url = request.Url;
+
+            if (request.Headers != null &&
+                request.Headers.Count > 0)
+            {
+                // TODO: Set headers properly:
+                Headers = request.Headers[0];
+            }
+
             UserHostAddress = request.UserHostAddress;
 
             if (httpContext.User != null && httpContext.User.Identity != null)
@@ -52,13 +57,13 @@
                 Referrer = request.UrlReferrer.AbsoluteUri;
             }
 
-            StatusCode = httpContext.Response.StatusCode;
+            StatusCode = response.StatusCode;
         }
 
         /// <summary>
         /// Gets the URL.
         /// </summary>
-        public string Url { get; private set; }
+        public Uri Url { get; private set; }
 
         /// <summary>
         /// Gets the referrer.
