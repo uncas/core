@@ -241,19 +241,11 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            object databaseValue = null;
-            DbCommand command = _factory.CreateCommand();
-            command.CommandText = commandText;
-            OperateOnDbCommand(
-                (DbCommand command2) => databaseValue = command2.ExecuteScalar(),
-                command,
-                parameters);
-            if (!(databaseValue is DBNull))
+            using (DbCommand command = _factory.CreateCommand())
             {
-                return (T)databaseValue;
+                command.CommandText = commandText;
+                return GetScalar<T>(command, parameters);
             }
-
-            return default(T);
         }
 
         /// <summary>
