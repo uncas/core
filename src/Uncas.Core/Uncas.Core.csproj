@@ -54,6 +54,17 @@
   <ItemGroup>
     <Compile Include="ConfigurationWrapper.cs" />
     <Compile Include="Data\DbContext.cs" />
+    <Compile Include="Data\Migration\DbAppliedChangeRepository.cs" />
+    <Compile Include="Data\Migration\DbAvailableChangeRepository.cs" />
+    <Compile Include="Data\Migration\DbChange.cs" />
+    <Compile Include="Data\Migration\DbTarget.cs" />
+    <Compile Include="Data\Migration\IAppliedChangeRepository.cs" />
+    <Compile Include="Data\Migration\IAvailableChangeRepository.cs" />
+    <Compile Include="Data\Migration\IMigrationChange.cs" />
+    <Compile Include="Data\Migration\IMigrationService.cs" />
+    <Compile Include="Data\Migration\IMigrationTarget.cs" />
+    <Compile Include="Data\Migration\MigrationChange.cs" />
+    <Compile Include="Data\Migration\MigrationService.cs" />
     <Compile Include="Data\OleDbContext.cs" />
     <Compile Include="Data\SqlDbContext.cs" />
     <Compile Include="Drawing\IImageHandler.cs" />
@@ -89,9 +100,7 @@
     <None Include="Properties\UncasCoreKey.snk" />
     <None Include="Uncas.Core.ruleset" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Migration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
