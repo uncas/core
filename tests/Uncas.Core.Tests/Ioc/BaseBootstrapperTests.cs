@@ -3,6 +3,7 @@
     using Moq;
     using NUnit.Framework;
     using Uncas.Core.Data.Migration;
+    using Uncas.Core.Ioc;
 
     [TestFixture]
     public class BaseBootstrapperTests
