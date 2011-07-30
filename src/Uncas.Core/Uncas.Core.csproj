@@ -52,6 +52,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseBootstrapper.cs" />
     <Compile Include="ConfigurationWrapper.cs" />
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Migration\DbAppliedChangeRepository.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Drawing\ImageResizing\ResizeImages.cs" />
     <Compile Include="Drawing\ImageResizing\ResizeProgressEventArgs.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IIocContainer.cs" />
     <Compile Include="Logging\ILogDbContext.cs" />
     <Compile Include="Logging\ILogRepository.cs" />
     <Compile Include="Logging\LogEntry.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Interop\ScreenCapture.cs" />
     <Compile Include="Ioc\BaseBootstrapper.cs" />
     <Compile Include="Ioc\IIocContainer.cs" />
+    <Compile Include="Ioc\IocIgnoreAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Web\CacheHelper.cs" />

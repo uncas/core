@@ -1,8 +1,11 @@
 ﻿namespace Uncas.Core.Data.Migration
 {
+    using Uncas.Core.Ioc;
+
     /// <summary>
     /// Represents a base migration change.
     /// </summary>
+    [IocIgnore]
     public class MigrationChange : IMigrationChange
     {
         /// <summary>

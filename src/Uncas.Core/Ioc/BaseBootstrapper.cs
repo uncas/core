@@ -1,4 +1,4 @@
-﻿namespace Uncas.Core
+﻿namespace Uncas.Core.Ioc
 {
     using System;
     using System.Collections.Generic;
@@ -80,6 +80,15 @@
             }
         }
 
+        private static bool ShouldBeIgnored(Type implementationType)
+        {
+            var ignoreAttributes =
+                implementationType.GetCustomAttributes(
+                typeof(IocIgnoreAttribute),
+                true);
+            return ignoreAttributes.Count() > 0;
+        }
+
         private void RegisterAutomagically()
         {
             RegisterImplementationsInAssembly(
@@ -107,6 +116,11 @@
                 if (interfaceType == null)
                 {
                     continue;
+                }
+
+                if (ShouldBeIgnored(implementationType))
+                {
+                    return;
                 }
 
                 _container.RegisterType(implementationType, interfaceType);
