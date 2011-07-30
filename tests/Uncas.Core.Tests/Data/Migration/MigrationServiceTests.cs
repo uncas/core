@@ -14,24 +14,24 @@
             IAvailableChangeRepository<T> source,
             IAppliedChangeRepository destination,
             IMigrationTarget<T> migrationTarget)
-            where T : MigrationChange;
+            where T : IMigrationChange;
     }
 
-    public interface IAvailableChangeRepository<T> where T : MigrationChange
+    public interface IAvailableChangeRepository<T> where T : IMigrationChange
     {
         IEnumerable<T> GetAvailableChanges();
     }
 
-    public interface IMigrationTarget<T> where T : MigrationChange
+    public interface IMigrationTarget<T> where T : IMigrationChange
     {
         void ApplyChange(T change);
     }
 
     public interface IAppliedChangeRepository
     {
-        IEnumerable<MigrationChange> GetAppliedChanges();
+        IEnumerable<IMigrationChange> GetAppliedChanges();
 
-        void AddAppliedChange(MigrationChange change);
+        void AddAppliedChange(IMigrationChange change);
     }
 
     [TestFixture]
@@ -70,7 +70,7 @@
             var destinationMock = new Mock<IAppliedChangeRepository>();
             var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
             var changesToApply = new List<MigrationChange>();
-            MigrationChange change = GetChange("A");
+            MigrationChange change = GetConcreteChange("A");
             changesToApply.Add(change);
             sourceMock.Setup(x => x.GetAvailableChanges()).Returns(changesToApply);
 
@@ -91,9 +91,9 @@
             var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
             var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var changesToApply = new List<MigrationChange>();
-            MigrationChange changeA = GetChange("A");
-            MigrationChange changeB = GetChange("B");
-            MigrationChange changeC = GetChange("C");
+            MigrationChange changeA = GetConcreteChange("A");
+            MigrationChange changeB = GetConcreteChange("B");
+            MigrationChange changeC = GetConcreteChange("C");
             changesToApply.Add(changeA);
             changesToApply.Add(changeB);
             changesToApply.Add(changeC);
@@ -124,7 +124,7 @@
             var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
             var changesToApply = new List<MigrationChange>();
-            changesToApply.Add(GetChange("A"));
+            changesToApply.Add(GetConcreteChange("A"));
             sourceMock.Setup(x => x.GetAvailableChanges()).Returns(changesToApply);
             destinationMock.Setup(x => x.GetAppliedChanges()).Returns(changesToApply);
 
@@ -139,11 +139,16 @@
                 x => x.AddAppliedChange(It.IsAny<MigrationChange>()), Times.Never());
         }
 
-        private static MigrationChange GetChange(string id)
+        private static IMigrationChange GetChange(string id)
         {
-            var mock = new Mock<MigrationChange>();
+            var mock = new Mock<IMigrationChange>();
             mock.Setup(x => x.Id).Returns(id);
             return mock.Object;
+        }
+
+        private static MigrationChange GetConcreteChange(string id)
+        {
+            return new MigrationChange(id);
         }
     }
 
@@ -152,7 +157,7 @@
         string Id { get; }
     }
 
-    public class MigrationChange
+    public class MigrationChange : IMigrationChange
     {
         public MigrationChange(string id)
         {
@@ -167,7 +172,7 @@
         public void Migrate<T>(
             IAvailableChangeRepository<T> availableChangeRepository,
             IAppliedChangeRepository appliedChangeRepository,
-            IMigrationTarget<T> migrationTarget) where T : MigrationChange
+            IMigrationTarget<T> migrationTarget) where T : IMigrationChange
         {
             IEnumerable<T> availableChanges =
                 availableChangeRepository.GetAvailableChanges();
@@ -176,7 +181,7 @@
                 return;
             }
 
-            IEnumerable<MigrationChange> appliedChanges =
+            IEnumerable<IMigrationChange> appliedChanges =
                 appliedChangeRepository.GetAppliedChanges();
             foreach (var change in availableChanges)
             {
@@ -191,8 +196,8 @@
         }
 
         private static bool IsAlreadyApplied(
-            IEnumerable<MigrationChange> appliedChanges,
-            MigrationChange change)
+            IEnumerable<IMigrationChange> appliedChanges,
+            IMigrationChange change)
         {
             return appliedChanges.Any(x => x.Id == change.Id);
         }
@@ -200,7 +205,7 @@
         private static void ApplyChange<T>(
             IAppliedChangeRepository appliedChangeRepository,
             T change,
-            IMigrationTarget<T> migrationTarget) where T : MigrationChange
+            IMigrationTarget<T> migrationTarget) where T : IMigrationChange
         {
             migrationTarget.ApplyChange(change);
             appliedChangeRepository.AddAppliedChange(change);
@@ -262,7 +267,7 @@
         {
         }
 
-        public IEnumerable<MigrationChange> GetAppliedChanges()
+        public IEnumerable<IMigrationChange> GetAppliedChanges()
         {
             InitializeDatabase();
             using (DbCommand command = CreateCommand())
@@ -271,7 +276,7 @@
             }
         }
 
-        public void AddAppliedChange(MigrationChange change)
+        public void AddAppliedChange(IMigrationChange change)
         {
             InitializeDatabase();
         }
@@ -282,7 +287,7 @@
             throw new NotImplementedException();
         }
 
-        private static MigrationChange MapToObject(DbDataReader reader)
+        private static IMigrationChange MapToObject(DbDataReader reader)
         {
             return new MigrationChange((string)reader["Id"]);
         }
