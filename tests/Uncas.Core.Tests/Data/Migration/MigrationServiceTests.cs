@@ -1,26 +1,30 @@
 ﻿namespace Uncas.Core.Tests.Data.Migration
 {
+    using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Linq;
     using Moq;
     using NUnit.Framework;
+    using Uncas.Core.Data;
 
     public interface IMigrationService
     {
-        void Migrate(
-            IAvailableChangeRepository source,
+        void Migrate<T>(
+            IAvailableChangeRepository<T> source,
             IAppliedChangeRepository destination,
-            IMigrationTarget migrationTarget);
+            IMigrationTarget<T> migrationTarget)
+            where T : MigrationChange;
     }
 
-    public interface IAvailableChangeRepository
+    public interface IAvailableChangeRepository<T> where T : MigrationChange
     {
-        IEnumerable<MigrationChange> GetAvailableChanges();
+        IEnumerable<T> GetAvailableChanges();
     }
 
-    public interface IMigrationTarget
+    public interface IMigrationTarget<T> where T : MigrationChange
     {
-        void ApplyChange(MigrationChange change);
+        void ApplyChange(T change);
     }
 
     public interface IAppliedChangeRepository
@@ -44,9 +48,9 @@
         [Test]
         public void Migrate_NoChanges_NoMigration()
         {
-            var sourceMock = new Mock<IAvailableChangeRepository>();
+            var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
-            var migrationTarget = new Mock<IMigrationTarget>();
+            var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
 
             _migrationService.Migrate(
                 sourceMock.Object,
@@ -62,9 +66,9 @@
         [Test]
         public void Migrate_OneChange_IsMigrated()
         {
-            var sourceMock = new Mock<IAvailableChangeRepository>();
+            var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
-            var migrationTarget = new Mock<IMigrationTarget>();
+            var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
             var changesToApply = new List<MigrationChange>();
             MigrationChange change = GetChange("A");
             changesToApply.Add(change);
@@ -84,8 +88,8 @@
         [Test]
         public void Migrate_OneOldAndTwoNewChanges_TwoAreMigrated()
         {
-            var migrationTarget = new Mock<IMigrationTarget>();
-            var sourceMock = new Mock<IAvailableChangeRepository>();
+            var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
+            var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var changesToApply = new List<MigrationChange>();
             MigrationChange changeA = GetChange("A");
             MigrationChange changeB = GetChange("B");
@@ -116,8 +120,8 @@
         [Test]
         public void Migrate_OneOldChange_NotMigrated()
         {
-            var migrationTarget = new Mock<IMigrationTarget>();
-            var sourceMock = new Mock<IAvailableChangeRepository>();
+            var migrationTarget = new Mock<IMigrationTarget<MigrationChange>>();
+            var sourceMock = new Mock<IAvailableChangeRepository<MigrationChange>>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
             var changesToApply = new List<MigrationChange>();
             changesToApply.Add(GetChange("A"));
@@ -143,19 +147,29 @@
         }
     }
 
-    public abstract class MigrationChange
+    public interface IMigrationChange
     {
-        public virtual string Id { get; set; }
+        string Id { get; }
+    }
+
+    public class MigrationChange
+    {
+        public MigrationChange(string id)
+        {
+            Id = id;
+        }
+
+        public string Id { get; private set; }
     }
 
     public class MigrationService : IMigrationService
     {
-        public void Migrate(
-            IAvailableChangeRepository availableChangeRepository,
+        public void Migrate<T>(
+            IAvailableChangeRepository<T> availableChangeRepository,
             IAppliedChangeRepository appliedChangeRepository,
-            IMigrationTarget migrationTarget)
+            IMigrationTarget<T> migrationTarget) where T : MigrationChange
         {
-            IEnumerable<MigrationChange> availableChanges =
+            IEnumerable<T> availableChanges =
                 availableChangeRepository.GetAvailableChanges();
             if (availableChanges.Count() == 0)
             {
@@ -168,7 +182,7 @@
             {
                 if (!IsAlreadyApplied(appliedChanges, change))
                 {
-                    ApplyChange(
+                    ApplyChange<T>(
                         appliedChangeRepository,
                         change,
                         migrationTarget);
@@ -183,13 +197,94 @@
             return appliedChanges.Any(x => x.Id == change.Id);
         }
 
-        private static void ApplyChange(
+        private static void ApplyChange<T>(
             IAppliedChangeRepository appliedChangeRepository,
-            MigrationChange change,
-            IMigrationTarget migrationTarget)
+            T change,
+            IMigrationTarget<T> migrationTarget) where T : MigrationChange
         {
             migrationTarget.ApplyChange(change);
             appliedChangeRepository.AddAppliedChange(change);
+        }
+    }
+
+    public class DbChange : MigrationChange
+    {
+        public DbChange(
+            string id,
+            string changeScript)
+            : base(id)
+        {
+            ChangeScript = changeScript;
+        }
+
+        public string ChangeScript { get; private set; }
+    }
+
+    public class DbTarget : DbContext, IMigrationTarget<DbChange>
+    {
+        public DbTarget(
+            DbProviderFactory factory,
+            string connectionString)
+            : base(factory, connectionString)
+        {
+        }
+
+        public void ApplyChange(DbChange change)
+        {
+            using (DbCommand command = CreateCommand())
+            {
+                command.CommandText = change.ChangeScript;
+                ModifyData(command);
+            }
+        }
+    }
+
+    public class DbAvailableChangeRepository : IAvailableChangeRepository<DbChange>
+    {
+        public IEnumerable<DbChange> GetAvailableChanges()
+        {
+            // TODO: Make real implementation here
+            // depending on where the scripts are stored:
+            var result = new List<DbChange>();
+            result.Add(new DbChange("1", "CREATE TABLE ..."));
+            result.Add(new DbChange("2", "ALTER TABLE ..."));
+            result.Add(new DbChange("3", "DROP TABLE ..."));
+            return result;
+        }
+    }
+
+    public class DbAppliedChangeRepository : DbContext, IAppliedChangeRepository
+    {
+        public DbAppliedChangeRepository(
+            DbProviderFactory factory,
+            string connectionString)
+            : base(factory, connectionString)
+        {
+        }
+
+        public IEnumerable<MigrationChange> GetAppliedChanges()
+        {
+            InitializeDatabase();
+            using (DbCommand command = CreateCommand())
+            {
+                return GetObjects(command, MapToObject);
+            }
+        }
+
+        public void AddAppliedChange(MigrationChange change)
+        {
+            InitializeDatabase();
+        }
+
+        private void InitializeDatabase()
+        {
+            // TODO: Implement migration db initialization...
+            throw new NotImplementedException();
+        }
+
+        private static MigrationChange MapToObject(DbDataReader reader)
+        {
+            return new MigrationChange((string)reader["Id"]);
         }
     }
 }

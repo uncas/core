@@ -5,6 +5,7 @@
     using System.Data.Common;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents a general db context.
@@ -89,6 +90,36 @@
                 command,
                 parameters);
             return dt;
+        }
+
+        /// <summary>
+        /// Gets the objects.
+        /// </summary>
+        /// <typeparam name="T">The type of the objects.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <param name="conversion">The conversion.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>A list of objects.</returns>
+        public IEnumerable<T> GetObjects<T>(
+            DbCommand command,
+            Func<DbDataReader, T> conversion,
+            params DbParameter[] parameters)
+        {
+            if (conversion == null)
+            {
+                throw new ArgumentNullException("conversion");
+            }
+
+            var result = new List<T>();
+            using (DbDataReader reader = GetReader(command, parameters))
+            {
+                while (reader.Read())
+                {
+                    result.Add(conversion(reader));
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -285,7 +316,7 @@
         /// <param name="value">The value.</param>
         protected static void AddParameter(
             DbCommand command,
-            string name, 
+            string name,
             object value)
         {
             if (command == null)
