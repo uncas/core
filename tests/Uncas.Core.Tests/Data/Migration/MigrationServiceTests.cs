@@ -5,6 +5,31 @@
     using Moq;
     using NUnit.Framework;
 
+    public interface IMigrationService
+    {
+        void Migrate(
+            IAvailableChangeRepository source,
+            IAppliedChangeRepository destination,
+            IMigrationTarget migrationTarget);
+    }
+
+    public interface IAvailableChangeRepository
+    {
+        IEnumerable<MigrationChange> GetAvailableChanges();
+    }
+
+    public interface IMigrationTarget
+    {
+        void ApplyChange(MigrationChange change);
+    }
+
+    public interface IAppliedChangeRepository
+    {
+        IEnumerable<MigrationChange> GetAppliedChanges();
+
+        void AddAppliedChange(MigrationChange change);
+    }
+
     [TestFixture]
     public class MigrationServiceTests
     {
@@ -21,10 +46,12 @@
         {
             var sourceMock = new Mock<IAvailableChangeRepository>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
+            var migrationTarget = new Mock<IMigrationTarget>();
 
             _migrationService.Migrate(
                 sourceMock.Object,
-                destinationMock.Object);
+                destinationMock.Object,
+                migrationTarget.Object);
 
             sourceMock.Verify(x => x.GetAvailableChanges(), Times.Once());
             destinationMock.Verify(x => x.GetAppliedChanges(), Times.Never());
@@ -37,6 +64,7 @@
         {
             var sourceMock = new Mock<IAvailableChangeRepository>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
+            var migrationTarget = new Mock<IMigrationTarget>();
             var changesToApply = new List<MigrationChange>();
             MigrationChange change = GetChange("A");
             changesToApply.Add(change);
@@ -44,7 +72,8 @@
 
             _migrationService.Migrate(
                 sourceMock.Object,
-                destinationMock.Object);
+                destinationMock.Object,
+                migrationTarget.Object);
 
             sourceMock.Verify(x => x.GetAvailableChanges(), Times.Once());
             destinationMock.Verify(x => x.GetAppliedChanges(), Times.Once());
@@ -55,6 +84,7 @@
         [Test]
         public void Migrate_OneOldAndTwoNewChanges_TwoAreMigrated()
         {
+            var migrationTarget = new Mock<IMigrationTarget>();
             var sourceMock = new Mock<IAvailableChangeRepository>();
             var changesToApply = new List<MigrationChange>();
             MigrationChange changeA = GetChange("A");
@@ -72,7 +102,8 @@
 
             _migrationService.Migrate(
                 sourceMock.Object,
-                destinationMock.Object);
+                destinationMock.Object,
+                migrationTarget.Object);
 
             destinationMock.Verify(
                 x => x.AddAppliedChange(It.IsAny<MigrationChange>()), Times.Exactly(2));
@@ -85,6 +116,7 @@
         [Test]
         public void Migrate_OneOldChange_NotMigrated()
         {
+            var migrationTarget = new Mock<IMigrationTarget>();
             var sourceMock = new Mock<IAvailableChangeRepository>();
             var destinationMock = new Mock<IAppliedChangeRepository>();
             var changesToApply = new List<MigrationChange>();
@@ -94,7 +126,8 @@
 
             _migrationService.Migrate(
                 sourceMock.Object,
-                destinationMock.Object);
+                destinationMock.Object,
+                migrationTarget.Object);
 
             sourceMock.Verify(x => x.GetAvailableChanges(), Times.Once());
             destinationMock.Verify(x => x.GetAppliedChanges(), Times.Once());
@@ -110,67 +143,53 @@
         }
     }
 
-    public interface IMigrationService
+    public abstract class MigrationChange
     {
-        void Migrate(
-            IAvailableChangeRepository source,
-            IAppliedChangeRepository destination);
+        public virtual string Id { get; set; }
     }
 
     public class MigrationService : IMigrationService
     {
         public void Migrate(
-            IAvailableChangeRepository source,
-            IAppliedChangeRepository destination)
+            IAvailableChangeRepository availableChangeRepository,
+            IAppliedChangeRepository appliedChangeRepository,
+            IMigrationTarget migrationTarget)
         {
             IEnumerable<MigrationChange> availableChanges =
-                source.GetAvailableChanges();
+                availableChangeRepository.GetAvailableChanges();
             if (availableChanges.Count() == 0)
             {
                 return;
             }
 
             IEnumerable<MigrationChange> appliedChanges =
-                destination.GetAppliedChanges();
+                appliedChangeRepository.GetAppliedChanges();
             foreach (var change in availableChanges)
             {
                 if (!IsAlreadyApplied(appliedChanges, change))
                 {
-                    ApplyChange(destination, change);
+                    ApplyChange(
+                        appliedChangeRepository,
+                        change,
+                        migrationTarget);
                 }
             }
         }
 
-        private bool IsAlreadyApplied(
+        private static bool IsAlreadyApplied(
             IEnumerable<MigrationChange> appliedChanges,
             MigrationChange change)
         {
             return appliedChanges.Any(x => x.Id == change.Id);
         }
 
-        private void ApplyChange(
-            IAppliedChangeRepository destination,
-            MigrationChange change)
+        private static void ApplyChange(
+            IAppliedChangeRepository appliedChangeRepository,
+            MigrationChange change,
+            IMigrationTarget migrationTarget)
         {
-            // TODO: Apply change.
-            destination.AddAppliedChange(change);
+            migrationTarget.ApplyChange(change);
+            appliedChangeRepository.AddAppliedChange(change);
         }
-    }
-
-    public interface IAvailableChangeRepository
-    {
-        IEnumerable<MigrationChange> GetAvailableChanges();
-    }
-
-    public interface IAppliedChangeRepository
-    {
-        IEnumerable<MigrationChange> GetAppliedChanges();
-
-        void AddAppliedChange(MigrationChange change);
-    }
-
-    public abstract class MigrationChange
-    {
-        public virtual string Id { get; set; }
     }
 }
