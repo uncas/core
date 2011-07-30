@@ -1,5 +1,6 @@
 ﻿namespace Uncas.Core.Data.Migration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -20,6 +21,16 @@
             IAppliedChangeRepository appliedChangeRepository,
             IMigrationTarget<T> migrationTarget) where T : IMigrationChange
         {
+            if (availableChangeRepository == null)
+            {
+                throw new ArgumentNullException("availableChangeRepository");
+            }
+
+            if (appliedChangeRepository == null)
+            {
+                throw new ArgumentNullException("appliedChangeRepository");
+            }
+
             IEnumerable<T> availableChanges =
                 availableChangeRepository.GetAvailableChanges();
             if (availableChanges.Count() == 0)

@@ -45,7 +45,7 @@
             InitializeDatabase();
         }
 
-        private void InitializeDatabase()
+        private static void InitializeDatabase()
         {
             // TODO: Implement migration db initialization...
             throw new NotImplementedException();

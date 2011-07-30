@@ -1,6 +1,7 @@
 ﻿namespace Uncas.Core.Data.Migration
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Stores which changes that have already been applied.
@@ -11,6 +12,10 @@
         /// Gets the applied changes.
         /// </summary>
         /// <returns>A list of applied changes.</returns>
+        [SuppressMessage(
+           "Microsoft.Design",
+           "CA1024:UsePropertiesWhereAppropriate",
+           Justification = "This involves looking up the values in some form of storage.")]
         IEnumerable<IMigrationChange> GetAppliedChanges();
 
         /// <summary>
