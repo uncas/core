@@ -46,6 +46,6 @@
                 Times.Once());
         }
 
-        // TODO: Test resolving all registered...
+        // TODO: Test resolving all registered types...
     }
 }
