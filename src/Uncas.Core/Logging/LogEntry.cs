@@ -10,7 +10,7 @@
     /// </summary>
     public class LogEntry
     {
-        private static readonly string[] FileNamesToSkip = 
+        private static readonly string[] FileNamesToSkip =
             new[] { "LogEntry.cs", "Logger.cs" };
 
         /// <summary>
@@ -31,7 +31,7 @@
             Additional = additional;
             Created = SystemTime.Now();
 
-            var stackTrace = new StackTrace(1, true);
+            var stackTrace = GetStackTrace();
 
             if (exception != null)
             {
@@ -196,18 +196,22 @@
             Id = id;
         }
 
-        private static StackFrame GetStackFrame(StackTrace stackTrace)
+        private static StackTrace GetStackTrace()
         {
+            int skip = 2;
+            var stackTrace = new StackTrace(skip, true);
             foreach (StackFrame frame in stackTrace.GetFrames())
             {
                 string fileName = frame.GetFileName();
                 if (FrameIsRelevant(fileName))
                 {
-                    return frame;
+                    break;
                 }
+            
+                skip++;
             }
 
-            return null;
+            return new StackTrace(skip, true);
         }
 
         private static bool FrameIsRelevant(
@@ -219,7 +223,7 @@
 
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
         {
-            StackFrame frame = GetStackFrame(stackTrace);
+            StackFrame frame = stackTrace.GetFrame(0);
             FileName = frame.GetFileName();
             LineNumber = frame.GetFileLineNumber();
         }
