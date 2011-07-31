@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncas.Core", "src\Uncas.Core\Uncas.Core.csproj", "{E4F20F98-4E29-4E1C-8FD4-71F320A54214}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncas.Core.External", "src\Uncas.Core.External\Uncas.Core.External.csproj", "{ED660804-F127-407B-8D63-3BB5720B59A7}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncas.Core.Tests", "tests\Uncas.Core.Tests\Uncas.Core.Tests.csproj", "{19042BF1-110F-49E9-9CCA-95F9327EEF4C}"
 EndProject
 Global
@@ -15,6 +17,10 @@ Global
 		{E4F20F98-4E29-4E1C-8FD4-71F320A54214}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4F20F98-4E29-4E1C-8FD4-71F320A54214}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4F20F98-4E29-4E1C-8FD4-71F320A54214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED660804-F127-407B-8D63-3BB5720B59A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED660804-F127-407B-8D63-3BB5720B59A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED660804-F127-407B-8D63-3BB5720B59A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED660804-F127-407B-8D63-3BB5720B59A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19042BF1-110F-49E9-9CCA-95F9327EEF4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19042BF1-110F-49E9-9CCA-95F9327EEF4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19042BF1-110F-49E9-9CCA-95F9327EEF4C}.Release|Any CPU.ActiveCfg = Release|Any CPU

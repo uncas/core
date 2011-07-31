@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Uncas.Core")]
-[assembly: AssemblyDescription("Assembly with core infrastructure that does *not* depend on external libraries")]
+[assembly: AssemblyTitle("Uncas.Core.External")]
+[assembly: AssemblyDescription("Assembly with core infrastructure that depends on external libraries.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Uncas")]
-[assembly: AssemblyProduct("Uncas.Core")]
+[assembly: AssemblyProduct("Uncas.Core.External")]
 [assembly: AssemblyCopyright("Copyright © Ole Lynge Sørensen 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7b79d9ad-d4fe-4a54-a3e4-85a6c0c8d3a7")]
+[assembly: Guid("8b8b14af-6876-4c69-b135-88edb8c9caa6")]
 
 // Version information for an assembly consists of the following four values:
 //
