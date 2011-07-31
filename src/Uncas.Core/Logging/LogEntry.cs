@@ -28,15 +28,15 @@
             Created = SystemTime.Now();
 
             var stackTrace = new StackTrace(1, true);
-            StackTrace = stackTrace.ToString();
 
-            // todo get line numbe and file name properly
             if (exception != null)
             {
                 ExceptionMessage = exception.Message;
                 ExceptionType = exception.GetType().ToString();
-                StackTrace = exception.StackTrace;
+                stackTrace = new StackTrace(exception, true);
             }
+
+            StackTrace = stackTrace.ToString();
 
             AssignFileNameAndLineNumber(stackTrace);
             AssignHttpState();
@@ -194,6 +194,7 @@
 
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
         {
+            // TODO: Get line numbe and file name properly.
             var frame = stackTrace.GetFrame(0);
             FileName = frame.GetFileName();
             LineNumber = frame.GetFileLineNumber();

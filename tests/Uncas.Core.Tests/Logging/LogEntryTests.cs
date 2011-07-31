@@ -41,16 +41,6 @@
         }
 
         [Test]
-        public void LogEntry_WithException_FileNameFromException()
-        {
-            var exception = new Exception("Test exception.");
-            var logEntry = new LogEntry(LogType.Error, "test", exception, null);
-
-            Assert.That(logEntry.FileName.EndsWith("LogEntryTests.cs"));
-            Assert.AreEqual(47, logEntry.LineNumber);
-        }
-
-        [Test]
         public void LogEntry_ThrownException_FileNameFromException()
         {
             try
