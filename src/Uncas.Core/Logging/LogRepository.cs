@@ -1,8 +1,10 @@
 ﻿namespace Uncas.Core.Logging
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Common;
     using Uncas.Core.Data;
+    using Uncas.Core.Data.Migration;
 
     /// <summary>
     /// Default log repository.
@@ -16,7 +18,6 @@
         public LogRepository(ILogDbContext logDbContext)
             : base(GetFactory(logDbContext), GetConnectionString(logDbContext))
         {
-            InitializeDatabase();
         }
 
         /// <summary>
@@ -158,27 +159,34 @@ VALUES
             }
         }
 
-        private void InitializeDatabase()
+        /// <summary>
+        /// Migrates the schema for the underlying database.
+        /// </summary>
+        public void MigrateSchema()
         {
-            InitializeLogEntryTable();
-            InitializeLogEntryHttpStateTable();
+            var availableChangeRepository = new LogDbSchemaChangeRepository();
+            var appliedChangeRepository = 
+                new DbAppliedChangeRepository(
+                    Factory,
+                    ConnectionString);
+            var migrationTarget = 
+                new DbTarget(
+                    Factory,
+                    ConnectionString);
+            var service = new MigrationService();
+            service.Migrate<DbChange>(
+                availableChangeRepository,
+                appliedChangeRepository,
+                migrationTarget);
         }
+    }
 
-        private void InitializeLogEntryTable()
-        {
-            const string TableCountCommandText = @"
-SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntry'";
-            using (var command = CreateCommand())
-            {
-                command.CommandText = TableCountCommandText;
-                int tableCount = (int)GetScalar<long>(command);
-                if (tableCount > 0)
-                {
-                    return;
-                }
-            }
-
-            const string CreateTableCommandText = @"
+    /// <summary>
+    /// Schema for log database.
+    /// </summary>
+    public class LogDbSchemaChangeRepository : IAvailableChangeRepository<DbChange>
+    {
+        private const string CreateLogEntryTableCommandText = @"
 CREATE TABLE LogEntry
 (
     Id integer PRIMARY KEY ASC
@@ -194,28 +202,8 @@ CREATE TABLE LogEntry
     , ApplicationInfo text
     , ServiceId integer
 )";
-            using (var command = CreateCommand())
-            {
-                command.CommandText = CreateTableCommandText;
-                ModifyData(command);
-            }
-        }
 
-        private void InitializeLogEntryHttpStateTable()
-        {
-            const string TableCountCommandText = @"
-SELECT COUNT(*) FROM sqlite_master WHERE name = 'LogEntryHttpState'";
-            using (var command = CreateCommand())
-            {
-                command.CommandText = TableCountCommandText;
-                int tableCount = (int)GetScalar<long>(command);
-                if (tableCount > 0)
-                {
-                    return;
-                }
-            }
-
-            const string CreateTableCommandText = @"
+        private const string CreateLogEntryHttpStateTableCommandText = @"
 CREATE TABLE LogEntryHttpState
 (
     Id integer PRIMARY KEY ASC
@@ -227,11 +215,17 @@ CREATE TABLE LogEntryHttpState
     , Headers text
     , UserName text
 )";
-            using (var command = CreateCommand())
-            {
-                command.CommandText = CreateTableCommandText;
-                ModifyData(command);
-            }
+
+        /// <summary>
+        /// Gets the available changes.
+        /// </summary>
+        /// <returns>A list of changes.</returns>
+        public IEnumerable<DbChange> GetAvailableChanges()
+        {
+            var result = new List<DbChange>();
+            result.Add(new DbChange("LogEntry-CreateTable", CreateLogEntryTableCommandText));
+            result.Add(new DbChange("LogEntryHttpState-CreateTable", CreateLogEntryHttpStateTableCommandText));
+            return result;
         }
     }
 }

@@ -12,10 +12,6 @@
     /// </summary>
     public abstract class DbContext
     {
-        private readonly string _connectionString;
-
-        private readonly DbProviderFactory _factory;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
         /// </summary>
@@ -25,10 +21,20 @@
             DbProviderFactory factory,
             string connectionString)
         {
-            _factory = factory;
-            _connectionString = connectionString;
+            Factory = factory;
+            ConnectionString = connectionString;
         }
 
+        /// <summary>
+        /// Gets the connection string.
+        /// </summary>
+        protected string ConnectionString { get; private set; }
+
+        /// <summary>
+        /// Gets the factory.
+        /// </summary>
+        protected DbProviderFactory Factory { get; private set; }
+        
         /// <summary>
         /// Gets the data table for the given command text.
         /// </summary>
@@ -49,13 +55,13 @@
             Action<DbCommand> commandAction =
                 (DbCommand command) =>
                 {
-                    using (DbDataAdapter adapter = _factory.CreateDataAdapter())
+                    using (DbDataAdapter adapter = Factory.CreateDataAdapter())
                     {
                         adapter.SelectCommand = command;
                         adapter.Fill(dt);
                     }
                 };
-            DbCommand command2 = _factory.CreateCommand();
+            DbCommand command2 = Factory.CreateCommand();
             command2.CommandText = commandText;
             OperateOnDbCommand(
                 commandAction,
@@ -79,7 +85,7 @@
             Action<DbCommand> commandAction =
                 (DbCommand command2) =>
                 {
-                    using (DbDataAdapter adapter = _factory.CreateDataAdapter())
+                    using (DbDataAdapter adapter = Factory.CreateDataAdapter())
                     {
                         adapter.SelectCommand = command2;
                         adapter.Fill(dt);
@@ -137,8 +143,8 @@
                 throw new ArgumentNullException("command");
             }
 
-            DbConnection connection = _factory.CreateConnection();
-            connection.ConnectionString = _connectionString;
+            DbConnection connection = Factory.CreateConnection();
+            connection.ConnectionString = ConnectionString;
             command.Connection = connection;
             AddParameters(command, parameters);
             connection.Open();
@@ -160,9 +166,9 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            DbConnection connection = _factory.CreateConnection();
-            connection.ConnectionString = _connectionString;
-            DbCommand command = _factory.CreateCommand();
+            DbConnection connection = Factory.CreateConnection();
+            connection.ConnectionString = ConnectionString;
+            DbCommand command = Factory.CreateCommand();
             command.CommandText = commandText;
             command.Connection = connection;
             AddParameters(command, parameters);
@@ -186,7 +192,7 @@
             params DbParameter[] parameters)
         {
             int affectedRows = 0;
-            var command = _factory.CreateCommand();
+            var command = Factory.CreateCommand();
             command.CommandText = commandText;
             OperateOnDbCommand(
                 (DbCommand command2) => affectedRows = command2.ExecuteNonQuery(),
@@ -233,7 +239,7 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            DbCommand command = _factory.CreateCommand();
+            DbCommand command = Factory.CreateCommand();
             command.CommandText = commandText;
             return GetScalar<int?>(command, parameters);
         }
@@ -272,7 +278,7 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            using (DbCommand command = _factory.CreateCommand())
+            using (DbCommand command = Factory.CreateCommand())
             {
                 command.CommandText = commandText;
                 return GetScalar<T>(command, parameters);
@@ -341,7 +347,7 @@
         /// <returns>The database command.</returns>
         protected DbCommand CreateCommand()
         {
-            return _factory.CreateCommand();
+            return Factory.CreateCommand();
         }
 
         private static void AddParameters(
@@ -364,9 +370,9 @@
             DbCommand command,
             params DbParameter[] parameters)
         {
-            using (DbConnection connection = _factory.CreateConnection())
+            using (DbConnection connection = Factory.CreateConnection())
             {
-                connection.ConnectionString = _connectionString;
+                connection.ConnectionString = ConnectionString;
                 command.Connection = connection;
                 AddParameters(command, parameters);
                 connection.Open();

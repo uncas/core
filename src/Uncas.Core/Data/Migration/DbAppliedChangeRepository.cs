@@ -1,6 +1,5 @@
 ﻿namespace Uncas.Core.Data.Migration
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Common;
 
@@ -32,6 +31,7 @@
             InitializeDatabase();
             using (DbCommand command = CreateCommand())
             {
+                command.CommandText = "SELECT * FROM MigrationChange";
                 return GetObjects(command, MapToObject);
             }
         }
@@ -43,12 +43,53 @@
         public void AddAppliedChange(IMigrationChange change)
         {
             InitializeDatabase();
+            const string CreateTableCommandText = @"
+INSERT INTO MigrationChange
+(
+    Id
+    , DateApplied
+)
+VALUES
+(
+    @Id
+    , @DateApplied
+)";
+            using (var command = CreateCommand())
+            {
+                AddParameter(command, "Id", change.Id);
+                AddParameter(command, "DateApplied", SystemTime.Now());
+                command.CommandText = CreateTableCommandText;
+                ModifyData(command);
+            }
         }
 
-        private static void InitializeDatabase()
+        private void InitializeDatabase()
         {
-            // TODO: Implement migration db initialization...
-            throw new NotImplementedException();
+            // TODO: Decouple from SQLite:
+            const string TableCountCommandText = @"
+SELECT COUNT(*) FROM sqlite_master WHERE name = 'MigrationChange'";
+            using (var command = CreateCommand())
+            {
+                command.CommandText = TableCountCommandText;
+                int tableCount = (int)GetScalar<long>(command);
+                if (tableCount > 0)
+                {
+                    return;
+                }
+            }
+
+            const string CreateTableCommandText = @"
+CREATE TABLE MigrationChange
+(
+    ChangeNumber integer PRIMARY KEY ASC
+    , Id text UNIQUE
+    , DateApplied datetime
+)";
+            using (var command = CreateCommand())
+            {
+                command.CommandText = CreateTableCommandText;
+                ModifyData(command);
+            }
         }
 
         private static IMigrationChange MapToObject(DbDataReader reader)
