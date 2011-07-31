@@ -67,6 +67,18 @@
         }
 
         /// <summary>
+        /// Determines whether the service is registered.
+        /// </summary>
+        /// <param name="type">The type of the service.</param>
+        /// <returns>
+        ///   <c>True</c> if the service is registered; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsRegistered(Type type)
+        {
+            return Container.IsRegistered(type);
+        }
+        
+        /// <summary>
         /// Registers the type.
         /// </summary>
         /// <param name="implementationType">Type of the implementation.</param>

@@ -20,5 +20,14 @@
         /// <param name="implementationType">Type of the implementation.</param>
         /// <param name="interfaceType">Type of the interface.</param>
         void RegisterType(Type implementationType, Type interfaceType);
+
+        /// <summary>
+        /// Determines whether the service is registered.
+        /// </summary>
+        /// <param name="type">The type of the service.</param>
+        /// <returns>
+        ///   <c>True</c> if the service is registered; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsRegistered(Type type);
     }
 }
