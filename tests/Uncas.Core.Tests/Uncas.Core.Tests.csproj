@@ -50,6 +50,7 @@
     <Compile Include="Ioc\BaseBootstrapperTests.cs" />
     <Compile Include="Ioc\ConcreteBootstrapperTests.cs" />
     <Compile Include="Ioc\LogRepositoryConfiguration.cs" />
+    <Compile Include="Logging\LoggerTests.cs" />
     <Compile Include="Logging\SQLiteLogRepositoryConfiguration.cs" />
     <Compile Include="Logging\LogEntryTests.cs" />
     <Compile Include="Logging\LogRepositoryTests.cs" />
