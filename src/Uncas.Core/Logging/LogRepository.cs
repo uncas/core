@@ -63,7 +63,8 @@
             const string commandText = @"
 SELECT * 
 FROM LogEntry
-WHERE Created >= @From;
+WHERE Created >= @From
+ORDER BY Created DESC;
 ";
             using (DbCommand command = CreateCommand())
             {
