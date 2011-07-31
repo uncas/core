@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Web;
 
     /// <summary>
@@ -192,10 +193,24 @@
             Id = id;
         }
 
+        private static StackFrame GetStackFrame(StackTrace stackTrace)
+        {
+            var fileNamesToSkip = new[] { "LogEntry.cs", "Logger.cs" };
+            foreach (StackFrame frame in stackTrace.GetFrames())
+            {
+                string fileName = frame.GetFileName();
+                if (!fileNamesToSkip.Any(x => fileName.EndsWith(x)))
+                {
+                    return frame;
+                }
+            }
+
+            return null;
+        }
+
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
         {
-            // TODO: Get line numbe and file name properly.
-            var frame = stackTrace.GetFrame(0);
+            StackFrame frame = GetStackFrame(stackTrace);
             FileName = frame.GetFileName();
             LineNumber = frame.GetFileLineNumber();
         }
