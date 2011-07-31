@@ -10,6 +10,9 @@
     /// </summary>
     public class LogEntry
     {
+        private static readonly string[] FileNamesToSkip = 
+            new[] { "LogEntry.cs", "Logger.cs" };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogEntry"/> class.
         /// </summary>
@@ -195,17 +198,23 @@
 
         private static StackFrame GetStackFrame(StackTrace stackTrace)
         {
-            var fileNamesToSkip = new[] { "LogEntry.cs", "Logger.cs" };
             foreach (StackFrame frame in stackTrace.GetFrames())
             {
                 string fileName = frame.GetFileName();
-                if (!fileNamesToSkip.Any(x => fileName.EndsWith(x)))
+                if (FrameIsRelevant(fileName))
                 {
                     return frame;
                 }
             }
 
             return null;
+        }
+
+        private static bool FrameIsRelevant(
+            string fileName)
+        {
+            return !FileNamesToSkip.Any(
+                x => fileName.EndsWith(x, StringComparison.OrdinalIgnoreCase));
         }
 
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
