@@ -6,9 +6,16 @@
 
     public class SQLiteLogRepositoryConfiguration : ILogRepositoryConfiguration
     {
+        private readonly string _fileName;
+
+        public SQLiteLogRepositoryConfiguration(string fileName)
+        {
+            _fileName = fileName;
+        }
+
         public string ConnectionString
         {
-            get { return "Data Source=Test.db;Version=3;"; }
+            get { return string.Format("Data Source={0};Version=3;", _fileName); }
         }
 
         public DbProviderFactory Factory
