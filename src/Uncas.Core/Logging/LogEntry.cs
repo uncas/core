@@ -47,6 +47,7 @@
         /// <summary>
         /// Gets the id.
         /// </summary>
+        /// <value>The id of the log entry.</value>
         public int? Id { get; private set; }
 
         /// <summary>
@@ -126,11 +127,13 @@
         /// <summary>
         /// Gets the application info.
         /// </summary>
+        /// <value>The application info.</value>
         public string ApplicationInfo { get; private set; }
 
         /// <summary>
         /// Gets the service id.
         /// </summary>
+        /// <value>The service id.</value>
         public int ServiceId { get; private set; }
 
         /// <summary>

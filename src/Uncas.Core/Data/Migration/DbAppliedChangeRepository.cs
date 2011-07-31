@@ -1,5 +1,6 @@
 ﻿namespace Uncas.Core.Data.Migration
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Common;
 
@@ -42,6 +43,18 @@
         /// <param name="change">The change.</param>
         public void AddAppliedChange(IMigrationChange change)
         {
+            if (change == null)
+            {
+                throw new ArgumentNullException("change");
+            }
+
+            if (string.IsNullOrEmpty(change.Id))
+            {
+                throw new ArgumentException(
+                    "Invalid change: id is null or empty.",
+                    "change");
+            }
+
             InitializeDatabase();
             const string CreateTableCommandText = @"
 INSERT INTO MigrationChange
@@ -61,6 +74,11 @@ VALUES
                 command.CommandText = CreateTableCommandText;
                 ModifyData(command);
             }
+        }
+
+        private static IMigrationChange MapToObject(DbDataReader reader)
+        {
+            return new MigrationChange((string)reader["Id"]);
         }
 
         private void InitializeDatabase()
@@ -90,11 +108,6 @@ CREATE TABLE MigrationChange
                 command.CommandText = CreateTableCommandText;
                 ModifyData(command);
             }
-        }
-
-        private static IMigrationChange MapToObject(DbDataReader reader)
-        {
-            return new MigrationChange((string)reader["Id"]);
         }
     }
 }

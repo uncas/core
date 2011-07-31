@@ -21,6 +21,7 @@
         /// <summary>
         /// Gets the change script.
         /// </summary>
+        /// <value>The change script.</value>
         public string ChangeScript { get; private set; }
     }
 }

@@ -20,6 +20,7 @@
         /// <summary>
         /// Gets the id of the migration change.
         /// </summary>
+        /// <value>The id of the migration change.</value>
         public string Id { get; private set; }
     }
 }

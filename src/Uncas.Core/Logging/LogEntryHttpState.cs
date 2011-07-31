@@ -63,16 +63,19 @@
         /// <summary>
         /// Gets the URL.
         /// </summary>
+        /// <value>The url of the HTTP request.</value>
         public Uri Url { get; private set; }
 
         /// <summary>
         /// Gets the referrer.
         /// </summary>
+        /// <value>The referrer of the HTTP request, if any.</value>
         public string Referrer { get; private set; }
 
         /// <summary>
-        /// Gets the user agent.
+        /// Gets the HTTP headers.
         /// </summary>
+        /// <value>The HTTP headers of the HTTP request.</value>
         public string Headers { get; private set; }
 
         /// <summary>
@@ -92,6 +95,7 @@
         /// <summary>
         /// Gets the status code.
         /// </summary>
+        /// <value>The status code of the HTTP request.</value>
         public int StatusCode { get; private set; }
     }
 }

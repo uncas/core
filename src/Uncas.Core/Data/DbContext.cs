@@ -28,11 +28,13 @@
         /// <summary>
         /// Gets the connection string.
         /// </summary>
+        /// <value>The connection string.</value>
         protected string ConnectionString { get; private set; }
 
         /// <summary>
         /// Gets the factory.
         /// </summary>
+        /// <value>The database provider factory.</value>
         protected DbProviderFactory Factory { get; private set; }
         
         /// <summary>
