@@ -120,7 +120,7 @@
 
                 if (ShouldBeIgnored(implementationType))
                 {
-                    return;
+                    continue;
                 }
 
                 _container.RegisterType(implementationType, interfaceType);
