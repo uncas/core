@@ -50,6 +50,12 @@
       <Link>UncasCoreKey.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Uncas.Core\Uncas.Core.csproj">
+      <Project>{E4F20F98-4E29-4E1C-8FD4-71F320A54214}</Project>
+      <Name>Uncas.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
