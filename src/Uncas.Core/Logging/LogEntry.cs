@@ -24,24 +24,72 @@
         {
             LogType = logType;
             Description = description;
-            Exception = exception;
             Additional = additional;
-
             Created = SystemTime.Now();
+
             var stackTrace = new StackTrace(1, true);
-            if (Exception != null)
+            StackTrace = stackTrace.ToString();
+
+            // todo get line numbe and file name properly
+            if (exception != null)
             {
-                ExceptionMessage = Exception.Message;
-                ExceptionType = Exception.GetType().ToString();
+                ExceptionMessage = exception.Message;
+                ExceptionType = exception.GetType().ToString();
+                StackTrace = exception.StackTrace;
             }
 
-            StackTrace = stackTrace.ToString();
             AssignFileNameAndLineNumber(stackTrace);
             AssignHttpState();
             AssignApplicationInfo();
 
             // TODO: Set ServiceId properly.
             ServiceId = 0;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogEntry"/> class.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <param name="logType">Type of the log.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="created">The created.</param>
+        /// <param name="additional">The additional.</param>
+        /// <param name="exceptionType">Type of the exception.</param>
+        /// <param name="exceptionMessage">The exception message.</param>
+        /// <param name="stackTrace">The stack trace.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="lineNumber">The line number.</param>
+        /// <param name="applicationInfo">The application info.</param>
+        /// <param name="serviceId">The service id.</param>
+        /// <param name="httpState">State of the HTTP.</param>
+        internal LogEntry(
+            int id,
+            LogType logType,
+            string description,
+            DateTime created,
+            string additional,
+            string exceptionType,
+            string exceptionMessage,
+            string stackTrace,
+            string fileName,
+            int lineNumber,
+            string applicationInfo,
+            int serviceId,
+            LogEntryHttpState httpState)
+        {
+            Id = id;
+            LogType = logType;
+            Description = description;
+            Created = created;
+            Additional = additional;
+            ExceptionType = exceptionType;
+            ExceptionMessage = exceptionMessage;
+            StackTrace = stackTrace;
+            FileName = fileName;
+            LineNumber = lineNumber;
+            ApplicationInfo = applicationInfo;
+            ServiceId = serviceId;
+            HttpState = httpState;
         }
 
         /// <summary>
@@ -63,12 +111,6 @@
         /// </summary>
         /// <value>The description.</value>
         public string Description { get; private set; }
-
-        /// <summary>
-        /// Gets the exception.
-        /// </summary>
-        /// <value>The exception.</value>
-        public Exception Exception { get; private set; }
 
         /// <summary>
         /// Gets the additional.

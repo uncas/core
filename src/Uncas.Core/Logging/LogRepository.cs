@@ -1,6 +1,7 @@
 ﻿namespace Uncas.Core.Logging
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Common;
     using Uncas.Core.Data;
     using Uncas.Core.Data.Migration;
@@ -51,6 +52,28 @@
         }
 
         /// <summary>
+        /// Gets the log entries since a specified time.
+        /// </summary>
+        /// <param name="from">The start time.</param>
+        /// <returns>
+        /// A list of log entries.
+        /// </returns>
+        public IEnumerable<LogEntry> GetLogEntries(DateTime from)
+        {
+            const string commandText = @"
+SELECT * 
+FROM LogEntry
+WHERE Created >= @From;
+";
+            using (DbCommand command = CreateCommand())
+            {
+                AddParameter(command, "From", from);
+                command.CommandText = commandText;
+                return GetObjects<LogEntry>(command, MapToLogEntry);
+            }
+        }
+
+        /// <summary>
         /// Migrates the schema for the underlying database.
         /// </summary>
         public void MigrateSchema()
@@ -69,6 +92,24 @@
                 availableChangeRepository,
                 appliedChangeRepository,
                 migrationTarget);
+        }
+
+        private static LogEntry MapToLogEntry(DbDataReader reader)
+        {
+            return new LogEntry(
+                (int)(long)reader["Id"],
+                (LogType)(int)reader["LogType"],
+                (string)reader["Description"],
+                (DateTime)reader["Created"],
+                (string)reader["Additional"],
+                (string)reader["ExceptionType"],
+                (string)reader["ExceptionMessage"],
+                (string)reader["StackTrace"],
+                (string)reader["FileName"],
+                (int)(long)reader["LineNumber"],
+                (string)reader["ApplicationInfo"],
+                (int)reader["ServiceId"],
+                null);
         }
 
         private static DbProviderFactory GetFactory(

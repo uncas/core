@@ -12,7 +12,7 @@
         /// Initializes a new instance of the <see cref="LogEntryHttpState"/> class.
         /// </summary>
         /// <param name="httpContext">The HTTP context.</param>
-        public LogEntryHttpState(
+        internal LogEntryHttpState(
             HttpContext httpContext)
         {
             if (httpContext == null)
