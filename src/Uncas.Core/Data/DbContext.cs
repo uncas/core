@@ -344,6 +344,55 @@
         }
 
         /// <summary>
+        /// Gets the date.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns>The date.</returns>
+        protected static DateTime GetDate(
+            DbDataReader reader,
+            string fieldName)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
+
+            object dbValue = reader[fieldName];
+            if (dbValue is DBNull)
+            {
+                throw new InvalidOperationException(
+                    "Database contains inconsistent data");
+            }
+
+            return (DateTime)dbValue;
+        }
+
+        /// <summary>
+        /// Gets the string.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <returns>The string.</returns>
+        protected static string GetString(
+            DbDataReader reader,
+            string fieldName)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
+
+            object dbValue = reader[fieldName];
+            if (dbValue is DBNull)
+            {
+                return null;
+            }
+
+            return (string)dbValue;
+        }
+
+        /// <summary>
         /// Creates the command.
         /// </summary>
         /// <returns>The database command.</returns>

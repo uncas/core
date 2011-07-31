@@ -98,17 +98,17 @@ WHERE Created >= @From;
         {
             return new LogEntry(
                 (int)(long)reader["Id"],
-                (LogType)(int)reader["LogType"],
-                (string)reader["Description"],
-                (DateTime)reader["Created"],
-                (string)reader["Additional"],
-                (string)reader["ExceptionType"],
-                (string)reader["ExceptionMessage"],
-                (string)reader["StackTrace"],
-                (string)reader["FileName"],
+                (LogType)(int)(long)reader["LogType"],
+                GetString(reader, "Description"),
+                GetDate(reader, "Created"),
+                GetString(reader, "Additional"),
+                GetString(reader, "ExceptionType"),
+                GetString(reader, "ExceptionMessage"),
+                GetString(reader, "StackTrace"),
+                GetString(reader, "FileName"),
                 (int)(long)reader["LineNumber"],
-                (string)reader["ApplicationInfo"],
-                (int)reader["ServiceId"],
+                GetString(reader, "ApplicationInfo"),
+                (int)(long)reader["ServiceId"],
                 null);
         }
 
