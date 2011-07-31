@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Uncas.Core")]
-[assembly: AssemblyDescription("Assembly with core infrastructure that does *not* depend on external libraries")]
+[assembly: AssemblyDescription("Infrastructure that does *not* depend on external libraries")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Uncas")]
 [assembly: AssemblyProduct("Uncas.Core")]

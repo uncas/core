@@ -13,8 +13,10 @@
         [SetUp]
         public void BeforeEach()
         {
-            var logDbContext = new SQLiteLogDbContext();
-            _logRepository = new LogRepository(logDbContext);
+            var logDbContext = new SQLiteLogRepositoryConfiguration();
+            var logRepository = new LogRepository(logDbContext);
+            logRepository.MigrateSchema();
+            _logRepository = logRepository;
         }
 
         [Test]
@@ -38,7 +40,7 @@
             var response = new HttpResponse(writer);
             var httpContext = new HttpContext(request, response);
             HttpContext.Current = httpContext;
-            
+
             var logEntry = new LogEntry(
                 LogType.Error,
                 "Description",

@@ -14,9 +14,19 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogRepository"/> class.
         /// </summary>
+        /// <param name="logRepositoryConfiguration">The log repository configuration.</param>
+        public LogRepository(ILogRepositoryConfiguration logRepositoryConfiguration)
+            : base(GetFactory(logRepositoryConfiguration), GetConnectionString(logRepositoryConfiguration))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogRepository"/> class.
+        /// </summary>
         /// <param name="logDbContext">The log db context.</param>
+        [Obsolete("Use overload with ILogRepositoryConfiguration instead.")]
         public LogRepository(ILogDbContext logDbContext)
-            : base(GetFactory(logDbContext), GetConnectionString(logDbContext))
+            : this(logDbContext as ILogRepositoryConfiguration)
         {
         }
 
@@ -42,25 +52,25 @@
         }
 
         private static DbProviderFactory GetFactory(
-            ILogDbContext logDbContext)
+            ILogRepositoryConfiguration logRepositoryConfiguration)
         {
-            if (logDbContext == null)
+            if (logRepositoryConfiguration == null)
             {
-                throw new ArgumentNullException("logDbContext");
+                throw new ArgumentNullException("logRepositoryConfiguration");
             }
 
-            return logDbContext.Factory;
+            return logRepositoryConfiguration.Factory;
         }
 
         private static string GetConnectionString(
-            ILogDbContext logDbContext)
+            ILogRepositoryConfiguration logRepositoryConfiguration)
         {
-            if (logDbContext == null)
+            if (logRepositoryConfiguration == null)
             {
-                throw new ArgumentNullException("logDbContext");
+                throw new ArgumentNullException("logRepositoryConfiguration");
             }
 
-            return logDbContext.ConnectionString;
+            return logRepositoryConfiguration.ConnectionString;
         }
 
         private int GetId()
@@ -165,11 +175,11 @@ VALUES
         public void MigrateSchema()
         {
             var availableChangeRepository = new LogDbSchemaChangeRepository();
-            var appliedChangeRepository = 
+            var appliedChangeRepository =
                 new DbAppliedChangeRepository(
                     Factory,
                     ConnectionString);
-            var migrationTarget = 
+            var migrationTarget =
                 new DbTarget(
                     Factory,
                     ConnectionString);

@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Data\Migration\MigrationServiceTests.cs" />
     <Compile Include="Ioc\BaseBootstrapperTests.cs" />
-    <Compile Include="Logging\SQLiteLogDbContext.cs" />
+    <Compile Include="Logging\SQLiteLogRepositoryConfiguration.cs" />
     <Compile Include="Logging\LogEntryTests.cs" />
     <Compile Include="Logging\LogRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

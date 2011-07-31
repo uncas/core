@@ -4,7 +4,7 @@
     using System.Data.SQLite;
     using Uncas.Core.Logging;
 
-    public class SQLiteLogDbContext : ILogDbContext
+    public class SQLiteLogRepositoryConfiguration : ILogRepositoryConfiguration
     {
         public string ConnectionString
         {
