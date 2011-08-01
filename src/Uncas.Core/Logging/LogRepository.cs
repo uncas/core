@@ -63,12 +63,14 @@
             const string commandText = @"
 SELECT * 
 FROM LogEntry
-WHERE Created >= @From
+WHERE @From <= Created
+    AND Created <= @To
 ORDER BY Created DESC;
 ";
             using (DbCommand command = CreateCommand())
             {
                 AddParameter(command, "From", from);
+                AddParameter(command, "To", SystemTime.Now());
                 command.CommandText = commandText;
                 return GetObjects<LogEntry>(command, MapToLogEntry);
             }
