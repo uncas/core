@@ -60,6 +60,22 @@
             StatusCode = response.StatusCode;
         }
 
+        internal LogEntryHttpState(
+            string urlString,
+            string referrer,
+            string headers,
+            string userHostAddress,
+            string userName,
+            int statusCode)
+        {
+            Url = new Uri(urlString);
+            Referrer = referrer;
+            Headers = headers;
+            UserHostAddress = userHostAddress;
+            UserName = userName;
+            StatusCode = statusCode;
+        }
+
         /// <summary>
         /// Gets the URL.
         /// </summary>

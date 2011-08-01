@@ -55,7 +55,12 @@
         /// <param name="lineNumber">The line number.</param>
         /// <param name="applicationInfo">The application info.</param>
         /// <param name="serviceId">The service id.</param>
-        /// <param name="httpState">State of the HTTP.</param>
+        /// <param name="urlString">The URL string.</param>
+        /// <param name="referrer">The referrer.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="userHostAddress">The user host address.</param>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="statusCode">The status code.</param>
         internal LogEntry(
             int id,
             LogType logType,
@@ -69,7 +74,12 @@
             int lineNumber,
             string applicationInfo,
             int serviceId,
-            LogEntryHttpState httpState)
+            string urlString,
+            string referrer,
+            string headers,
+            string userHostAddress,
+            string userName,
+            int statusCode)
         {
             Id = id;
             LogType = logType;
@@ -83,7 +93,13 @@
             LineNumber = lineNumber;
             ApplicationInfo = applicationInfo;
             ServiceId = serviceId;
-            HttpState = httpState;
+            HttpState = new LogEntryHttpState(
+                urlString,
+                referrer,
+                headers,
+                userHostAddress,
+                userName,
+                statusCode);
         }
 
         /// <summary>

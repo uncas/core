@@ -62,9 +62,11 @@
         {
             const string commandText = @"
 SELECT * 
-FROM LogEntry
-WHERE @From <= Created
-    AND Created <= @To
+FROM LogEntry AS LE
+JOIN LogEntryHttpState AS LEHS
+    ON LE.Id = LEHS.LogEntryId
+WHERE @From <= LE.Created
+    AND LE.Created <= @To
 ORDER BY Created DESC;
 ";
             using (DbCommand command = CreateCommand())
@@ -112,7 +114,12 @@ ORDER BY Created DESC;
                 (int)(long)reader["LineNumber"],
                 GetString(reader, "ApplicationInfo"),
                 (int)(long)reader["ServiceId"],
-                null);
+                GetString(reader, "Url"),
+                GetString(reader, "Referrer"),
+                GetString(reader, "Headers"),
+                GetString(reader, "UserHostAddress"),
+                GetString(reader, "UserName"),
+                (int)(long)reader["StatusCode"]);
         }
 
         private static DbProviderFactory GetFactory(
