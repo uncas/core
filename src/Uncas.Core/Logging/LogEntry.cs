@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Web;
 
     /// <summary>
@@ -31,23 +32,40 @@
             Additional = additional;
             Created = SystemTime.Now();
 
-            var stackTrace = GetStackTrace();
-
-            if (exception != null)
-            {
-                ExceptionMessage = exception.Message;
-                ExceptionType = exception.GetType().ToString();
-                stackTrace = new StackTrace(exception, true);
-            }
-
-            StackTrace = stackTrace.ToString();
-
-            AssignFileNameAndLineNumber(stackTrace);
+            AssignStackTraceAndExceptionInfo(exception);
             AssignHttpState();
             AssignApplicationInfo();
 
             // TODO: Set ServiceId properly.
             ServiceId = 0;
+        }
+
+        private void AssignStackTraceAndExceptionInfo(Exception exception)
+        {
+            if (exception != null)
+            {
+                var stackTraceStringBuilder = new StringBuilder();
+                Exception coreException = exception;
+                stackTraceStringBuilder.AppendLine(coreException.StackTrace);
+                while (coreException.InnerException != null)
+                {
+                    coreException = coreException.InnerException;
+                    stackTraceStringBuilder.AppendLine("Inner exception:");
+                    stackTraceStringBuilder.AppendLine(coreException.StackTrace);
+                }
+
+                ExceptionMessage = coreException.Message;
+                ExceptionType = coreException.GetType().ToString();
+                StackTrace = stackTraceStringBuilder.ToString();
+                var stackTrace = new StackTrace(coreException, true);
+                AssignFileNameAndLineNumber(stackTrace);
+            }
+            else
+            {
+                StackTrace stackTrace = GetStackTrace();
+                StackTrace = stackTrace.ToString();
+                AssignFileNameAndLineNumber(stackTrace);
+            }
         }
 
         /// <summary>
@@ -207,7 +225,7 @@
                 {
                     break;
                 }
-            
+
                 skip++;
             }
 

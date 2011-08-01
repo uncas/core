@@ -43,14 +43,43 @@
         [Test]
         public void LogEntry_ThrownException_FileNameFromException()
         {
+            const string exceptionMessage = "Test exception.";
             try
             {
-                throw new Exception("Test exception.");
+                throw new Exception(exceptionMessage);
             }
             catch (Exception exception)
             {
                 var logEntry = new LogEntry(LogType.Error, "test", exception, null);
                 Assert.That(logEntry.FileName.EndsWith("LogEntryTests.cs"));
+                Assert.AreEqual(exceptionMessage, logEntry.ExceptionMessage);
+            }
+        }
+
+        [Test]
+        public void LogEntry_InnerException_DetailsFromInnerException()
+        {
+            const string innerExceptionMessage = "() Inner exception message.";
+            const string outerExceptionMessage = ")( Outer exception message.";
+            try
+            {
+                try
+                {
+                    throw new Exception(innerExceptionMessage);
+                }
+                catch (Exception innerException)
+                {
+                    throw new Exception(outerExceptionMessage, innerException);
+                }
+            }
+            catch (Exception outerException)
+            {
+                var logEntry = new LogEntry(
+                    LogType.Error,
+                    "test",
+                    outerException,
+                    null);
+                Assert.AreEqual(innerExceptionMessage, logEntry.ExceptionMessage);
             }
         }
 
