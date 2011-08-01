@@ -40,34 +40,6 @@
             ServiceId = 0;
         }
 
-        private void AssignStackTraceAndExceptionInfo(Exception exception)
-        {
-            if (exception != null)
-            {
-                var stackTraceStringBuilder = new StringBuilder();
-                Exception coreException = exception;
-                stackTraceStringBuilder.AppendLine(coreException.StackTrace);
-                while (coreException.InnerException != null)
-                {
-                    coreException = coreException.InnerException;
-                    stackTraceStringBuilder.AppendLine("Inner exception:");
-                    stackTraceStringBuilder.AppendLine(coreException.StackTrace);
-                }
-
-                ExceptionMessage = coreException.Message;
-                ExceptionType = coreException.GetType().ToString();
-                StackTrace = stackTraceStringBuilder.ToString();
-                var stackTrace = new StackTrace(coreException, true);
-                AssignFileNameAndLineNumber(stackTrace);
-            }
-            else
-            {
-                StackTrace stackTrace = GetStackTrace();
-                StackTrace = stackTrace.ToString();
-                AssignFileNameAndLineNumber(stackTrace);
-            }
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LogEntry"/> class.
         /// </summary>
@@ -237,6 +209,34 @@
         {
             return !FileNamesToSkip.Any(
                 x => fileName.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private void AssignStackTraceAndExceptionInfo(Exception exception)
+        {
+            if (exception != null)
+            {
+                var stackTraceStringBuilder = new StringBuilder();
+                Exception coreException = exception;
+                stackTraceStringBuilder.AppendLine(coreException.StackTrace);
+                while (coreException.InnerException != null)
+                {
+                    coreException = coreException.InnerException;
+                    stackTraceStringBuilder.AppendLine("Inner exception:");
+                    stackTraceStringBuilder.AppendLine(coreException.StackTrace);
+                }
+
+                ExceptionMessage = coreException.Message;
+                ExceptionType = coreException.GetType().ToString();
+                StackTrace = stackTraceStringBuilder.ToString();
+                var stackTrace = new StackTrace(coreException, true);
+                AssignFileNameAndLineNumber(stackTrace);
+            }
+            else
+            {
+                StackTrace stackTrace = GetStackTrace();
+                StackTrace = stackTrace.ToString();
+                AssignFileNameAndLineNumber(stackTrace);
+            }
         }
 
         private void AssignFileNameAndLineNumber(StackTrace stackTrace)
