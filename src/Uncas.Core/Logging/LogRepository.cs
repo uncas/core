@@ -146,6 +146,7 @@ ORDER BY Created DESC;
 
         private int GetId()
         {
+            // TODO: Assign last_insert_rowid() to an out parameter instead.
             const string CommandText = @"
 SELECT MAX(Id) FROM LogEntry
 ";
