@@ -1,36 +1,76 @@
 ﻿namespace Uncas.Core.Web
 {
+    using System;
     using System.Web;
+    using System.Globalization;
+    using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Site URL logic.
+    /// </summary>
     public static class SiteUrl
     {
-        public static string WebSiteBaseUrl
+        /// <summary>
+        /// Gets the website base URL.
+        /// </summary>
+        public static Uri BaseUrl
         {
             get
             {
-                return string.Format(
+                var urlString =
+                    string.Format(
+                    CultureInfo.InvariantCulture,
                     "{0}://{1}{2}"
                     , HttpContext.Current.Request.Url.Scheme
                     , HttpContext.Current.Request.Url.Authority
                     , HttpContext.Current.Request.ApplicationPath.TrimEnd('/'));
+                return new Uri(urlString);
             }
         }
 
+        /// <summary>
+        /// Combines the virtual paths.
+        /// </summary>
+        /// <param name="virtualPath1">The 1st virtual path.</param>
+        /// <param name="virtualPath2">The 2nd virtual path.</param>
+        /// <returns></returns>
         public static string CombineVirtualPaths(
             string virtualPath1
             , string virtualPath2)
         {
+            if (string.IsNullOrEmpty(virtualPath1))
+            {
+                throw new ArgumentNullException("virtualPath1");
+            }
+
+            string effective2 = virtualPath2 != null ? virtualPath2 : string.Empty;
+
             return string.Format(
-                "{0}/{1}", 
+                CultureInfo.InvariantCulture,
+                "{0}/{1}",
                 virtualPath1.Trim('~', '/')
-                , virtualPath2.Trim('/'));
+                , effective2.Trim('/'));
         }
 
-        public static string GetAbsoluteUrl(string virtualPath)
+        /// <summary>
+        /// Gets the absolute URL.
+        /// </summary>
+        /// <param name="virtualPath">The virtual path.</param>
+        /// <returns></returns>
+        public static Uri GetAbsoluteUrl(string virtualPath)
         {
-            return CombineVirtualPaths(WebSiteBaseUrl, UrlEscape(virtualPath));
+            string urlString =
+                CombineVirtualPaths(
+                BaseUrl.AbsoluteUri,
+                UrlEscape(virtualPath));
+            return new Uri(urlString);
         }
 
+        /// <summary>
+        /// URLs the escape.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
         public static string UrlEscape(string text)
         {
             if (string.IsNullOrEmpty(text))
