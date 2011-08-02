@@ -14,7 +14,7 @@
         /// Gets the image.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
+        /// <returns>The image.</returns>
         public Image GetImage(string fileName)
         {
             return Bitmap.FromFile(fileName);
@@ -24,7 +24,7 @@
         /// Gets the image.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
-        /// <returns></returns>
+        /// <returns>The image.</returns>
         public Image GetImage(byte[] buffer)
         {
             Image image = null;
@@ -40,7 +40,7 @@
         /// Gets the bytes.
         /// </summary>
         /// <param name="image">The image.</param>
-        /// <returns></returns>
+        /// <returns>The buffer.</returns>
         public byte[] GetBytes(Image image)
         {
             if (image == null)
@@ -63,7 +63,7 @@
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         public byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight)
         {
             return GetThumbnailResult(buffer, maxWidthAndHeight).GetBufferAsArray();
@@ -121,7 +121,7 @@
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         public byte[] GetThumbnail(byte[] buffer, int maxWidth, int maxHeight)
         {
             return GetThumbnailResult(buffer, maxWidth, maxHeight).GetBufferAsArray();
@@ -133,7 +133,7 @@
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>The image buffer resize result.</returns>
         public ImageBufferResizeResult GetThumbnailResult(
             byte[] buffer,
             int maxWidth,
@@ -178,7 +178,9 @@
         /// </summary>
         /// <param name="image">The img.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// The image.
+        /// </returns>
         public Image GetThumbnail(Image image, int maxWidthAndHeight)
         {
             if (image == null)
@@ -210,7 +212,9 @@
         /// <param name="image">The img.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// The image.
+        /// </returns>
         public Image GetThumbnail(Image image, int maxWidth, int maxHeight)
         {
             if (image == null)
@@ -241,7 +245,9 @@
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="thumbSize">Size of the thumb.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// The thumbnail image.
+        /// </returns>
         [SuppressMessage(
             "Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",

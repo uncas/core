@@ -12,21 +12,21 @@
         /// Gets the bytes.
         /// </summary>
         /// <param name="image">The image.</param>
-        /// <returns></returns>
+        /// <returns>The buffer.</returns>
         byte[] GetBytes(Image image);
 
         /// <summary>
         /// Gets the image.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
-        /// <returns></returns>
+        /// <returns>The image.</returns>
         Image GetImage(byte[] buffer);
 
         /// <summary>
         /// Gets the image.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
+        /// <returns>The image.</returns>
         Image GetImage(string fileName);
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         byte[] GetThumbnail(byte[] buffer, int maxWidth, int maxHeight);
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>The image buffer resize result.</returns>
         ImageBufferResizeResult GetThumbnailResult(
             byte[] buffer,
             int maxWidth,
@@ -57,7 +57,7 @@
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
         /// <param name="originalSize">Size of the original.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         [Obsolete("Use GetThumbnailResult instead.")]
         byte[] GetThumbnail(
             byte[] buffer,
@@ -70,7 +70,7 @@
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight);
 
         /// <summary>
@@ -91,7 +91,7 @@
         /// <param name="buffer">The buffer.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
         /// <param name="originalSize">Size of the original.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail buffer.</returns>
         [Obsolete("Use GetThumbnailResult instead.")]
         byte[] GetThumbnail(
             byte[] buffer,
@@ -103,7 +103,7 @@
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="thumbSize">Size of the thumb.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail image.</returns>
         Image GetThumbnail(Image image, Size thumbSize);
 
         /// <summary>
@@ -112,7 +112,7 @@
         /// <param name="image">The image.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail image.</returns>
         Image GetThumbnail(Image image, int maxWidth, int maxHeight);
 
         /// <summary>
@@ -120,7 +120,7 @@
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <returns></returns>
+        /// <returns>The thumbnail image.</returns>
         Image GetThumbnail(Image image, int maxWidthAndHeight);
     }
 }

@@ -48,7 +48,7 @@
         /// <summary>
         /// Gets the buffer as an array.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The buffer.</returns>
         public byte[] GetBufferAsArray()
         {
             return _buffer;

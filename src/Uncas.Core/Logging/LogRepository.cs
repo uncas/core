@@ -60,7 +60,7 @@
         /// </returns>
         public IEnumerable<LogEntry> GetLogEntries(DateTime from)
         {
-            const string commandText = @"
+            const string CommandText = @"
 SELECT * 
 FROM LogEntry AS LE
 JOIN LogEntryHttpState AS LEHS
@@ -73,7 +73,7 @@ ORDER BY Created DESC;
             {
                 AddParameter(command, "From", from);
                 AddParameter(command, "To", SystemTime.Now());
-                command.CommandText = commandText;
+                command.CommandText = CommandText;
                 return GetObjects<LogEntry>(command, MapToLogEntry);
             }
         }

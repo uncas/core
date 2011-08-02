@@ -27,7 +27,7 @@
         /// Gets the cache item.
         /// </summary>
         /// <param name="rawKey">The raw key.</param>
-        /// <returns></returns>
+        /// <returns>The cached item.</returns>
         public object GetCacheItem(string rawKey)
         {
             return HttpRuntime.Cache[GetCacheKey(rawKey)];

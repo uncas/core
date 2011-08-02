@@ -4,7 +4,7 @@
     using System.Web.UI;
 
     /// <summary>
-    /// Playback of videos on YouTube, VideoJug, FiveMinutes, EHow
+    /// Playback of videos on YouTube, VideoJug, FiveMinutes, EHow.
     /// </summary>
     [ToolboxData("<{0}:ExternalPlayer runat=server></{0}:ExternalPlayer>")]
     public class ExternalPlayer : BasePlayer
@@ -23,13 +23,53 @@
             {
                 return _mediaSourceType;
             }
+
             set
             {
                 _mediaSourceType = value;
             }
         }
 
-        #region Formats
+        /// <summary>
+        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
+        /// </summary>
+        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
+        protected override void RenderContents(HtmlTextWriter writer)
+        {
+            if (writer == null)
+            {
+                return;
+            }
+
+            string playerFormat = string.Empty;
+            switch (this.MediaSourceType)
+            {
+                case VideoSourceType.YouTube:
+                    playerFormat = GetYouTubeFormat();
+                    break;
+                case VideoSourceType.VideoJug:
+                    playerFormat = GetVideoJugFormat();
+                    break;
+                case VideoSourceType.FiveMinutes:
+                    playerFormat = Get5minFormat();
+                    break;
+                case VideoSourceType.EHow:
+                    playerFormat = GetEHowFormat();
+                    break;
+                default:
+                    break;
+            }
+
+            string player = string.Format(
+                CultureInfo.InvariantCulture,
+                playerFormat,
+                this.ClientID,
+                (int)this.Width.Value,
+                (int)this.Height.Value,
+                this.MediaSource);
+
+            writer.Write(player);
+        }
 
         private static string GetYouTubeFormat()
         {
@@ -111,52 +151,5 @@
     type='application/x-shockwave-flash' />
 ";
         }
-
-        #endregion
-
-        #region Render
-
-        /// <summary>
-        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
-        /// </summary>
-        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
-        protected override void RenderContents(HtmlTextWriter writer)
-        {
-            if (writer == null)
-            {
-                return;
-            }
-
-            string playerFormat = string.Empty;
-            switch (this.MediaSourceType)
-            {
-                case VideoSourceType.YouTube:
-                    playerFormat = GetYouTubeFormat();
-                    break;
-                case VideoSourceType.VideoJug:
-                    playerFormat = GetVideoJugFormat();
-                    break;
-                case VideoSourceType.FiveMinutes:
-                    playerFormat = Get5minFormat();
-                    break;
-                case VideoSourceType.EHow:
-                    playerFormat = GetEHowFormat();
-                    break;
-                default:
-                    break;
-            }
-
-            string player = string.Format(
-                CultureInfo.InvariantCulture,
-                playerFormat,
-                this.ClientID,
-                (int)this.Width.Value,
-                (int)this.Height.Value,
-                this.MediaSource);
-
-            writer.Write(player);
-        }
-
-        #endregion
     }
 }

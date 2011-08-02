@@ -16,7 +16,7 @@
 
         private Unit _width = new Unit(480);
 
-        private Unit _Height = new Unit(360);
+        private Unit _height = new Unit(360);
 
         /// <summary>
         /// Gets or sets a value indicating whether to auto play.
@@ -33,20 +33,21 @@
         /// <summary>
         /// Gets or sets the height of the Web server control.
         /// </summary>
+        /// <value>The height.</value>
         /// <returns>A <see cref="T:System.Web.UI.WebControls.Unit"/> that represents the height of the control. The default is <see cref="F:System.Web.UI.WebControls.Unit.Empty"/>.</returns>
-        ///   
         /// <exception cref="T:System.ArgumentException">The height was set to a negative value.</exception>
         public override Unit Height
         {
             get
             {
-                base.Height = _Height;
-                return _Height;
+                base.Height = _height;
+                return _height;
             }
+
             set
             {
                 base.Height = value;
-                _Height = value;
+                _height = value;
             }
         }
 
@@ -93,8 +94,8 @@
         /// <summary>
         /// Gets or sets the width of the Web server control.
         /// </summary>
+        /// <value>The width.</value>
         /// <returns>A <see cref="T:System.Web.UI.WebControls.Unit"/> that represents the width of the control. The default is <see cref="F:System.Web.UI.WebControls.Unit.Empty"/>.</returns>
-        ///   
         /// <exception cref="T:System.ArgumentException">The width of the Web server control was set to a negative value. </exception>
         public override Unit Width
         {
@@ -103,6 +104,7 @@
                 base.Width = _width;
                 return _width;
             }
+
             set
             {
                 base.Width = value;

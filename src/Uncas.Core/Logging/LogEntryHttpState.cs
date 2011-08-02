@@ -60,6 +60,15 @@
             StatusCode = response.StatusCode;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogEntryHttpState"/> class.
+        /// </summary>
+        /// <param name="urlString">The URL string.</param>
+        /// <param name="referrer">The referrer.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="userHostAddress">The user host address.</param>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="statusCode">The status code.</param>
         internal LogEntryHttpState(
             string urlString,
             string referrer,

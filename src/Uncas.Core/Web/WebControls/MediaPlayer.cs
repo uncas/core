@@ -8,30 +8,85 @@
     /// <summary>
     /// Media player that supports the following formats:
     ///     Movie formats: wmv, flv 
-    ///     Sound formats: wma, mp3
+    ///     Sound formats: wma, mp3.
     /// </summary>
     [ToolboxData("<{0}:MediaPlayer runat=server></{0}:MediaPlayer>")]
     public class MediaPlayer : BasePlayer
     {
-        #region Player formats
-
-        private string GetFlashPlayerFormat()
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.PreRender"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        protected override void OnPreRender(EventArgs e)
         {
-            string FlashPlayerLocation = Page.ClientScript.GetWebResourceUrl
-                (this.GetType(), "Uncas.Core.Web.WebControls.FlashPlayer.swf");
-            return @"
-<div id='{0}_flashContainer'>
-    <a href='http://www.macromedia.com/go/getflashplayer'>Get the Flash Player</a> to see this player.
-</div>
-<script type='text/javascript'>
-	var s1 = new SWFObject('" + FlashPlayerLocation + @"', 'mediaplayer', '{2}', '{3}', '8');
-	s1.addParam('allowfullscreen', 'true');
-	s1.addVariable('width', '{2}');
-	s1.addVariable('height', '{3}');
-	s1.addVariable('file', '{1}');
-	s1.write('{0}_flashContainer');
-</script>
-";
+            base.OnPreRender(e);
+
+            if (this.MediaSourceHasExtension(".flv"))
+            {
+                string swfobjectLocation =
+                    Page.ClientScript.GetWebResourceUrl(this.GetType(), "Uncas.Core.Web.WebControls.swfobject.js");
+                Page.ClientScript.RegisterClientScriptInclude("swfobject", swfobjectLocation);
+            }
+        }
+
+        /// <summary>
+        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
+        /// </summary>
+        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
+        protected override void RenderContents(HtmlTextWriter writer)
+        {
+            if (writer == null)
+            {
+                return;
+            }
+
+            // Resizing when playing sound:
+            if (this.MediaSourceHasExtension(".mp3") ||
+                this.MediaSourceHasExtension(".wma"))
+            {
+                if (IsIE())
+                {
+                    this.Width = Unit.Pixel(300);
+                    this.Height = Unit.Pixel(42);
+                }
+                else
+                {
+                    this.Width = Unit.Pixel(210);
+                    this.Height = Unit.Pixel(45);
+                }
+            }
+
+            // Getting the media player html:
+            string mediaPlayerFormat = string.Empty;
+            if (this.MediaSourceHasExtension(".flv"))
+            {
+                mediaPlayerFormat = GetFlashPlayerFormat();
+            }
+            else if (this.MediaSourceHasExtension(".mp4")
+                || this.MediaSourceHasExtension(".m4v")
+                || this.MediaSourceHasExtension(".mov"))
+            {
+                mediaPlayerFormat = GetMp4PlayerFormat();
+            }
+            else if (IsIE())
+            {
+                mediaPlayerFormat = GetIEMediaPlayerFormat();
+            }
+            else
+            {
+                mediaPlayerFormat = GetNonIEMediaPlayerFormat();
+            }
+
+            string mediaPlayer =
+                string.Format(
+                CultureInfo.InvariantCulture,
+                mediaPlayerFormat,
+                /* 0 */ this.ClientID,
+                /* 1 */ this.MediaSource,
+                /* 2 */ (int)this.Width.Value,
+                /* 3 */ (int)this.Height.Value,
+                /* 4 */ this.AutoPlay);
+            writer.Write(mediaPlayer);
         }
 
         private static string GetMp4PlayerFormat()
@@ -102,24 +157,24 @@
 ";
         }
 
-        #endregion
-
-        #region PreRender and Render
-
-        /// <summary>
-        /// Raises the <see cref="E:System.Web.UI.Control.PreRender"/> event.
-        /// </summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
-        protected override void OnPreRender(EventArgs e)
+        private string GetFlashPlayerFormat()
         {
-            base.OnPreRender(e);
-
-            if (this.MediaSourceHasExtension(".flv"))
-            {
-                string swfobjectLocation =
-                    Page.ClientScript.GetWebResourceUrl(this.GetType(), "Uncas.Core.Web.WebControls.swfobject.js");
-                Page.ClientScript.RegisterClientScriptInclude("swfobject", swfobjectLocation);
-            }
+            string flashPlayerLocation = Page.ClientScript.GetWebResourceUrl(
+                this.GetType(),
+                "Uncas.Core.Web.WebControls.FlashPlayer.swf");
+            return @"
+<div id='{0}_flashContainer'>
+    <a href='http://www.macromedia.com/go/getflashplayer'>Get the Flash Player</a> to see this player.
+</div>
+<script type='text/javascript'>
+	var s1 = new SWFObject('" + flashPlayerLocation + @"', 'mediaplayer', '{2}', '{3}', '8');
+	s1.addParam('allowfullscreen', 'true');
+	s1.addVariable('width', '{2}');
+	s1.addVariable('height', '{3}');
+	s1.addVariable('file', '{1}');
+	s1.write('{0}_flashContainer');
+</script>
+";
         }
 
         private bool MediaSourceHasExtension(string extension)
@@ -128,68 +183,6 @@
                 extension,
                 StringComparison.OrdinalIgnoreCase);
         }
-
-        /// <summary>
-        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
-        /// </summary>
-        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
-        protected override void RenderContents(HtmlTextWriter writer)
-        {
-            if (writer == null)
-            {
-                return;
-            }
-
-            // Resizing when playing sound:
-            if (this.MediaSourceHasExtension(".mp3") ||
-                this.MediaSourceHasExtension(".wma"))
-            {
-                if (IsIE())
-                {
-                    this.Width = Unit.Pixel(300);
-                    this.Height = Unit.Pixel(42);
-                }
-                else
-                {
-                    this.Width = Unit.Pixel(210);
-                    this.Height = Unit.Pixel(45);
-                }
-            }
-
-            // Getting the media player html:
-            string mediaPlayerFormat = string.Empty;
-            if (this.MediaSourceHasExtension(".flv"))
-            {
-                mediaPlayerFormat = GetFlashPlayerFormat();
-            }
-            else if (this.MediaSourceHasExtension(".mp4")
-                || this.MediaSourceHasExtension(".m4v")
-                || this.MediaSourceHasExtension(".mov"))
-            {
-                mediaPlayerFormat = GetMp4PlayerFormat();
-            }
-            else if (IsIE())
-            {
-                mediaPlayerFormat = GetIEMediaPlayerFormat();
-            }
-            else
-            {
-                mediaPlayerFormat = GetNonIEMediaPlayerFormat();
-            }
-
-            string mediaPlayer =
-                string.Format(
-                CultureInfo.InvariantCulture,
-                mediaPlayerFormat,
-                /* 0 */ this.ClientID,
-                /* 1 */ this.MediaSource,
-                /* 2 */ (int)this.Width.Value,
-                /* 3 */ (int)this.Height.Value,
-                /* 4 */ this.AutoPlay);
-            writer.Write(mediaPlayer);
-        }
-
-        #endregion
 
         private bool IsIE()
         {

@@ -231,7 +231,7 @@
         /// </summary>
         /// <param name="commandText">The command text.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The integer value.</returns>
         [Obsolete("Use overload that takes DbCommand instead.")]
         [SuppressMessage(
             "Microsoft.Security",
@@ -251,7 +251,7 @@
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The integer value.</returns>
         public int? GetInt32(
             DbCommand command,
             params DbParameter[] parameters)
@@ -270,7 +270,7 @@
         /// <typeparam name="T">The type of the scalar.</typeparam>
         /// <param name="commandText">The command text.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The scalar value.</returns>
         [Obsolete("Use overload that takes DbCommand instead.")]
         [SuppressMessage(
             "Microsoft.Security",
@@ -293,7 +293,7 @@
         /// <typeparam name="T">The type of the scalar.</typeparam>
         /// <param name="command">The command.</param>
         /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
+        /// <returns>The scalar value.</returns>
         public T GetScalar<T>(
             DbCommand command,
             params DbParameter[] parameters)
@@ -358,14 +358,14 @@
                 throw new ArgumentNullException("reader");
             }
 
-            object dbValue = reader[fieldName];
-            if (dbValue is DBNull)
+            object databaseValue = reader[fieldName];
+            if (databaseValue is DBNull)
             {
                 throw new InvalidOperationException(
                     "Database contains inconsistent data");
             }
 
-            return (DateTime)dbValue;
+            return (DateTime)databaseValue;
         }
 
         /// <summary>
@@ -383,13 +383,13 @@
                 throw new ArgumentNullException("reader");
             }
 
-            object dbValue = reader[fieldName];
-            if (dbValue is DBNull)
+            object databaseValue = reader[fieldName];
+            if (databaseValue is DBNull)
             {
                 return null;
             }
 
-            return (string)dbValue;
+            return (string)databaseValue;
         }
 
         /// <summary>

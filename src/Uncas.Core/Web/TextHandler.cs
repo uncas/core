@@ -11,7 +11,7 @@
         /// Inserts line breaks.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns></returns>
+        /// <returns>The string with extra line breaks.</returns>
         public static string InsertLineBreaks(string text)
         {
             return InsertLineBreaks(text, 1); // The default...
@@ -29,7 +29,10 @@
         {
             string outString = string.Empty;
             if (string.IsNullOrEmpty(text))
+            {
                 return outString;
+            }
+
             numberOfLineBreaks = Math.Max(1, numberOfLineBreaks);
             foreach (char karakter in text.ToCharArray())
             {

@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The integer parameter.</returns>
         public static OleDbParameter GetInt32Parameter(string name, int? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Integer);
@@ -43,7 +43,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The 64 bit integer parameter.</returns>
         public static OleDbParameter GetInt64Parameter(string name, long? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.BigInt);
@@ -64,7 +64,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The date time parameter.</returns>
         public static OleDbParameter GetDateTimeParameter(string name, DateTime? value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Date);
@@ -85,7 +85,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">If set to <c>true</c> [value].</param>
-        /// <returns></returns>
+        /// <returns>The boolean parameter.</returns>
         public static OleDbParameter GetBooleanParameter(string name, bool value)
         {
             OleDbParameter par = new OleDbParameter(name, OleDbType.Boolean);
@@ -100,7 +100,7 @@
         /// <param name="value">The value.</param>
         /// <param name="precision">The precision.</param>
         /// <param name="scale">The scale.</param>
-        /// <returns></returns>
+        /// <returns>The decimal parameter.</returns>
         public static OleDbParameter GetDecimalParameter(
             string name,
             decimal? value,
@@ -127,7 +127,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The single precision parameter.</returns>
         public static OleDbParameter GetSingleParameter(
             string name,
             float? value)
@@ -150,7 +150,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The string parameter.</returns>
         public static OleDbParameter GetStringParameter(
             string name,
             string value)
@@ -164,7 +164,7 @@
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
         /// <param name="size">The size.</param>
-        /// <returns></returns>
+        /// <returns>The string parameter.</returns>
         public static OleDbParameter GetStringParameter(
             string name,
             string value,
@@ -189,7 +189,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>The note parameter.</returns>
         public static OleDbParameter GetNoteParameter(
             string name,
             string value)
