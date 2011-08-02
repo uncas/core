@@ -101,6 +101,7 @@
     <Compile Include="SystemTime.cs" />
     <Compile Include="Web\CacheHelper.cs" />
     <Compile Include="Web\SiteUrl.cs" />
+    <Compile Include="Web\TextHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\UncasCoreKey.snk" />
