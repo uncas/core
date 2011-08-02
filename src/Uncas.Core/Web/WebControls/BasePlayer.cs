@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
 
@@ -14,7 +15,7 @@
         private bool _autoPlay;
 
         private Unit _width = new Unit(480);
-        
+
         private Unit _Height = new Unit(360);
 
         /// <summary>
@@ -68,14 +69,21 @@
 
             set
             {
+                if (string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+
                 string mediaSource = value;
                 if (!mediaSource.StartsWith(
                     "http",
                     StringComparison.OrdinalIgnoreCase))
                 {
-                    mediaSource = string.Format("{0}/{1}"
-                        , Uncas.Core.Web.SiteUrl.BaseUrl
-                        , mediaSource.TrimStart('/', '~'));
+                    mediaSource = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}/{1}",
+                        Uncas.Core.Web.SiteUrl.BaseUrl,
+                        mediaSource.TrimStart('/', '~'));
                 }
 
                 ViewState["MediaSource"] = mediaSource;

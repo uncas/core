@@ -1,6 +1,7 @@
 ﻿namespace Uncas.Core.Web.WebControls
 {
     using System;
+    using System.Globalization;
     using System.Web.UI;
     using System.Web.UI.WebControls;
 
@@ -134,6 +135,11 @@
         /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
         protected override void RenderContents(HtmlTextWriter writer)
         {
+            if (writer == null)
+            {
+                return;
+            }
+
             // Resizing when playing sound:
             if (this.MediaSourceHasExtension(".mp3") ||
                 this.MediaSourceHasExtension(".wma"))
@@ -173,13 +179,13 @@
 
             string mediaPlayer =
                 string.Format(
-                mediaPlayerFormat
-                /* 0 */, this.ClientID
-                /* 1 */, this.MediaSource
-                /* 2 */, (int)this.Width.Value
-                /* 3 */, (int)this.Height.Value
-                /* 4 */, this.AutoPlay
-                );
+                CultureInfo.InvariantCulture,
+                mediaPlayerFormat,
+                /* 0 */ this.ClientID,
+                /* 1 */ this.MediaSource,
+                /* 2 */ (int)this.Width.Value,
+                /* 3 */ (int)this.Height.Value,
+                /* 4 */ this.AutoPlay);
             writer.Write(mediaPlayer);
         }
 

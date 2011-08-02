@@ -1,9 +1,9 @@
 ﻿namespace Uncas.Core.Web
 {
     using System;
-    using System.Web;
-    using System.Globalization;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Web;
 
     /// <summary>
     /// Site URL logic.
@@ -71,6 +71,10 @@
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1055:UriReturnValuesShouldNotBeStrings",
+            Justification = "Does not have to be full URL.")]
         public static string UrlEscape(string text)
         {
             if (string.IsNullOrEmpty(text))

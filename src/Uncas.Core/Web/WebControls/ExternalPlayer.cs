@@ -1,5 +1,6 @@
 ﻿namespace Uncas.Core.Web.WebControls
 {
+    using System.Globalization;
     using System.Web.UI;
 
     /// <summary>
@@ -121,6 +122,11 @@
         /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
         protected override void RenderContents(HtmlTextWriter writer)
         {
+            if (writer == null)
+            {
+                return;
+            }
+
             string playerFormat = string.Empty;
             switch (this.MediaSourceType)
             {
@@ -140,12 +146,13 @@
                     break;
             }
 
-            string player = string.Format(playerFormat
-                , this.ClientID
-                , (int)this.Width.Value
-                , (int)this.Height.Value
-                , this.MediaSource
-                );
+            string player = string.Format(
+                CultureInfo.InvariantCulture,
+                playerFormat,
+                this.ClientID,
+                (int)this.Width.Value,
+                (int)this.Height.Value,
+                this.MediaSource);
 
             writer.Write(player);
         }
