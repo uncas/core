@@ -5,6 +5,9 @@
     using System.Web.UI;
     using System.Web.UI.WebControls;
 
+    /// <summary>
+    /// Base player for all media players.
+    /// </summary>
     [DefaultProperty("MediaSource")]
     public abstract class BasePlayer : WebControl
     {
@@ -14,12 +17,24 @@
         
         private Unit _Height = new Unit(360);
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to auto play.
+        /// </summary>
+        /// <value>
+        ///   <c>True</c> if set to auto play; otherwise, <c>false</c>.
+        /// </value>
         public bool AutoPlay
         {
             get { return _autoPlay; }
             set { _autoPlay = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the height of the Web server control.
+        /// </summary>
+        /// <returns>A <see cref="T:System.Web.UI.WebControls.Unit"/> that represents the height of the control. The default is <see cref="F:System.Web.UI.WebControls.Unit.Empty"/>.</returns>
+        ///   
+        /// <exception cref="T:System.ArgumentException">The height was set to a negative value.</exception>
         public override Unit Height
         {
             get
@@ -34,6 +49,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the media source.
+        /// </summary>
+        /// <value>
+        /// The media source.
+        /// </value>
         [Bindable(true)]
         [DefaultValue("")]
         [UrlProperty]
@@ -61,6 +82,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the width of the Web server control.
+        /// </summary>
+        /// <returns>A <see cref="T:System.Web.UI.WebControls.Unit"/> that represents the width of the control. The default is <see cref="F:System.Web.UI.WebControls.Unit.Empty"/>.</returns>
+        ///   
+        /// <exception cref="T:System.ArgumentException">The width of the Web server control was set to a negative value. </exception>
         public override Unit Width
         {
             get

@@ -10,6 +10,12 @@
     {
         private VideoSourceType _mediaSourceType = VideoSourceType.YouTube;
 
+        /// <summary>
+        /// Gets or sets the type of the media source.
+        /// </summary>
+        /// <value>
+        /// The type of the media source.
+        /// </value>
         public VideoSourceType MediaSourceType
         {
             get
@@ -109,6 +115,10 @@
 
         #region Render
 
+        /// <summary>
+        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
+        /// </summary>
+        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
         protected override void RenderContents(HtmlTextWriter writer)
         {
             string playerFormat = string.Empty;
@@ -129,6 +139,7 @@
                 default:
                     break;
             }
+
             string player = string.Format(playerFormat
                 , this.ClientID
                 , (int)this.Width.Value
