@@ -100,6 +100,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Web\CacheHelper.cs" />
+    <Compile Include="Web\SiteUrl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\UncasCoreKey.snk" />
