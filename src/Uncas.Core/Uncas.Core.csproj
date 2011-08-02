@@ -102,13 +102,20 @@
     <Compile Include="Web\CacheHelper.cs" />
     <Compile Include="Web\SiteUrl.cs" />
     <Compile Include="Web\TextHandler.cs" />
+    <Compile Include="Web\WebControls\BasePlayer.cs" />
+    <Compile Include="Web\WebControls\ExternalPlayer.cs" />
+    <Compile Include="Web\WebControls\MediaPlayer.cs" />
+    <Compile Include="Web\WebControls\VideoSourceType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\UncasCoreKey.snk" />
     <None Include="Uncas.Core.ruleset" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Web\WebControls\" />
+    <EmbeddedResource Include="Web\WebControls\FlashPlayer.swf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Web\WebControls\swfobject.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
