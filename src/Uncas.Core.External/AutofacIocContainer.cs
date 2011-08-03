@@ -1,7 +1,10 @@
 ﻿namespace Uncas.Core.External
 {
     using System;
+    using System.Reflection;
+    using System.Web.Mvc;
     using Autofac;
+    using Autofac.Integration.Mvc;
     using Autofac.Integration.Web;
     using Uncas.Core.Ioc;
 
@@ -31,6 +34,11 @@
             }
         }
 
+        public void RegisterControllers(Assembly assembly)
+        {
+            _builder.RegisterControllers(assembly);
+        }
+
         /// <summary>
         /// Gets the container provider.
         /// </summary>
@@ -49,10 +57,18 @@
             {
                 if (_container == null)
                 {
-                    _container = _builder.Build();
+                    _container = Builder.Build();
                 }
 
                 return _container;
+            }
+        }
+
+        public IDependencyResolver DependencyResolver
+        {
+            get
+            {
+                return new AutofacDependencyResolver(Container);
             }
         }
 
@@ -77,7 +93,7 @@
         {
             return Container.IsRegistered(type);
         }
-        
+
         /// <summary>
         /// Registers the type.
         /// </summary>

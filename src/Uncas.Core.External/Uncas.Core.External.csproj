@@ -42,6 +42,9 @@
     <Reference Include="Autofac">
       <HintPath>..\..\lib\Autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\..\lib\Autofac\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac.Integration.Web">
       <HintPath>..\..\lib\Autofac\Autofac.Integration.Web.dll</HintPath>
     </Reference>
@@ -51,6 +54,7 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\lib\SQLite\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacIocContainer.cs" />

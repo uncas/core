@@ -1,6 +1,7 @@
 ﻿namespace Uncas.Core.Ioc
 {
     using System;
+    using System.Reflection;
 
     /// <summary>
     /// Represents an inversion-of-control container.
@@ -29,5 +30,11 @@
         ///   <c>True</c> if the service is registered; otherwise, <c>false</c>.
         /// </returns>
         bool IsRegistered(Type type);
+
+        /// <summary>
+        /// Registers the controllers.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        void RegisterControllers(Assembly assembly);
     }
 }
