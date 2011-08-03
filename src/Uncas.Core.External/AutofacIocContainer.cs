@@ -18,10 +18,22 @@
         private static IContainer _container;
 
         /// <summary>
+        /// Gets the dependency resolver.
+        /// </summary>
+        /// <value>The dependency resolver.</value>
+        public static IDependencyResolver DependencyResolver
+        {
+            get
+            {
+                return new AutofacDependencyResolver(Container);
+            }
+        }
+
+        /// <summary>
         /// Gets the builder.
         /// </summary>
         /// <value>The builder.</value>
-        public static ContainerBuilder Builder
+        private static ContainerBuilder Builder
         {
             get
             {
@@ -31,23 +43,6 @@
                 }
 
                 return _builder;
-            }
-        }
-
-        public void RegisterControllers(Assembly assembly)
-        {
-            _builder.RegisterControllers(assembly);
-        }
-
-        /// <summary>
-        /// Gets the container provider.
-        /// </summary>
-        /// <value>The container provider.</value>
-        public static IContainerProvider ContainerProvider
-        {
-            get
-            {
-                return new ContainerProvider(Container);
             }
         }
 
@@ -64,12 +59,13 @@
             }
         }
 
-        public IDependencyResolver DependencyResolver
+        /// <summary>
+        /// Registers the controllers.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        public void RegisterControllers(Assembly assembly)
         {
-            get
-            {
-                return new AutofacDependencyResolver(Container);
-            }
+            _builder.RegisterControllers(assembly);
         }
 
         /// <summary>
