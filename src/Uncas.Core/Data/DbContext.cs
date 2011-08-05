@@ -36,7 +36,7 @@
         /// </summary>
         /// <value>The database provider factory.</value>
         protected DbProviderFactory Factory { get; private set; }
-        
+
         /// <summary>
         /// Gets the data table for the given command text.
         /// </summary>
@@ -52,17 +52,16 @@
             string commandText,
             params DbParameter[] parameters)
         {
-            DataTable dt = new DataTable("uncas-data");
-            dt.Locale = CultureInfo.InvariantCulture;
+            var dt = new DataTable("uncas-data") { Locale = CultureInfo.InvariantCulture };
             Action<DbCommand> commandAction =
-                (DbCommand command) =>
-                {
-                    using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                command =>
                     {
-                        adapter.SelectCommand = command;
-                        adapter.Fill(dt);
-                    }
-                };
+                        using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(dt);
+                        }
+                    };
             DbCommand command2 = Factory.CreateCommand();
             command2.CommandText = commandText;
             OperateOnDbCommand(
@@ -82,22 +81,59 @@
             DbCommand command,
             params DbParameter[] parameters)
         {
-            DataTable dt = new DataTable("uncas-data");
-            dt.Locale = CultureInfo.InvariantCulture;
+            var dt = new DataTable("uncas-data") { Locale = CultureInfo.InvariantCulture };
             Action<DbCommand> commandAction =
-                (DbCommand command2) =>
-                {
-                    using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                command2 =>
                     {
-                        adapter.SelectCommand = command2;
-                        adapter.Fill(dt);
-                    }
-                };
+                        using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                        {
+                            adapter.SelectCommand = command2;
+                            adapter.Fill(dt);
+                        }
+                    };
             OperateOnDbCommand(
                 commandAction,
                 command,
                 parameters);
             return dt;
+        }
+
+        /// <summary>
+        /// Gets the int32.
+        /// </summary>
+        /// <param name="commandText">The command text.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The integer value.</returns>
+        [Obsolete("Use overload that takes DbCommand instead.")]
+        [SuppressMessage(
+            "Microsoft.Security",
+            "CA2100:Review SQL queries for security vulnerabilities",
+            Justification = "This is marked as obsolete.")]
+        public int? GetInt32(
+            string commandText,
+            params DbParameter[] parameters)
+        {
+            DbCommand command = Factory.CreateCommand();
+            command.CommandText = commandText;
+            return GetScalar<int?>(command, parameters);
+        }
+
+        /// <summary>
+        /// Gets the int32.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The integer value.</returns>
+        public int? GetInt32(
+            DbCommand command,
+            params DbParameter[] parameters)
+        {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
+            return GetScalar<int?>(command, parameters);
         }
 
         /// <summary>
@@ -179,92 +215,6 @@
         }
 
         /// <summary>
-        /// Modifies the data.
-        /// </summary>
-        /// <param name="commandText">The command text.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>The number of affected rows.</returns>
-        [Obsolete("Use overload with DbCommand instead.")]
-        [SuppressMessage(
-            "Microsoft.Security",
-            "CA2100:Review SQL queries for security vulnerabilities",
-            Justification = "This is marked as obsolete.")]
-        public int ModifyData(
-            string commandText,
-            params DbParameter[] parameters)
-        {
-            int affectedRows = 0;
-            var command = Factory.CreateCommand();
-            command.CommandText = commandText;
-            OperateOnDbCommand(
-                (DbCommand command2) => affectedRows = command2.ExecuteNonQuery(),
-                command,
-                parameters);
-            return affectedRows;
-        }
-
-        /// <summary>
-        /// Modifies the data.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>The number of affected rows.</returns>
-        public int ModifyData(
-            DbCommand command,
-            params DbParameter[] parameters)
-        {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
-
-            int affectedRows = 0;
-            OperateOnDbCommand(
-                (DbCommand command2) => affectedRows = command2.ExecuteNonQuery(),
-                command,
-                parameters);
-            return affectedRows;
-        }
-
-        /// <summary>
-        /// Gets the int32.
-        /// </summary>
-        /// <param name="commandText">The command text.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>The integer value.</returns>
-        [Obsolete("Use overload that takes DbCommand instead.")]
-        [SuppressMessage(
-            "Microsoft.Security",
-            "CA2100:Review SQL queries for security vulnerabilities",
-            Justification = "This is marked as obsolete.")]
-        public int? GetInt32(
-            string commandText,
-            params DbParameter[] parameters)
-        {
-            DbCommand command = Factory.CreateCommand();
-            command.CommandText = commandText;
-            return GetScalar<int?>(command, parameters);
-        }
-
-        /// <summary>
-        /// Gets the int32.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>The integer value.</returns>
-        public int? GetInt32(
-            DbCommand command,
-            params DbParameter[] parameters)
-        {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
-
-            return GetScalar<int?>(command, parameters);
-        }
-
-        /// <summary>
         /// Gets the scalar.
         /// </summary>
         /// <typeparam name="T">The type of the scalar.</typeparam>
@@ -305,7 +255,7 @@
 
             object databaseValue = null;
             OperateOnDbCommand(
-                (DbCommand command2) => databaseValue = command2.ExecuteScalar(),
+                command2 => databaseValue = command2.ExecuteScalar(),
                 command,
                 parameters);
             if (!(databaseValue is DBNull))
@@ -314,6 +264,54 @@
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Modifies the data.
+        /// </summary>
+        /// <param name="commandText">The command text.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The number of affected rows.</returns>
+        [Obsolete("Use overload with DbCommand instead.")]
+        [SuppressMessage(
+            "Microsoft.Security",
+            "CA2100:Review SQL queries for security vulnerabilities",
+            Justification = "This is marked as obsolete.")]
+        public int ModifyData(
+            string commandText,
+            params DbParameter[] parameters)
+        {
+            int affectedRows = 0;
+            DbCommand command = Factory.CreateCommand();
+            command.CommandText = commandText;
+            OperateOnDbCommand(
+                command2 => affectedRows = command2.ExecuteNonQuery(),
+                command,
+                parameters);
+            return affectedRows;
+        }
+
+        /// <summary>
+        /// Modifies the data.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The number of affected rows.</returns>
+        public int ModifyData(
+            DbCommand command,
+            params DbParameter[] parameters)
+        {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
+            int affectedRows = 0;
+            OperateOnDbCommand(
+                command2 => affectedRows = command2.ExecuteNonQuery(),
+                command,
+                parameters);
+            return affectedRows;
         }
 
         /// <summary>
@@ -339,7 +337,7 @@
 
             DbParameter parameter = command.CreateParameter();
             parameter.ParameterName = name;
-            parameter.Value = value != null ? value : DBNull.Value;
+            parameter.Value = value ?? DBNull.Value;
             command.Parameters.Add(parameter);
         }
 
@@ -403,7 +401,7 @@
 
         private static void AddParameters(
             DbCommand command,
-            DbParameter[] parameters)
+            IEnumerable<DbParameter> parameters)
         {
             if (parameters == null)
             {

@@ -3,7 +3,7 @@
     using System.Data.SqlClient;
 
     /// <summary>
-    /// SQL db context.
+    /// Microsoft SQL Server data context.
     /// </summary>
     public class SqlDbContext : DbContext
     {
