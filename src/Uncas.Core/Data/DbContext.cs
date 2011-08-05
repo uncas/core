@@ -45,6 +45,10 @@
         /// <returns>The data table.</returns>
         [Obsolete("Use overload that takes DbCommand instead.")]
         [SuppressMessage(
+            "Microsoft.Reliability", 
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Is the return value...")]
+        [SuppressMessage(
             "Microsoft.Security",
             "CA2100:Review SQL queries for security vulnerabilities",
             Justification = "This is marked as obsolete.")]
@@ -77,6 +81,10 @@
         /// <param name="command">The command.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>The data table.</returns>
+        [SuppressMessage(
+            "Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Is the return value...")]
         public DataTable GetData(
             DbCommand command,
             params DbParameter[] parameters)
