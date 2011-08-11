@@ -88,6 +88,11 @@
   <ItemGroup>
     <Compile Include="BaseBootstrapper.cs" />
     <Compile Include="ConfigurationWrapper.cs" />
+    <Compile Include="CoreText.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CoreText.resx</DependentUpon>
+    </Compile>
     <Compile Include="Data\DbContext.cs" />
     <Compile Include="Data\Migration\DbAppliedChangeRepository.cs" />
     <Compile Include="Data\Migration\DbAvailableChangeRepository.cs" />
@@ -151,6 +156,10 @@
     <None Include="Uncas.Core.ruleset" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CoreText.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CoreText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Web\WebControls\FlashPlayer.swf" />
   </ItemGroup>
   <ItemGroup>

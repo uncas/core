@@ -93,8 +93,7 @@ namespace Uncas.Core.Services
                 var serviceManager = new ServiceManager(_serviceName);
                 if (command == ServiceManagerCommand.Application)
                 {
-                    const string message = @"Running in console mode.";
-                    Console.WriteLine(message);
+                    Console.WriteLine(CoreText.ProgramRunner_RunningInConsoleMode);
                     _actionToRun();
                     Console.Read();
                 }
@@ -116,10 +115,13 @@ namespace Uncas.Core.Services
         private static void PrintUsage()
         {
             string exeName = Assembly.GetExecutingAssembly().ManifestModule.Name;
-            Console.WriteLine("Usage:");
+            Console.WriteLine(CoreText.ProgramRunner_Usage);
             foreach (var item in _commands)
             {
-                Console.WriteLine(@"  " + exeName + @" " + item.Key);
+                Console.WriteLine(
+                    CoreText.ProgramRunner_CommandUsage,
+                    exeName,
+                    item.Key);
             }
 
             Console.Read();
