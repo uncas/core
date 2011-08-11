@@ -12,7 +12,7 @@
     /// <summary>
     /// Install, Uninstall, Start and Stop services.
     /// </summary>
-    public class ServiceManager
+    public sealed class ServiceManager
     {
         private Dictionary<ServiceManagerCommand, Action> _commands;
 
@@ -31,61 +31,6 @@
         private string ServiceName { get; set; }
 
         /// <summary>
-        /// Determines whether the service is installed.
-        /// </summary>
-        /// <returns>
-        /// <c>True</c> if the service is installed; otherwise, <c>false</c>.
-        /// </returns>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Needs to be robust - general exceptions are logged.")]
-        public virtual bool IsServiceInstalled()
-        {
-            using (var serviceController =
-                new ServiceController(ServiceName))
-            {
-                try
-                {
-                    ServiceControllerStatus status = serviceController.Status;
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    EventLog.WriteEntry(
-                        "ServiceManager",
-                        ex.ToString(),
-                        EventLogEntryType.Error);
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the service is running.
-        /// </summary>
-        /// <returns>
-        /// <c>True</c> if the service is running; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsServiceRunning()
-        {
-            using (var serviceController = new ServiceController(ServiceName))
-            {
-                if (!IsServiceInstalled())
-                {
-                    return false;
-                }
-
-                return serviceController.Status == ServiceControllerStatus.Running;
-            }
-        }
-
-        /// <summary>
         /// Runs the command.
         /// </summary>
         /// <param name="command">The command.</param>
@@ -94,131 +39,6 @@
             if (_commands.ContainsKey(command))
             {
                 _commands[command]();
-            }
-        }
-
-        /// <summary>
-        /// Installs the service.
-        /// </summary>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Needs to be robust - general exceptions are logged.")]
-        protected virtual void InstallService()
-        {
-            if (IsServiceInstalled())
-            {
-                return;
-            }
-
-            try
-            {
-                var commandLine = new string[1];
-                commandLine[0] = "Test install";
-                IDictionary mySavedState = new Hashtable();
-                AssemblyInstaller installer = GetAssemblyInstaller(commandLine);
-                try
-                {
-                    installer.Install(mySavedState);
-                    installer.Commit(mySavedState);
-                }
-                catch (Exception ex)
-                {
-                    installer.Rollback(mySavedState);
-                    EventLog.WriteEntry(
-                        "ServiceManager",
-                        ex.ToString(),
-                        EventLogEntryType.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                EventLog.WriteEntry("ServiceManager", ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Starts the service.
-        /// </summary>
-        protected virtual void StartService()
-        {
-            if (!IsServiceInstalled())
-            {
-                return;
-            }
-
-            using (var serviceController = new ServiceController(ServiceName))
-            {
-                if (serviceController.Status == ServiceControllerStatus.Stopped)
-                {
-                    try
-                    {
-                        serviceController.Start();
-                        WaitForStatusChange(
-                            serviceController,
-                            ServiceControllerStatus.Running);
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        EventLog.WriteEntry(
-                            "ServiceManager",
-                            ex.ToString(),
-                            EventLogEntryType.Error);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Stops the service.
-        /// </summary>
-        protected virtual void StopService()
-        {
-            if (!IsServiceInstalled())
-            {
-                return;
-            }
-
-            using (var serviceController = new ServiceController(ServiceName))
-            {
-                if (serviceController.Status != ServiceControllerStatus.Running)
-                {
-                    return;
-                }
-                serviceController.Stop();
-                WaitForStatusChange(serviceController, ServiceControllerStatus.Stopped);
-            }
-        }
-
-        /// <summary>
-        /// Uninstalls the service.
-        /// </summary>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Needs to be robust - general exceptions are logged.")]
-        protected virtual void UninstallService()
-        {
-            if (!IsServiceInstalled())
-            {
-                return;
-            }
-
-            var commandLine = new string[1];
-            commandLine[0] = "Test Uninstall";
-            IDictionary mySavedState = new Hashtable();
-            mySavedState.Clear();
-            AssemblyInstaller installer = GetAssemblyInstaller(commandLine);
-            try
-            {
-                installer.Uninstall(mySavedState);
-            }
-            catch (Exception ex)
-            {
-                EventLog.WriteEntry(
-                    "ServiceManager",
-                    ex.ToString(),
-                    EventLogEntryType.Error);
             }
         }
 
@@ -271,6 +91,167 @@
                                 { ServiceManagerCommand.Start, StartService },
                                 { ServiceManagerCommand.Stop, StopService },
                             };
+        }
+
+        /// <summary>
+        /// Installs the service.
+        /// </summary>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Needs to be robust - general exceptions are logged.")]
+        private void InstallService()
+        {
+            if (IsServiceInstalled())
+            {
+                return;
+            }
+
+            try
+            {
+                var commandLine = new string[1];
+                commandLine[0] = "Test install";
+                IDictionary mySavedState = new Hashtable();
+                AssemblyInstaller installer = GetAssemblyInstaller(commandLine);
+                try
+                {
+                    installer.Install(mySavedState);
+                    installer.Commit(mySavedState);
+                }
+                catch (Exception ex)
+                {
+                    installer.Rollback(mySavedState);
+                    EventLog.WriteEntry(
+                        "ServiceManager",
+                        ex.ToString(),
+                        EventLogEntryType.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry("ServiceManager", ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the service is installed.
+        /// </summary>
+        /// <returns>
+        /// <c>True</c> if the service is installed; otherwise, <c>false</c>.
+        /// </returns>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Needs to be robust - general exceptions are logged.")]
+        private bool IsServiceInstalled()
+        {
+            using (var serviceController =
+                new ServiceController(ServiceName))
+            {
+                try
+                {
+                    ServiceControllerStatus status = serviceController.Status;
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(
+                        "ServiceManager",
+                        ex.ToString(),
+                        EventLogEntryType.Error);
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Starts the service.
+        /// </summary>
+        private void StartService()
+        {
+            if (!IsServiceInstalled())
+            {
+                return;
+            }
+
+            using (var serviceController = new ServiceController(ServiceName))
+            {
+                if (serviceController.Status == ServiceControllerStatus.Stopped)
+                {
+                    try
+                    {
+                        serviceController.Start();
+                        WaitForStatusChange(
+                            serviceController,
+                            ServiceControllerStatus.Running);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        EventLog.WriteEntry(
+                            "ServiceManager",
+                            ex.ToString(),
+                            EventLogEntryType.Error);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stops the service.
+        /// </summary>
+        private void StopService()
+        {
+            if (!IsServiceInstalled())
+            {
+                return;
+            }
+
+            using (var serviceController = new ServiceController(ServiceName))
+            {
+                if (serviceController.Status != ServiceControllerStatus.Running)
+                {
+                    return;
+                }
+                serviceController.Stop();
+                WaitForStatusChange(serviceController, ServiceControllerStatus.Stopped);
+            }
+        }
+
+        /// <summary>
+        /// Uninstalls the service.
+        /// </summary>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Needs to be robust - general exceptions are logged.")]
+        private void UninstallService()
+        {
+            if (!IsServiceInstalled())
+            {
+                return;
+            }
+
+            var commandLine = new string[1];
+            commandLine[0] = "Test Uninstall";
+            IDictionary mySavedState = new Hashtable();
+            mySavedState.Clear();
+            AssemblyInstaller installer = GetAssemblyInstaller(commandLine);
+            try
+            {
+                installer.Uninstall(mySavedState);
+            }
+            catch (Exception ex)
+            {
+                EventLog.WriteEntry(
+                    "ServiceManager",
+                    ex.ToString(),
+                    EventLogEntryType.Error);
+            }
         }
     }
 }
