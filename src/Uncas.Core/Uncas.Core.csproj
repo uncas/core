@@ -99,6 +99,7 @@
     <Compile Include="Data\Migration\MigrationChange.cs" />
     <Compile Include="Data\Migration\MigrationService.cs" />
     <Compile Include="Data\OleDbContext.cs" />
+    <Compile Include="Data\PagingInfo.cs" />
     <Compile Include="Data\SqlDbContext.cs" />
     <Compile Include="Drawing\IImageHandler.cs" />
     <Compile Include="Drawing\ImageBufferResizeResult.cs" />
