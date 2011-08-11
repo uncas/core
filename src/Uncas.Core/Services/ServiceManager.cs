@@ -104,6 +104,9 @@
         {
             if (IsServiceInstalled())
             {
+                Console.WriteLine(
+                    "Service '{0}' is already installed.", 
+                    ServiceName);
                 return;
             }
 
@@ -176,6 +179,9 @@
         {
             if (!IsServiceInstalled())
             {
+                Console.WriteLine(
+                    "Service '{0}' is not installed and will not be started.",
+                    ServiceName);
                 return;
             }
 
@@ -208,6 +214,9 @@
         {
             if (!IsServiceInstalled())
             {
+                Console.WriteLine(
+                    "Service '{0}' is not installed and will not be stopped.",
+                    ServiceName);
                 return;
             }
 
@@ -233,6 +242,9 @@
         {
             if (!IsServiceInstalled())
             {
+                Console.WriteLine(
+                    "Service '{0}' is not installed and will not be uninstalled.",
+                    ServiceName);
                 return;
             }
 
