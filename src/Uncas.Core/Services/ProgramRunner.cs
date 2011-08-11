@@ -25,19 +25,17 @@ namespace Uncas.Core.Services
                     { "-stop", ServiceManagerCommand.Stop }
                 };
 
+        private readonly Action _actionToRun;
+        private readonly Func<ServiceBase> _getServiceToRun;
+        private readonly string _serviceName;
+
         /// <summary>
-        /// Runs the program.
+        /// Initializes a new instance of the <see cref="ProgramRunner"/> class.
         /// </summary>
-        /// <param name="args">The args.</param>
         /// <param name="actionToRun">The action to run.</param>
         /// <param name="serviceName">Name of the service.</param>
         /// <param name="getServiceToRun">The get service to run.</param>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Should be robust.")]
-        public void RunProgram(
-            string[] args,
+        public ProgramRunner(
             Action actionToRun,
             string serviceName,
             Func<ServiceBase> getServiceToRun)
@@ -57,6 +55,21 @@ namespace Uncas.Core.Services
                 throw new ArgumentNullException("getServiceToRun");
             }
 
+            _actionToRun = actionToRun;
+            _serviceName = serviceName;
+            _getServiceToRun = getServiceToRun;
+        }
+
+        /// <summary>
+        /// Runs the program.
+        /// </summary>
+        /// <param name="args">The command-line arguments.</param>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Should be robust.")]
+        public void RunProgram(string[] args)
+        {
             try
             {
                 if (Debugger.IsAttached)
@@ -66,7 +79,7 @@ namespace Uncas.Core.Services
 
                 if (args == null || args.Length == 0)
                 {
-                    ServiceBase.Run(getServiceToRun());
+                    ServiceBase.Run(_getServiceToRun());
                     return;
                 }
 
@@ -77,12 +90,12 @@ namespace Uncas.Core.Services
                     return;
                 }
 
-                var serviceManager = new ServiceManager(serviceName);
+                var serviceManager = new ServiceManager(_serviceName);
                 if (command == ServiceManagerCommand.Application)
                 {
                     const string message = @"Running in console mode.";
                     Console.WriteLine(message);
-                    actionToRun();
+                    _actionToRun();
                     Console.Read();
                 }
                 else
@@ -93,7 +106,7 @@ namespace Uncas.Core.Services
             catch (Exception ex)
             {
                 EventLog.WriteEntry(
-                    serviceName,
+                    _serviceName,
                     ex.ToString(),
                     EventLogEntryType.Error);
                 Console.WriteLine(ex);
