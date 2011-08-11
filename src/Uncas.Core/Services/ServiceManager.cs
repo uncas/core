@@ -10,22 +10,6 @@
     using System.Threading;
 
     /// <summary>
-    /// Commands that can be executed for a service.
-    /// Note: Application is not really a service command, 
-    /// but we let the client use it as a marker
-    /// for not being in service mode.
-    /// </summary>
-    public enum ServiceManagerCommand
-    {
-        Unknown,
-        Application,
-        Install,
-        Uninstall,
-        Start,
-        Stop,
-    }
-
-    /// <summary>
     /// Install, Uninstall, Start and Stop services.
     /// </summary>
     public class ServiceManager
@@ -46,6 +30,12 @@
 
         private string ServiceName { get; set; }
 
+        /// <summary>
+        /// Determines whether the service is installed.
+        /// </summary>
+        /// <returns>
+        /// <c>True</c> if the service is installed; otherwise, <c>false</c>.
+        /// </returns>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
@@ -76,6 +66,12 @@
             }
         }
 
+        /// <summary>
+        /// Determines whether the service is running.
+        /// </summary>
+        /// <returns>
+        /// <c>True</c> if the service is running; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsServiceRunning()
         {
             using (var serviceController = new ServiceController(ServiceName))
@@ -89,6 +85,10 @@
             }
         }
 
+        /// <summary>
+        /// Runs the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
         public void RunCommand(ServiceManagerCommand command)
         {
             if (_commands.ContainsKey(command))
@@ -97,6 +97,9 @@
             }
         }
 
+        /// <summary>
+        /// Installs the service.
+        /// </summary>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
@@ -134,6 +137,9 @@
             }
         }
 
+        /// <summary>
+        /// Starts the service.
+        /// </summary>
         protected virtual void StartService()
         {
             if (!IsServiceInstalled())
@@ -163,6 +169,9 @@
             }
         }
 
+        /// <summary>
+        /// Stops the service.
+        /// </summary>
         protected virtual void StopService()
         {
             if (!IsServiceInstalled())
@@ -181,6 +190,9 @@
             }
         }
 
+        /// <summary>
+        /// Uninstalls the service.
+        /// </summary>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",

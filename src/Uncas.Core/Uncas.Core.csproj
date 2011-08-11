@@ -134,6 +134,7 @@
     <Compile Include="Ioc\IocIgnoreAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Services\ServiceManagerCommand.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Web\CacheHelper.cs" />
     <Compile Include="Web\ErrorHandler.cs" />
