@@ -3,11 +3,12 @@ namespace Uncas.Core.Services
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.ServiceProcess;
 
     /// <summary>
-    /// Handles program run.
+    /// Runs programs.
     /// </summary>
     public class ProgramRunner
     {
@@ -31,12 +32,31 @@ namespace Uncas.Core.Services
         /// <param name="actionToRun">The action to run.</param>
         /// <param name="serviceName">Name of the service.</param>
         /// <param name="getServiceToRun">The get service to run.</param>
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Should be robust.")]
         public void RunProgram(
             string[] args,
             Action actionToRun,
             string serviceName,
             Func<ServiceBase> getServiceToRun)
         {
+            if (actionToRun == null)
+            {
+                throw new ArgumentNullException("actionToRun");
+            }
+
+            if (string.IsNullOrEmpty(serviceName))
+            {
+                throw new ArgumentNullException("serviceName");
+            }
+
+            if (getServiceToRun == null)
+            {
+                throw new ArgumentNullException("getServiceToRun");
+            }
+
             try
             {
                 if (Debugger.IsAttached)
@@ -44,7 +64,7 @@ namespace Uncas.Core.Services
                     Debugger.Break();
                 }
 
-                if (args.Length == 0)
+                if (args == null || args.Length == 0)
                 {
                     ServiceBase.Run(getServiceToRun());
                     return;
@@ -76,6 +96,7 @@ namespace Uncas.Core.Services
                     serviceName,
                     ex.ToString(),
                     EventLogEntryType.Error);
+                Console.WriteLine(ex);
             }
         }
 
