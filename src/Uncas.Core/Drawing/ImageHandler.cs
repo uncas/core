@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.IO;
 
     /// <summary>
@@ -10,32 +11,6 @@
     /// </summary>
     public class ImageHandler : IImageHandler
     {
-        /// <summary>
-        /// Gets the image.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns>The image.</returns>
-        public Image GetImage(string fileName)
-        {
-            return Bitmap.FromFile(fileName);
-        }
-
-        /// <summary>
-        /// Gets the image.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <returns>The image.</returns>
-        public Image GetImage(byte[] buffer)
-        {
-            Image image = null;
-            using (MemoryStream ms = new MemoryStream(buffer))
-            {
-                image = Bitmap.FromStream(ms);
-            }
-
-            return image;
-        }
-
         /// <summary>
         /// Gets the bytes.
         /// </summary>
@@ -49,13 +24,39 @@
             }
 
             byte[] bytes = null;
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                image.Save(ms, ImageFormat.Jpeg);
                 bytes = ms.ToArray();
             }
 
             return bytes;
+        }
+
+        /// <summary>
+        /// Gets the image.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>The image.</returns>
+        public Image GetImage(string fileName)
+        {
+            return Image.FromFile(fileName);
+        }
+
+        /// <summary>
+        /// Gets the image.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>The image.</returns>
+        public Image GetImage(byte[] buffer)
+        {
+            Image image = null;
+            using (var ms = new MemoryStream(buffer))
+            {
+                image = Image.FromStream(ms);
+            }
+
+            return image;
         }
 
         /// <summary>
@@ -67,29 +68,6 @@
         public byte[] GetThumbnail(byte[] buffer, int maxWidthAndHeight)
         {
             return GetThumbnailResult(buffer, maxWidthAndHeight).GetBufferAsArray();
-        }
-
-        /// <summary>
-        /// Gets the thumbnail.
-        /// </summary>
-        /// <param name="buffer">The bytes of the original image.</param>
-        /// <param name="maxWidthAndHeight">Height of the max width and.</param>
-        /// <returns>
-        /// The thumbnail result.
-        /// </returns>
-        public ImageBufferResizeResult GetThumbnailResult(
-            byte[] buffer,
-            int maxWidthAndHeight)
-        {
-            byte[] output = null;
-            Size originalSize;
-            using (Image img = GetImage(buffer))
-            {
-                originalSize = img.Size;
-                output = GetBytes(GetThumbnail(img, maxWidthAndHeight));
-            }
-
-            return new ImageBufferResizeResult(output, originalSize);
         }
 
         /// <summary>
@@ -128,29 +106,6 @@
         }
 
         /// <summary>
-        /// Gets the thumbnail.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="maxWidth">Width of the max.</param>
-        /// <param name="maxHeight">Height of the max.</param>
-        /// <returns>The image buffer resize result.</returns>
-        public ImageBufferResizeResult GetThumbnailResult(
-            byte[] buffer,
-            int maxWidth,
-            int maxHeight)
-        {
-            byte[] output = null;
-            Size originalSize;
-            using (Image img = GetImage(buffer))
-            {
-                originalSize = img.Size;
-                output = GetBytes(GetThumbnail(img, maxWidth, maxHeight));
-            }
-
-            return new ImageBufferResizeResult(output, originalSize);
-        }
-
-        /// <summary>
         /// Gets the thumbnail image as a byte array.
         /// </summary>
         /// <param name="buffer">The bytes of the original image.</param>
@@ -165,7 +120,7 @@
             int maxHeight,
             out Size originalSize)
         {
-            var result = GetThumbnailResult(
+            ImageBufferResizeResult result = GetThumbnailResult(
                 buffer,
                 maxWidth,
                 maxHeight);
@@ -274,6 +229,52 @@
             }
 
             return bmp;
+        }
+
+        /// <summary>
+        /// Gets the thumbnail.
+        /// </summary>
+        /// <param name="buffer">The bytes of the original image.</param>
+        /// <param name="maxWidthAndHeight">Height of the max width and.</param>
+        /// <returns>
+        /// The thumbnail result.
+        /// </returns>
+        public ImageBufferResizeResult GetThumbnailResult(
+            byte[] buffer,
+            int maxWidthAndHeight)
+        {
+            byte[] output = null;
+            Size originalSize;
+            using (Image img = GetImage(buffer))
+            {
+                originalSize = img.Size;
+                output = GetBytes(GetThumbnail(img, maxWidthAndHeight));
+            }
+
+            return new ImageBufferResizeResult(output, originalSize);
+        }
+
+        /// <summary>
+        /// Gets the thumbnail.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="maxWidth">Width of the max.</param>
+        /// <param name="maxHeight">Height of the max.</param>
+        /// <returns>The image buffer resize result.</returns>
+        public ImageBufferResizeResult GetThumbnailResult(
+            byte[] buffer,
+            int maxWidth,
+            int maxHeight)
+        {
+            byte[] output = null;
+            Size originalSize;
+            using (Image img = GetImage(buffer))
+            {
+                originalSize = img.Size;
+                output = GetBytes(GetThumbnail(img, maxWidth, maxHeight));
+            }
+
+            return new ImageBufferResizeResult(output, originalSize);
         }
     }
 }

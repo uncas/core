@@ -8,7 +8,8 @@
     /// </summary>
     public class LogDbSchemaChangeRepository : IAvailableChangeRepository<DbChange>
     {
-        private const string CreateLogEntryTableCommandText = @"
+        private const string CreateLogEntryTableCommandText =
+            @"
 CREATE TABLE LogEntry
 (
     Id integer PRIMARY KEY ASC
@@ -25,7 +26,8 @@ CREATE TABLE LogEntry
     , ServiceId integer
 )";
 
-        private const string CreateLogEntryHttpStateTableCommandText = @"
+        private const string CreateLogEntryHttpStateTableCommandText =
+            @"
 CREATE TABLE LogEntryHttpState
 (
     Id integer PRIMARY KEY ASC

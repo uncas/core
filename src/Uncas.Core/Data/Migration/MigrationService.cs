@@ -40,23 +40,16 @@
 
             IEnumerable<IMigrationChange> appliedChanges =
                 appliedChangeRepository.GetAppliedChanges();
-            foreach (var change in availableChanges)
+            foreach (T change in availableChanges)
             {
                 if (!IsAlreadyApplied(appliedChanges, change))
                 {
-                    ApplyChange<T>(
+                    ApplyChange(
                         appliedChangeRepository,
                         change,
                         migrationTarget);
                 }
             }
-        }
-
-        private static bool IsAlreadyApplied(
-            IEnumerable<IMigrationChange> appliedChanges,
-            IMigrationChange change)
-        {
-            return appliedChanges.Any(x => x.Id == change.Id);
         }
 
         private static void ApplyChange<T>(
@@ -66,6 +59,13 @@
         {
             migrationTarget.ApplyChange(change);
             appliedChangeRepository.AddAppliedChange(change);
+        }
+
+        private static bool IsAlreadyApplied(
+            IEnumerable<IMigrationChange> appliedChanges,
+            IMigrationChange change)
+        {
+            return appliedChanges.Any(x => x.Id == change.Id);
         }
     }
 }

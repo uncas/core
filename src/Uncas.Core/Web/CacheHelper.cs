@@ -12,7 +12,7 @@
     {
         private const double CacheDuration = 60.0 * 5.0;
 
-        private string[] _masterCacheKeyArray = { string.Empty };
+        private readonly string[] _masterCacheKeyArray = { string.Empty };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheHelper"/> class.
@@ -21,16 +21,6 @@
         public CacheHelper(string masterCacheKey)
         {
             _masterCacheKeyArray = new string[1] { masterCacheKey };
-        }
-
-        /// <summary>
-        /// Gets the cache item.
-        /// </summary>
-        /// <param name="rawKey">The raw key.</param>
-        /// <returns>The cached item.</returns>
-        public object GetCacheItem(string rawKey)
-        {
-            return HttpRuntime.Cache[GetCacheKey(rawKey)];
         }
 
         /// <summary>
@@ -67,6 +57,16 @@
                 dependency,
                 DateTime.UtcNow.AddSeconds(CacheDuration),
                 Cache.NoSlidingExpiration);
+        }
+
+        /// <summary>
+        /// Gets the cache item.
+        /// </summary>
+        /// <param name="rawKey">The raw key.</param>
+        /// <returns>The cached item.</returns>
+        public object GetCacheItem(string rawKey)
+        {
+            return HttpRuntime.Cache[GetCacheKey(rawKey)];
         }
 
         /// <summary>

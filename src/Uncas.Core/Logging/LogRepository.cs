@@ -31,6 +31,55 @@
         }
 
         /// <summary>
+        /// Gets the log entries since a specified time.
+        /// </summary>
+        /// <param name="from">The start time.</param>
+        /// <returns>
+        /// A list of log entries.
+        /// </returns>
+        public IEnumerable<LogEntry> GetLogEntries(DateTime from)
+        {
+            const string CommandText =
+                @"
+SELECT * 
+FROM LogEntry AS LE
+JOIN LogEntryHttpState AS LEHS
+    ON LE.Id = LEHS.LogEntryId
+WHERE @From <= LE.Created
+    AND LE.Created <= @To
+ORDER BY Created DESC;
+";
+            using (DbCommand command = CreateCommand())
+            {
+                AddParameter(command, "From", from);
+                AddParameter(command, "To", SystemTime.Now());
+                command.CommandText = CommandText;
+                return GetObjects(command, MapToLogEntry);
+            }
+        }
+
+        /// <summary>
+        /// Migrates the schema for the underlying database.
+        /// </summary>
+        public void MigrateSchema()
+        {
+            var availableChangeRepository = new LogDbSchemaChangeRepository();
+            var appliedChangeRepository =
+                new DbAppliedChangeRepository(
+                    Factory,
+                    ConnectionString);
+            var migrationTarget =
+                new DbTarget(
+                    Factory,
+                    ConnectionString);
+            var service = new MigrationService();
+            service.Migrate(
+                availableChangeRepository,
+                appliedChangeRepository,
+                migrationTarget);
+        }
+
+        /// <summary>
         /// Saves the specified log entry.
         /// </summary>
         /// <param name="logEntry">The log entry.</param>
@@ -51,52 +100,26 @@
             }
         }
 
-        /// <summary>
-        /// Gets the log entries since a specified time.
-        /// </summary>
-        /// <param name="from">The start time.</param>
-        /// <returns>
-        /// A list of log entries.
-        /// </returns>
-        public IEnumerable<LogEntry> GetLogEntries(DateTime from)
+        private static string GetConnectionString(
+            ILogRepositoryConfiguration logRepositoryConfiguration)
         {
-            const string CommandText = @"
-SELECT * 
-FROM LogEntry AS LE
-JOIN LogEntryHttpState AS LEHS
-    ON LE.Id = LEHS.LogEntryId
-WHERE @From <= LE.Created
-    AND LE.Created <= @To
-ORDER BY Created DESC;
-";
-            using (DbCommand command = CreateCommand())
+            if (logRepositoryConfiguration == null)
             {
-                AddParameter(command, "From", from);
-                AddParameter(command, "To", SystemTime.Now());
-                command.CommandText = CommandText;
-                return GetObjects<LogEntry>(command, MapToLogEntry);
+                throw new ArgumentNullException("logRepositoryConfiguration");
             }
+
+            return logRepositoryConfiguration.ConnectionString;
         }
 
-        /// <summary>
-        /// Migrates the schema for the underlying database.
-        /// </summary>
-        public void MigrateSchema()
+        private static DbProviderFactory GetFactory(
+            ILogRepositoryConfiguration logRepositoryConfiguration)
         {
-            var availableChangeRepository = new LogDbSchemaChangeRepository();
-            var appliedChangeRepository =
-                new DbAppliedChangeRepository(
-                    Factory,
-                    ConnectionString);
-            var migrationTarget =
-                new DbTarget(
-                    Factory,
-                    ConnectionString);
-            var service = new MigrationService();
-            service.Migrate<DbChange>(
-                availableChangeRepository,
-                appliedChangeRepository,
-                migrationTarget);
+            if (logRepositoryConfiguration == null)
+            {
+                throw new ArgumentNullException("logRepositoryConfiguration");
+            }
+
+            return logRepositoryConfiguration.Factory;
         }
 
         private static LogEntry MapToLogEntry(DbDataReader reader)
@@ -122,35 +145,13 @@ ORDER BY Created DESC;
                 (int)(long)reader["StatusCode"]);
         }
 
-        private static DbProviderFactory GetFactory(
-            ILogRepositoryConfiguration logRepositoryConfiguration)
-        {
-            if (logRepositoryConfiguration == null)
-            {
-                throw new ArgumentNullException("logRepositoryConfiguration");
-            }
-
-            return logRepositoryConfiguration.Factory;
-        }
-
-        private static string GetConnectionString(
-            ILogRepositoryConfiguration logRepositoryConfiguration)
-        {
-            if (logRepositoryConfiguration == null)
-            {
-                throw new ArgumentNullException("logRepositoryConfiguration");
-            }
-
-            return logRepositoryConfiguration.ConnectionString;
-        }
-
         private int GetId()
         {
             // TODO: Assign last_insert_rowid() to an out parameter instead.
             const string CommandText = @"
 SELECT MAX(Id) FROM LogEntry
 ";
-            using (var command = CreateCommand())
+            using (DbCommand command = CreateCommand())
             {
                 command.CommandText = CommandText;
                 return (int)GetScalar<long>(
@@ -158,9 +159,47 @@ SELECT MAX(Id) FROM LogEntry
             }
         }
 
+        private void SaveHttpState(LogEntry logEntry)
+        {
+            LogEntryHttpState logEntryHttpState = logEntry.HttpState;
+            const string CommandText =
+                @"
+INSERT INTO LogEntryHttpState
+(LogEntryId
+    , StatusCode
+    , Url
+    , Referrer
+    , UserHostAddress
+    , Headers
+    , UserName)
+VALUES
+(@LogEntryId
+    , @StatusCode
+    , @Url
+    , @Referrer
+    , @UserHostAddress
+    , @Headers
+    , @UserName)
+";
+            using (DbCommand command = CreateCommand())
+            {
+                AddParameter(command, "LogEntryId", logEntry.Id);
+                AddParameter(command, "StatusCode", logEntryHttpState.StatusCode);
+                AddParameter(command, "Url", logEntryHttpState.Url);
+                AddParameter(command, "Referrer", logEntryHttpState.Referrer);
+                AddParameter(command, "UserHostAddress", logEntryHttpState.UserHostAddress);
+                AddParameter(command, "Headers", logEntryHttpState.Headers);
+                AddParameter(command, "UserName", logEntryHttpState.UserName);
+                command.CommandText = CommandText;
+                ModifyData(
+                    command);
+            }
+        }
+
         private void SaveLogEntry(LogEntry logEntry)
         {
-            const string CommandText = @"
+            const string CommandText =
+                @"
 INSERT INTO LogEntry
 (Created
     , LogType
@@ -186,7 +225,7 @@ VALUES
     , @ApplicationInfo
     , @ServiceId)
 ";
-            using (var command = CreateCommand())
+            using (DbCommand command = CreateCommand())
             {
                 AddParameter(command, "Created", logEntry.Created);
                 AddParameter(command, "StackTrace", logEntry.StackTrace);
@@ -199,42 +238,6 @@ VALUES
                 AddParameter(command, "ApplicationInfo", logEntry.ApplicationInfo);
                 AddParameter(command, "ServiceId", logEntry.ServiceId);
                 AddParameter(command, "LogType", logEntry.LogType);
-                command.CommandText = CommandText;
-                ModifyData(
-                    command);
-            }
-        }
-
-        private void SaveHttpState(LogEntry logEntry)
-        {
-            LogEntryHttpState logEntryHttpState = logEntry.HttpState;
-            const string CommandText = @"
-INSERT INTO LogEntryHttpState
-(LogEntryId
-    , StatusCode
-    , Url
-    , Referrer
-    , UserHostAddress
-    , Headers
-    , UserName)
-VALUES
-(@LogEntryId
-    , @StatusCode
-    , @Url
-    , @Referrer
-    , @UserHostAddress
-    , @Headers
-    , @UserName)
-";
-            using (var command = CreateCommand())
-            {
-                AddParameter(command, "LogEntryId", logEntry.Id);
-                AddParameter(command, "StatusCode", logEntryHttpState.StatusCode);
-                AddParameter(command, "Url", logEntryHttpState.Url);
-                AddParameter(command, "Referrer", logEntryHttpState.Referrer);
-                AddParameter(command, "UserHostAddress", logEntryHttpState.UserHostAddress);
-                AddParameter(command, "Headers", logEntryHttpState.Headers);
-                AddParameter(command, "UserName", logEntryHttpState.UserName);
                 command.CommandText = CommandText;
                 ModifyData(
                     command);

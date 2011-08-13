@@ -8,8 +8,7 @@
     [TestFixture]
     public class LoggerTests
     {
-        private ILogger _logger;
-        private Mock<ILogRepository> _logRepositoryMock;
+        #region Setup/Teardown
 
         [SetUp]
         public void BeforeEach()
@@ -17,6 +16,11 @@
             _logRepositoryMock = new Mock<ILogRepository>();
             _logger = new Logger(_logRepositoryMock.Object);
         }
+
+        #endregion
+
+        private ILogger _logger;
+        private Mock<ILogRepository> _logRepositoryMock;
 
         [Test]
         public void Log_WithDescription_SavesDescription()

@@ -18,9 +18,9 @@
         public static string GetConnectionString(
             string connectionStringName)
         {
-            var connectionStringObject =
+            ConnectionStringSettings connectionStringObject =
                 ConfigurationManager
-                .ConnectionStrings[connectionStringName];
+                    .ConnectionStrings[connectionStringName];
             if (connectionStringObject == null)
             {
                 throw new ArgumentException(
@@ -43,9 +43,9 @@
             string connectionStringName,
             string defaultValue)
         {
-            var connectionStringObject =
+            ConnectionStringSettings connectionStringObject =
                 ConfigurationManager
-                .ConnectionStrings[connectionStringName];
+                    .ConnectionStrings[connectionStringName];
             if (connectionStringObject == null)
             {
                 return defaultValue;

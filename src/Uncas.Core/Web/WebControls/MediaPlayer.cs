@@ -21,10 +21,10 @@
         {
             base.OnPreRender(e);
 
-            if (this.MediaSourceHasExtension(".flv"))
+            if (MediaSourceHasExtension(".flv"))
             {
                 string swfobjectLocation =
-                    Page.ClientScript.GetWebResourceUrl(this.GetType(), "Uncas.Core.Web.WebControls.swfobject.js");
+                    Page.ClientScript.GetWebResourceUrl(GetType(), "Uncas.Core.Web.WebControls.swfobject.js");
                 Page.ClientScript.RegisterClientScriptInclude("swfobject", swfobjectLocation);
             }
         }
@@ -41,30 +41,30 @@
             }
 
             // Resizing when playing sound:
-            if (this.MediaSourceHasExtension(".mp3") ||
-                this.MediaSourceHasExtension(".wma"))
+            if (MediaSourceHasExtension(".mp3") ||
+                MediaSourceHasExtension(".wma"))
             {
                 if (IsIE())
                 {
-                    this.Width = Unit.Pixel(300);
-                    this.Height = Unit.Pixel(42);
+                    Width = Unit.Pixel(300);
+                    Height = Unit.Pixel(42);
                 }
                 else
                 {
-                    this.Width = Unit.Pixel(210);
-                    this.Height = Unit.Pixel(45);
+                    Width = Unit.Pixel(210);
+                    Height = Unit.Pixel(45);
                 }
             }
 
             // Getting the media player html:
             string mediaPlayerFormat = string.Empty;
-            if (this.MediaSourceHasExtension(".flv"))
+            if (MediaSourceHasExtension(".flv"))
             {
                 mediaPlayerFormat = GetFlashPlayerFormat();
             }
-            else if (this.MediaSourceHasExtension(".mp4")
-                || this.MediaSourceHasExtension(".m4v")
-                || this.MediaSourceHasExtension(".mov"))
+            else if (MediaSourceHasExtension(".mp4")
+                     || MediaSourceHasExtension(".m4v")
+                     || MediaSourceHasExtension(".mov"))
             {
                 mediaPlayerFormat = GetMp4PlayerFormat();
             }
@@ -79,34 +79,20 @@
 
             string mediaPlayer =
                 string.Format(
-                CultureInfo.InvariantCulture,
-                mediaPlayerFormat,
-                /* 0 */ this.ClientID,
-                /* 1 */ this.MediaSource,
-                /* 2 */ (int)this.Width.Value,
-                /* 3 */ (int)this.Height.Value,
-                /* 4 */ this.AutoPlay);
+                    CultureInfo.InvariantCulture,
+                    mediaPlayerFormat,
+                    /* 0 */ ClientID,
+                    /* 1 */ MediaSource,
+                    /* 2 */ (int)Width.Value,
+                    /* 3 */ (int)Height.Value,
+                    /* 4 */ AutoPlay);
             writer.Write(mediaPlayer);
-        }
-
-        private static string GetMp4PlayerFormat()
-        {
-            return @"
-<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' 
-    codebase='http://www.apple.com/qtactivex/qtplugin.cab' id='{0}_object'
-    width='{2}' height='{3}'>
-    <param name='src' value='{1}' />
-    <param name='autoplay' value='{4}' />
-    <embed src='{1}' type='image/x-macpaint' id='{0}_embed' 
-        pluginspage='http://www.apple.com/quicktime/download' width='{2}' height='{3}' 
-        autoplay='{4}'>
-    </embed>
-</object>";
         }
 
         private static string GetIEMediaPlayerFormat()
         {
-            return @"
+            return
+                @"
 <object classid='CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95'
     codebase='http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701'
     standby='Loading Microsoft® Windows® Media Player components...'
@@ -128,9 +114,26 @@
 ";
         }
 
+        private static string GetMp4PlayerFormat()
+        {
+            return
+                @"
+<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' 
+    codebase='http://www.apple.com/qtactivex/qtplugin.cab' id='{0}_object'
+    width='{2}' height='{3}'>
+    <param name='src' value='{1}' />
+    <param name='autoplay' value='{4}' />
+    <embed src='{1}' type='image/x-macpaint' id='{0}_embed' 
+        pluginspage='http://www.apple.com/quicktime/download' width='{2}' height='{3}' 
+        autoplay='{4}'>
+    </embed>
+</object>";
+        }
+
         private static string GetNonIEMediaPlayerFormat()
         {
-            return @"
+            return
+                @"
     <embed 
         pluginspage='http://www.microsoft.com/Windows/MediaPlayer/'
         type='application/x-mplayer2' 
@@ -160,14 +163,17 @@
         private string GetFlashPlayerFormat()
         {
             string flashPlayerLocation = Page.ClientScript.GetWebResourceUrl(
-                this.GetType(),
+                GetType(),
                 "Uncas.Core.Web.WebControls.FlashPlayer.swf");
-            return @"
+            return
+                @"
 <div id='{0}_flashContainer'>
     <a href='http://www.macromedia.com/go/getflashplayer'>Get the Flash Player</a> to see this player.
 </div>
 <script type='text/javascript'>
-	var s1 = new SWFObject('" + flashPlayerLocation + @"', 'mediaplayer', '{2}', '{3}', '8');
+	var s1 = new SWFObject('" +
+                flashPlayerLocation +
+                @"', 'mediaplayer', '{2}', '{3}', '8');
 	s1.addParam('allowfullscreen', 'true');
 	s1.addVariable('width', '{2}');
 	s1.addVariable('height', '{3}');
@@ -177,17 +183,17 @@
 ";
         }
 
-        private bool MediaSourceHasExtension(string extension)
-        {
-            return this.MediaSource.EndsWith(
-                extension,
-                StringComparison.OrdinalIgnoreCase);
-        }
-
         private bool IsIE()
         {
             return Page.Request.Browser.Browser.Equals(
                 "ie",
+                StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool MediaSourceHasExtension(string extension)
+        {
+            return MediaSource.EndsWith(
+                extension,
                 StringComparison.OrdinalIgnoreCase);
         }
     }

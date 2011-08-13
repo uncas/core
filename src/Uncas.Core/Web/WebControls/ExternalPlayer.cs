@@ -19,15 +19,9 @@
         /// </value>
         public VideoSourceType MediaSourceType
         {
-            get
-            {
-                return _mediaSourceType;
-            }
+            get { return _mediaSourceType; }
 
-            set
-            {
-                _mediaSourceType = value;
-            }
+            set { _mediaSourceType = value; }
         }
 
         /// <summary>
@@ -42,7 +36,7 @@
             }
 
             string playerFormat = string.Empty;
-            switch (this.MediaSourceType)
+            switch (MediaSourceType)
             {
                 case VideoSourceType.YouTube:
                     playerFormat = GetYouTubeFormat();
@@ -63,33 +57,57 @@
             string player = string.Format(
                 CultureInfo.InvariantCulture,
                 playerFormat,
-                this.ClientID,
-                (int)this.Width.Value,
-                (int)this.Height.Value,
-                this.MediaSource);
+                ClientID,
+                (int)Width.Value,
+                (int)Height.Value,
+                MediaSource);
 
             writer.Write(player);
         }
 
-        private static string GetYouTubeFormat()
+        private static string Get5minFormat()
         {
-            return @"
-<object id='{0}_object' width='{1}' height='{2}'>
-    <param name='movie' value='http://www.youtube.com/v/{3}&hl=en&fs=1' />
-    <param name='allowFullScreen' value='true' />
-    <embed id='{0}_embed' src='http://www.youtube.com/v/{3}&hl=en&fs=1' 
-        type='application/x-shockwave-flash' 
-        allowfullscreen='true' 
-        width='{1}' 
-        height='{2}'>
+            return
+                @"
+<object width='{1}' height='{2}' id='{0}_object'>
+    <param name='allowfullscreen' value='true' />
+    <param name='allowScriptAccess' value='always' />
+    <param name='movie' value='http://www.5min.com/Embeded/{3}/' />
+    <embed id='{0}_embed' src='http://www.5min.com/Embeded/{3}/' type='application/x-shockwave-flash'
+        width='{1}' height='{2}' allowfullscreen='true' allowscriptaccess='always'>
     </embed>
 </object>
 ";
         }
 
+        private static string GetEHowFormat()
+        {
+            return
+                @"
+<embed id='{0}_embed' 
+    name='{0}_embed'
+    width='{1}' 
+    height='{2}' 
+    align='TL' 
+    flashvars='id={3}&partnerId=3&pwidth={1}&pheight={2}'
+    scale='noscale' 
+    allowfullscreen='true' 
+    wmode='window' 
+    menu='false' 
+    loop='false'
+    allowscriptaccess='always' 
+    quality='high' 
+    bgcolor='#000000' 
+    style='' 
+    src='http://www.ehow.com/flash/player.swf'
+    type='application/x-shockwave-flash' />
+";
+        }
+
         private static string GetVideoJugFormat()
         {
-            return @"
+            return
+                @"
 <object 
     classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' 
     codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0'
@@ -115,40 +133,20 @@
 ";
         }
 
-        private static string Get5minFormat()
+        private static string GetYouTubeFormat()
         {
-            return @"
-<object width='{1}' height='{2}' id='{0}_object'>
-    <param name='allowfullscreen' value='true' />
-    <param name='allowScriptAccess' value='always' />
-    <param name='movie' value='http://www.5min.com/Embeded/{3}/' />
-    <embed id='{0}_embed' src='http://www.5min.com/Embeded/{3}/' type='application/x-shockwave-flash'
-        width='{1}' height='{2}' allowfullscreen='true' allowscriptaccess='always'>
+            return
+                @"
+<object id='{0}_object' width='{1}' height='{2}'>
+    <param name='movie' value='http://www.youtube.com/v/{3}&hl=en&fs=1' />
+    <param name='allowFullScreen' value='true' />
+    <embed id='{0}_embed' src='http://www.youtube.com/v/{3}&hl=en&fs=1' 
+        type='application/x-shockwave-flash' 
+        allowfullscreen='true' 
+        width='{1}' 
+        height='{2}'>
     </embed>
 </object>
-";
-        }
-
-        private static string GetEHowFormat()
-        {
-            return @"
-<embed id='{0}_embed' 
-    name='{0}_embed'
-    width='{1}' 
-    height='{2}' 
-    align='TL' 
-    flashvars='id={3}&partnerId=3&pwidth={1}&pheight={2}'
-    scale='noscale' 
-    allowfullscreen='true' 
-    wmode='window' 
-    menu='false' 
-    loop='false'
-    allowscriptaccess='always' 
-    quality='high' 
-    bgcolor='#000000' 
-    style='' 
-    src='http://www.ehow.com/flash/player.swf'
-    type='application/x-shockwave-flash' />
 ";
         }
     }

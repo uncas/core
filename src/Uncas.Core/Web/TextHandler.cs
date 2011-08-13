@@ -24,7 +24,7 @@
         /// <param name="numberOfLineBreaks">The number of line breaks.</param>
         /// <returns>The text with line breaks.</returns>
         public static string InsertLineBreaks(
-            string text, 
+            string text,
             int numberOfLineBreaks)
         {
             string outString = string.Empty;
@@ -34,7 +34,7 @@
             }
 
             numberOfLineBreaks = Math.Max(1, numberOfLineBreaks);
-            foreach (char karakter in text.ToCharArray())
+            foreach (char karakter in text)
             {
                 if (char.ConvertToUtf32(karakter.ToString(), 0) == 13)
                 {
@@ -48,7 +48,7 @@
                     outString += karakter.ToString();
                 }
             }
- 
+
             return outString;
         }
     }

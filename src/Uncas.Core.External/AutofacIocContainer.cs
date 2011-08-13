@@ -5,7 +5,6 @@
     using System.Web.Mvc;
     using Autofac;
     using Autofac.Integration.Mvc;
-    using Autofac.Integration.Web;
     using Uncas.Core.Ioc;
 
     /// <summary>
@@ -23,10 +22,7 @@
         /// <value>The dependency resolver.</value>
         public static IDependencyResolver DependencyResolver
         {
-            get
-            {
-                return new AutofacDependencyResolver(Container);
-            }
+            get { return new AutofacDependencyResolver(Container); }
         }
 
         /// <summary>
@@ -60,25 +56,6 @@
         }
 
         /// <summary>
-        /// Registers the controllers.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        public void RegisterControllers(Assembly assembly)
-        {
-            _builder.RegisterControllers(assembly);
-        }
-
-        /// <summary>
-        /// Resolves an instance of type T.
-        /// </summary>
-        /// <typeparam name="T">The type of the instance to resolve.</typeparam>
-        /// <returns>An instance of type T.</returns>
-        public T Resolve<T>()
-        {
-            return Container.Resolve<T>();
-        }
-
-        /// <summary>
         /// Determines whether the service is registered.
         /// </summary>
         /// <param name="type">The type of the service.</param>
@@ -91,6 +68,15 @@
         }
 
         /// <summary>
+        /// Registers the controllers.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        public void RegisterControllers(Assembly assembly)
+        {
+            _builder.RegisterControllers(assembly);
+        }
+
+        /// <summary>
         /// Registers the type.
         /// </summary>
         /// <param name="implementationType">Type of the implementation.</param>
@@ -100,6 +86,16 @@
             Type interfaceType)
         {
             Builder.RegisterType(implementationType).As(interfaceType);
+        }
+
+        /// <summary>
+        /// Resolves an instance of type T.
+        /// </summary>
+        /// <typeparam name="T">The type of the instance to resolve.</typeparam>
+        /// <returns>An instance of type T.</returns>
+        public T Resolve<T>()
+        {
+            return Container.Resolve<T>();
         }
     }
 }

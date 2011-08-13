@@ -20,15 +20,9 @@
         /// </value>
         public static Func<DateTime> Now
         {
-            get
-            {
-                return _now;
-            }
+            get { return _now; }
 
-            set
-            {
-                _now = value;
-            }
+            set { _now = value; }
         }
     }
 }

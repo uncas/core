@@ -100,10 +100,10 @@
             string additional)
         {
             GenerateAndSaveLogEntry(
-               logType,
-               description,
-               exception,
-               additional);
+                logType,
+                description,
+                exception,
+                additional);
         }
 
         private void GenerateAndSaveLogEntry(

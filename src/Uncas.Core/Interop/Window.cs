@@ -15,8 +15,8 @@
     public class Window
     {
         private readonly IntPtr _handle;
-        private readonly string _title;
         private readonly string _processName;
+        private readonly string _title;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Window"/> class.
@@ -35,10 +35,7 @@
         /// <value>The current foreground window.</value>
         public static Window CurrentForeground
         {
-            get
-            {
-                return new Window(SafeNativeMethods.GetForegroundWindow());
-            }
+            get { return new Window(SafeNativeMethods.GetForegroundWindow()); }
         }
 
         /// <summary>
@@ -67,21 +64,7 @@
         /// </value>
         public string ProcessName
         {
-            get
-            {
-                return _processName;
-            }
-        }
-
-        private static string GetProcessName(IntPtr handle)
-        {
-            using (Process process =
-                GetProcessAtWindowHandle(handle))
-            {
-                return process != null ?
-                    process.ProcessName :
-                    null;
-            }
+            get { return _processName; }
         }
 
         private static Process GetProcessAtWindowHandle(
@@ -91,16 +74,27 @@
                 p => p.MainWindowHandle == windowHandle);
         }
 
+        private static string GetProcessName(IntPtr handle)
+        {
+            using (Process process =
+                GetProcessAtWindowHandle(handle))
+            {
+                return process != null
+                           ? process.ProcessName
+                           : null;
+            }
+        }
+
         private static string GetTitle(
             IntPtr windowHandle)
         {
             int chars = 256;
-            StringBuilder buff = new StringBuilder(chars);
+            var buff = new StringBuilder(chars);
             int getWindowTextResult =
                 SafeNativeMethods.GetWindowText(
-                windowHandle,
-                buff,
-                chars);
+                    windowHandle,
+                    buff,
+                    chars);
             if (getWindowTextResult > 0)
             {
                 return buff.ToString();

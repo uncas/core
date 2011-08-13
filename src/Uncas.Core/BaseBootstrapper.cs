@@ -7,7 +7,7 @@
     /// Redirect to new namespace.
     /// </summary>
     [Obsolete("Use Uncas.Core.Ioc.BaseBootstrapper instead.")]
-    public class BaseBootstrapper : Uncas.Core.Ioc.BaseBootstrapper
+    public class BaseBootstrapper : Ioc.BaseBootstrapper
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
@@ -15,7 +15,7 @@
         /// <param name="container">The container.</param>
         [Obsolete("Use Uncas.Core.Ioc.BaseBootstrapper instead.")]
         public BaseBootstrapper(
-            Uncas.Core.Ioc.IIocContainer container)
+            Ioc.IIocContainer container)
             : base(container)
         {
         }
@@ -27,7 +27,7 @@
         /// <param name="assembly">The assembly.</param>
         [Obsolete("Use Uncas.Core.Ioc.BaseBootstrapper instead.")]
         public BaseBootstrapper(
-            Uncas.Core.Ioc.IIocContainer container,
+            Ioc.IIocContainer container,
             Assembly assembly)
             : base(container, assembly)
         {

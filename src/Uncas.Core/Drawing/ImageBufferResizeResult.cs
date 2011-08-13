@@ -31,10 +31,7 @@
         /// </value>
         public IEnumerable<byte> Buffer
         {
-            get
-            {
-                return _buffer;
-            }
+            get { return _buffer; }
         }
 
         /// <summary>

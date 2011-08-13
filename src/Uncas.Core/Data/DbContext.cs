@@ -45,7 +45,7 @@
         /// <returns>The data table.</returns>
         [Obsolete("Use overload that takes DbCommand instead.")]
         [SuppressMessage(
-            "Microsoft.Reliability", 
+            "Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Is the return value...")]
         [SuppressMessage(

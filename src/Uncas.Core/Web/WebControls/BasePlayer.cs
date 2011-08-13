@@ -12,11 +12,8 @@
     [DefaultProperty("MediaSource")]
     public abstract class BasePlayer : WebControl
     {
-        private bool _autoPlay;
-
-        private Unit _width = new Unit(480);
-
         private Unit _height = new Unit(360);
+        private Unit _width = new Unit(480);
 
         /// <summary>
         /// Gets or sets a value indicating whether to auto play.
@@ -24,11 +21,7 @@
         /// <value>
         ///   <c>True</c> if set to auto play; otherwise, <c>false</c>.
         /// </value>
-        public bool AutoPlay
-        {
-            get { return _autoPlay; }
-            set { _autoPlay = value; }
-        }
+        public bool AutoPlay { get; set; }
 
         /// <summary>
         /// Gets or sets the height of the Web server control.
@@ -64,7 +57,7 @@
         {
             get
             {
-                string s = (string)ViewState["MediaSource"];
+                var s = (string)ViewState["MediaSource"];
                 return string.IsNullOrEmpty(s) ? string.Empty : s;
             }
 
@@ -83,7 +76,7 @@
                     mediaSource = string.Format(
                         CultureInfo.InvariantCulture,
                         "{0}/{1}",
-                        Uncas.Core.Web.SiteUrl.BaseUrl,
+                        SiteUrl.BaseUrl,
                         mediaSource.TrimStart('/', '~'));
                 }
 

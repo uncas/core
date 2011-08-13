@@ -39,12 +39,12 @@
         /// <param name="baseInputFolder">The base input folder.</param>
         /// <param name="includeSubfolders">If set to <c>true</c> [include sub folders].</param>
         void DoResizeWorkAsync(
-            string baseOutputFolder, 
-            int maxImageSize, 
-            bool chooseFiles, 
-            IEnumerable filePaths, 
-            bool chooseFolder, 
-            string baseInputFolder, 
+            string baseOutputFolder,
+            int maxImageSize,
+            bool chooseFiles,
+            IEnumerable filePaths,
+            bool chooseFolder,
+            string baseInputFolder,
             bool includeSubfolders);
     }
 }

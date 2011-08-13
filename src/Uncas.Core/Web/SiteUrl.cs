@@ -18,13 +18,13 @@
         {
             get
             {
-                var urlString =
+                string urlString =
                     string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}://{1}{2}",
-                    HttpContext.Current.Request.Url.Scheme,
-                    HttpContext.Current.Request.Url.Authority,
-                    HttpContext.Current.Request.ApplicationPath.TrimEnd('/'));
+                        CultureInfo.InvariantCulture,
+                        "{0}://{1}{2}",
+                        HttpContext.Current.Request.Url.Scheme,
+                        HttpContext.Current.Request.Url.Authority,
+                        HttpContext.Current.Request.ApplicationPath.TrimEnd('/'));
                 return new Uri(urlString);
             }
         }
@@ -62,8 +62,8 @@
         {
             string urlString =
                 CombineVirtualPaths(
-                BaseUrl.AbsoluteUri,
-                UrlEscape(virtualPath));
+                    BaseUrl.AbsoluteUri,
+                    UrlEscape(virtualPath));
             return new Uri(urlString);
         }
 

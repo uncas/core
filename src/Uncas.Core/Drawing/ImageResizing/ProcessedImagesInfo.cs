@@ -1,6 +1,5 @@
 ﻿namespace Uncas.Core.Drawing.ImageResizing
 {
-    using System;
     using System.Globalization;
 
     /// <summary>
@@ -29,7 +28,7 @@
             get
             {
                 return (int)((100d * ResizedNumberOfImages)
-                    / (1d * TotalNumberOfImages));
+                             / (1d * TotalNumberOfImages));
             }
         }
 

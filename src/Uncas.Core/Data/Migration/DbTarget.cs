@@ -28,7 +28,9 @@
         [SuppressMessage(
             "Microsoft.Security",
             "CA2100:Review SQL queries for security vulnerabilities",
-            Justification = "The db migration requires sql to come from some external source - in this case it's a source that should be under control of the developer...")]
+            Justification =
+                "The db migration requires sql to come from some external source - in this case it's a source that should be under control of the developer..."
+            )]
         public void ApplyChange(DbChange change)
         {
             if (change == null)

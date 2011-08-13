@@ -16,6 +16,18 @@
     public class ScreenCapture : IScreenCapture
     {
         /// <summary>
+        /// Captures the foreground window.
+        /// </summary>
+        /// <returns>
+        /// The image containing the foreground window.
+        /// </returns>
+        public Image CaptureForegroundWindow()
+        {
+            IntPtr handle = Window.CurrentForeground.Handle;
+            return CaptureWindow(handle);
+        }
+
+        /// <summary>
         /// Creates an Image object containing a screen shot 
         /// of the entire desktop.
         /// </summary>
@@ -26,15 +38,15 @@
         }
 
         /// <summary>
-        /// Captures the foreground window.
+        /// Captures a screen shot of the entire desktop,
+        /// and saves it to a file.
         /// </summary>
-        /// <returns>
-        /// The image containing the foreground window.
-        /// </returns>
-        public Image CaptureForegroundWindow()
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="format">The format.</param>
+        public void CaptureScreenToFile(string fileName, ImageFormat format)
         {
-            IntPtr handle = Window.CurrentForeground.Handle;
-            return CaptureWindow(handle);
+            Image img = CaptureScreen();
+            img.Save(fileName, format);
         }
 
         /// <summary>
@@ -50,7 +62,7 @@
             IntPtr hdcSrc = SafeNativeMethods.User32.GetWindowDC(handle);
 
             // get the size
-            SafeNativeMethods.User32.RECT windowRect =
+            var windowRect =
                 new SafeNativeMethods.User32.RECT();
             int windowRectResult =
                 SafeNativeMethods.User32.GetWindowRect(handle, ref windowRect);
@@ -79,15 +91,15 @@
 
             // bitblt over
             SafeNativeMethods.GDI32.BitBlt(
-                 hdcDest,
-                 0,
-                 0,
-                 width,
-                 height,
-                 hdcSrc,
-                 0,
-                 0,
-                 SafeNativeMethods.GDI32.SRCCOPY);
+                hdcDest,
+                0,
+                0,
+                width,
+                height,
+                hdcSrc,
+                0,
+                0,
+                SafeNativeMethods.GDI32.SRCCOPY);
 
             // restore selection
             SafeNativeMethods.GDI32.SelectObject(hdcDest, oldBitmap);
@@ -124,18 +136,6 @@
             ImageFormat format)
         {
             Image img = CaptureWindow(handle);
-            img.Save(fileName, format);
-        }
-
-        /// <summary>
-        /// Captures a screen shot of the entire desktop,
-        /// and saves it to a file.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="format">The format.</param>
-        public void CaptureScreenToFile(string fileName, ImageFormat format)
-        {
-            Image img = CaptureScreen();
             img.Save(fileName, format);
         }
 
@@ -200,14 +200,14 @@
                 public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
                 [DllImport("user32.dll")]
-                public static extern int ReleaseDC(
-                    IntPtr hWnd,
-                    IntPtr hDC);
-
-                [DllImport("user32.dll")]
                 public static extern int GetWindowRect(
                     IntPtr hWnd,
                     ref RECT rect);
+
+                [DllImport("user32.dll")]
+                public static extern int ReleaseDC(
+                    IntPtr hWnd,
+                    IntPtr hDC);
 
                 /// <summary>
                 /// Struct that represents a rectangle of a window.
@@ -215,10 +215,10 @@
                 [StructLayout(LayoutKind.Sequential)]
                 public struct RECT
                 {
-                    public int left;
-                    public int top;
-                    public int right;
-                    public int bottom;
+                    public readonly int left;
+                    public readonly int top;
+                    public readonly int right;
+                    public readonly int bottom;
                 }
             }
         }

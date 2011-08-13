@@ -103,7 +103,7 @@
             if (IsServiceInstalled())
             {
                 Console.WriteLine(
-                    "Service '{0}' is already installed.", 
+                    "Service '{0}' is already installed.",
                     ServiceName);
                 return;
             }

@@ -22,22 +22,6 @@
         }
 
         /// <summary>
-        /// Gets the applied changes.
-        /// </summary>
-        /// <returns>
-        /// A list of applied changes.
-        /// </returns>
-        public IEnumerable<IMigrationChange> GetAppliedChanges()
-        {
-            InitializeDatabase();
-            using (DbCommand command = CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM MigrationChange";
-                return GetObjects(command, MapToObject);
-            }
-        }
-
-        /// <summary>
         /// Adds the applied change.
         /// </summary>
         /// <param name="change">The change.</param>
@@ -56,7 +40,8 @@
             }
 
             InitializeDatabase();
-            const string CreateTableCommandText = @"
+            const string CreateTableCommandText =
+                @"
 INSERT INTO MigrationChange
 (
     Id
@@ -67,12 +52,28 @@ VALUES
     @Id
     , @DateApplied
 )";
-            using (var command = CreateCommand())
+            using (DbCommand command = CreateCommand())
             {
                 AddParameter(command, "Id", change.Id);
                 AddParameter(command, "DateApplied", SystemTime.Now());
                 command.CommandText = CreateTableCommandText;
                 ModifyData(command);
+            }
+        }
+
+        /// <summary>
+        /// Gets the applied changes.
+        /// </summary>
+        /// <returns>
+        /// A list of applied changes.
+        /// </returns>
+        public IEnumerable<IMigrationChange> GetAppliedChanges()
+        {
+            InitializeDatabase();
+            using (DbCommand command = CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM MigrationChange";
+                return GetObjects(command, MapToObject);
             }
         }
 
@@ -86,24 +87,25 @@ VALUES
             // TODO: Decouple from SQLite:
             const string TableCountCommandText = @"
 SELECT COUNT(*) FROM sqlite_master WHERE name = 'MigrationChange'";
-            using (var command = CreateCommand())
+            using (DbCommand command = CreateCommand())
             {
                 command.CommandText = TableCountCommandText;
-                int tableCount = (int)GetScalar<long>(command);
+                var tableCount = (int)GetScalar<long>(command);
                 if (tableCount > 0)
                 {
                     return;
                 }
             }
 
-            const string CreateTableCommandText = @"
+            const string CreateTableCommandText =
+                @"
 CREATE TABLE MigrationChange
 (
     ChangeNumber integer PRIMARY KEY ASC
     , Id text UNIQUE
     , DateApplied datetime
 )";
-            using (var command = CreateCommand())
+            using (DbCommand command = CreateCommand())
             {
                 command.CommandText = CreateTableCommandText;
                 ModifyData(command);

@@ -10,9 +10,8 @@
     /// </summary>
     public class BaseBootstrapper
     {
-        private readonly IIocContainer _container;
-
         private readonly Assembly _assembly;
+        private readonly IIocContainer _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseBootstrapper"/> class.
@@ -51,27 +50,11 @@
             return _container.Resolve<T>();
         }
 
-        private static IEnumerable<AssemblyName> GetReferencedAssemblies(
-            Assembly assembly)
-        {
-            var result = new List<AssemblyName>();
-            var referencedAssemblies = assembly.GetReferencedAssemblies();
-            var uncas = referencedAssemblies
-                .Where(x => x.Name.StartsWith("Uncas.", StringComparison.OrdinalIgnoreCase));
-            result.AddRange(uncas);
-            foreach (var assemblyName in uncas)
-            {
-                AddAssemblies(result, GetReferencedAssemblies(Assembly.Load(assemblyName)));
-            }
-
-            return result;
-        }
-
         private static void AddAssemblies(
             List<AssemblyName> existing,
             IEnumerable<AssemblyName> found)
         {
-            foreach (var an in found)
+            foreach (AssemblyName an in found)
             {
                 if (!existing.Any(x => x.Name == an.Name))
                 {
@@ -80,12 +63,28 @@
             }
         }
 
+        private static IEnumerable<AssemblyName> GetReferencedAssemblies(
+            Assembly assembly)
+        {
+            var result = new List<AssemblyName>();
+            AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
+            IEnumerable<AssemblyName> uncas = referencedAssemblies
+                .Where(x => x.Name.StartsWith("Uncas.", StringComparison.OrdinalIgnoreCase));
+            result.AddRange(uncas);
+            foreach (AssemblyName assemblyName in uncas)
+            {
+                AddAssemblies(result, GetReferencedAssemblies(Assembly.Load(assemblyName)));
+            }
+
+            return result;
+        }
+
         private static bool ShouldBeIgnored(Type implementationType)
         {
-            var ignoreAttributes =
+            object[] ignoreAttributes =
                 implementationType.GetCustomAttributes(
-                typeof(IocIgnoreAttribute),
-                true);
+                    typeof(IocIgnoreAttribute),
+                    true);
             return ignoreAttributes.Count() > 0;
         }
 
@@ -95,7 +94,7 @@
                 _assembly);
             IEnumerable<AssemblyName> uncasReferencedAssemblyNames =
                 GetReferencedAssemblies(_assembly);
-            foreach (var referencedAssemblyName in uncasReferencedAssemblyNames)
+            foreach (AssemblyName referencedAssemblyName in uncasReferencedAssemblyNames)
             {
                 Assembly referencedAssembly =
                     Assembly.Load(referencedAssemblyName);

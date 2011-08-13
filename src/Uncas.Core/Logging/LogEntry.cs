@@ -202,6 +202,13 @@
             Id = id;
         }
 
+        private static bool FrameIsRelevant(
+            string fileName)
+        {
+            return !FileNamesToSkip.Any(
+                x => fileName.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+        }
+
         private static StackTrace GetStackTrace()
         {
             int skip = 2;
@@ -220,11 +227,28 @@
             return new StackTrace(skip, true);
         }
 
-        private static bool FrameIsRelevant(
-            string fileName)
+        private void AssignApplicationInfo()
         {
-            return !FileNamesToSkip.Any(
-                x => fileName.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+            // TODO: Set application info on log entry.
+            ApplicationInfo = "NOT DEFINED YET";
+        }
+
+        private void AssignFileNameAndLineNumber(StackTrace stackTrace)
+        {
+            StackFrame frame = stackTrace.GetFrame(0);
+            FileName = frame.GetFileName();
+            LineNumber = frame.GetFileLineNumber();
+        }
+
+        private void AssignHttpState()
+        {
+            HttpContext httpContext = HttpContext.Current;
+            if (httpContext == null)
+            {
+                return;
+            }
+
+            HttpState = new LogEntryHttpState(httpContext);
         }
 
         private void AssignStackTraceAndExceptionInfo(Exception exception)
@@ -253,30 +277,6 @@
                 StackTrace = stackTrace.ToString();
                 AssignFileNameAndLineNumber(stackTrace);
             }
-        }
-
-        private void AssignFileNameAndLineNumber(StackTrace stackTrace)
-        {
-            StackFrame frame = stackTrace.GetFrame(0);
-            FileName = frame.GetFileName();
-            LineNumber = frame.GetFileLineNumber();
-        }
-
-        private void AssignHttpState()
-        {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return;
-            }
-
-            HttpState = new LogEntryHttpState(httpContext);
-        }
-
-        private void AssignApplicationInfo()
-        {
-            // TODO: Set application info on log entry.
-            ApplicationInfo = "NOT DEFINED YET";
         }
     }
 }
