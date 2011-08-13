@@ -10,7 +10,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ResizeFailedEventArgs"/> class.
         /// </summary>
-        /// <param name="ex">The ex.</param>
+        /// <param name="ex">The exception.</param>
         public ResizeFailedEventArgs(Exception ex)
         {
             Exception = ex;

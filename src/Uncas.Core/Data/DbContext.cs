@@ -325,9 +325,9 @@
         /// <summary>
         /// Adds the parameter.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="command">The command to add the parameter for.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         protected static void AddParameter(
             DbCommand command,
             string name,
@@ -352,9 +352,9 @@
         /// <summary>
         /// Gets the date.
         /// </summary>
-        /// <param name="reader">The reader.</param>
+        /// <param name="reader">The data reader.</param>
         /// <param name="fieldName">Name of the field.</param>
-        /// <returns>The date.</returns>
+        /// <returns>The date time value.</returns>
         protected static DateTime GetDate(
             DbDataReader reader,
             string fieldName)

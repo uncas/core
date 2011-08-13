@@ -174,12 +174,12 @@
         }
 
         /// <summary>
-        /// Gets the thumbnail.
+        /// Gets the thumbnail of a given image.
         /// </summary>
-        /// <param name="image">The img.</param>
+        /// <param name="image">The image to get a thumbnail for.</param>
         /// <param name="maxWidthAndHeight">Height of the max width and.</param>
         /// <returns>
-        /// The image.
+        /// The thumbnail image.
         /// </returns>
         public Image GetThumbnail(Image image, int maxWidthAndHeight)
         {
@@ -207,13 +207,13 @@
         }
 
         /// <summary>
-        /// Gets the thumbnail.
+        /// Gets the thumbnail of the given image.
         /// </summary>
-        /// <param name="image">The img.</param>
+        /// <param name="image">The image to get a thumnail of.</param>
         /// <param name="maxWidth">Width of the max.</param>
         /// <param name="maxHeight">Height of the max.</param>
         /// <returns>
-        /// The image.
+        /// The thumbnail image.
         /// </returns>
         public Image GetThumbnail(Image image, int maxWidth, int maxHeight)
         {

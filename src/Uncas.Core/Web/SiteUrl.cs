@@ -70,7 +70,7 @@
         /// <summary>
         /// URLs the escape.
         /// </summary>
-        /// <param name="text">The text.</param>
+        /// <param name="text">The text to excape.</param>
         /// <returns>The scaped text.</returns>
         [SuppressMessage(
             "Microsoft.Design",

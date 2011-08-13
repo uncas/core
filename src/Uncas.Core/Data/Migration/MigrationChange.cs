@@ -11,7 +11,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="MigrationChange"/> class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the migration change.</param>
         public MigrationChange(string id)
         {
             Id = id;

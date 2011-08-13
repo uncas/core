@@ -17,11 +17,9 @@
         private Dictionary<ServiceManagerCommand, Action> _commands;
 
         /// <summary>
-        /// Initialize a ServiceManager.
+        /// Initializes a new instance of the <see cref="ServiceManager"/> class.
         /// </summary>
-        /// <param name="serviceName">
-        /// The name of the service as defined in the Service component.
-        /// </param>
+        /// <param name="serviceName">The name of the service as defined in the Service component.</param>
         public ServiceManager(string serviceName)
         {
             ServiceName = serviceName;
@@ -62,8 +60,8 @@
         /// it might take some time
         /// for the action to complete. Wait here until we get the new status or time out.
         /// </summary>
-        /// <param name="serviceController"></param>
-        /// <param name="newStatus"></param>
+        /// <param name="serviceController">The service controller.</param>
+        /// <param name="newStatus">The status to wait for.</param>
         private static void WaitForStatusChange(
             ServiceController serviceController,
             ServiceControllerStatus newStatus)

@@ -10,7 +10,7 @@
         /// <summary>
         /// Inserts line breaks.
         /// </summary>
-        /// <param name="text">The text.</param>
+        /// <param name="text">The text to insert line breaks in.</param>
         /// <returns>The string with extra line breaks.</returns>
         public static string InsertLineBreaks(string text)
         {
@@ -20,7 +20,7 @@
         /// <summary>
         /// Inserts line breaks.
         /// </summary>
-        /// <param name="text">The text.</param>
+        /// <param name="text">The text to insert line breaks in.</param>
         /// <param name="numberOfLineBreaks">The number of line breaks.</param>
         /// <returns>The text with line breaks.</returns>
         public static string InsertLineBreaks(

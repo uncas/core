@@ -8,7 +8,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DbChange"/> class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the db change.</param>
         /// <param name="changeScript">The change script.</param>
         public DbChange(
             string id,

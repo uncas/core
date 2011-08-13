@@ -43,10 +43,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogEntry"/> class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the log entry.</param>
         /// <param name="logType">Type of the log.</param>
         /// <param name="description">The description.</param>
-        /// <param name="created">The created.</param>
+        /// <param name="created">The created date and time.</param>
         /// <param name="additional">The additional.</param>
         /// <param name="exceptionType">Type of the exception.</param>
         /// <param name="exceptionMessage">The exception message.</param>
@@ -56,10 +56,10 @@
         /// <param name="applicationInfo">The application info.</param>
         /// <param name="serviceId">The service id.</param>
         /// <param name="urlString">The URL string.</param>
-        /// <param name="referrer">The referrer.</param>
-        /// <param name="headers">The headers.</param>
+        /// <param name="referrer">The HTTP referrer.</param>
+        /// <param name="headers">The HTTP headers.</param>
         /// <param name="userHostAddress">The user host address.</param>
-        /// <param name="userName">Name of the user.</param>
+        /// <param name="userName">The name of the user.</param>
         /// <param name="statusCode">The status code.</param>
         internal LogEntry(
             int id,
@@ -191,7 +191,7 @@
         /// <summary>
         /// Assigns the id.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the log entry.</param>
         internal void AssignId(int id)
         {
             if (id < 1)

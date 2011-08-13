@@ -18,56 +18,27 @@
         }
 
         /// <summary>
-        /// Gets the int32 parameter.
+        /// Gets the boolean parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns>The integer parameter.</returns>
-        public static OleDbParameter GetInt32Parameter(string name, int? value)
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">If set to <c>true</c> [value].</param>
+        /// <returns>The boolean parameter.</returns>
+        public static OleDbParameter GetBooleanParameter(string name, bool value)
         {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.Integer);
-            if (value.HasValue)
-            {
-                par.Value = value;
-            }
-            else
-            {
-                par.Value = DBNull.Value;
-            }
-
-            return par;
-        }
-
-        /// <summary>
-        /// Gets the int64 parameter.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns>The 64 bit integer parameter.</returns>
-        public static OleDbParameter GetInt64Parameter(string name, long? value)
-        {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.BigInt);
-            if (value.HasValue)
-            {
-                par.Value = value;
-            }
-            else
-            {
-                par.Value = DBNull.Value;
-            }
-
+            var par = new OleDbParameter(name, OleDbType.Boolean);
+            par.Value = value;
             return par;
         }
 
         /// <summary>
         /// Gets the date time parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         /// <returns>The date time parameter.</returns>
         public static OleDbParameter GetDateTimeParameter(string name, DateTime? value)
         {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.Date);
+            var par = new OleDbParameter(name, OleDbType.Date);
             if (value.HasValue)
             {
                 par.Value = value.Value;
@@ -81,25 +52,12 @@
         }
 
         /// <summary>
-        /// Gets the boolean parameter.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">If set to <c>true</c> [value].</param>
-        /// <returns>The boolean parameter.</returns>
-        public static OleDbParameter GetBooleanParameter(string name, bool value)
-        {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.Boolean);
-            par.Value = value;
-            return par;
-        }
-
-        /// <summary>
         /// Gets the decimal parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         /// <param name="precision">The precision.</param>
-        /// <param name="scale">The scale.</param>
+        /// <param name="scale">The scale of the parameter.</param>
         /// <returns>The decimal parameter.</returns>
         public static OleDbParameter GetDecimalParameter(
             string name,
@@ -107,7 +65,7 @@
             byte precision,
             byte scale)
         {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.Decimal);
+            var par = new OleDbParameter(name, OleDbType.Decimal);
             par.Precision = precision;
             par.Scale = scale;
             if (value.HasValue)
@@ -123,16 +81,81 @@
         }
 
         /// <summary>
+        /// Gets the int32 parameter.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The integer parameter.</returns>
+        public static OleDbParameter GetInt32Parameter(string name, int? value)
+        {
+            var par = new OleDbParameter(name, OleDbType.Integer);
+            if (value.HasValue)
+            {
+                par.Value = value;
+            }
+            else
+            {
+                par.Value = DBNull.Value;
+            }
+
+            return par;
+        }
+
+        /// <summary>
+        /// Gets the int64 parameter.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The 64 bit integer parameter.</returns>
+        public static OleDbParameter GetInt64Parameter(string name, long? value)
+        {
+            var par = new OleDbParameter(name, OleDbType.BigInt);
+            if (value.HasValue)
+            {
+                par.Value = value;
+            }
+            else
+            {
+                par.Value = DBNull.Value;
+            }
+
+            return par;
+        }
+
+        /// <summary>
+        /// Gets the note parameter.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <returns>The note parameter.</returns>
+        public static OleDbParameter GetNoteParameter(
+            string name,
+            string value)
+        {
+            var par = new OleDbParameter(name, OleDbType.LongVarChar);
+            if (!string.IsNullOrEmpty(value))
+            {
+                par.Value = value;
+            }
+            else
+            {
+                par.Value = DBNull.Value;
+            }
+
+            return par;
+        }
+
+        /// <summary>
         /// Gets the single parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         /// <returns>The single precision parameter.</returns>
         public static OleDbParameter GetSingleParameter(
             string name,
             float? value)
         {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.Single);
+            var par = new OleDbParameter(name, OleDbType.Single);
             if (value.HasValue)
             {
                 par.Value = value;
@@ -148,8 +171,8 @@
         /// <summary>
         /// Gets the string parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         /// <returns>The string parameter.</returns>
         public static OleDbParameter GetStringParameter(
             string name,
@@ -161,40 +184,17 @@
         /// <summary>
         /// Gets the string parameter.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="size">The size of the parameter.</param>
         /// <returns>The string parameter.</returns>
         public static OleDbParameter GetStringParameter(
             string name,
             string value,
             int size)
         {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.VarChar);
+            var par = new OleDbParameter(name, OleDbType.VarChar);
             par.Size = size;
-            if (!string.IsNullOrEmpty(value))
-            {
-                par.Value = value;
-            }
-            else
-            {
-                par.Value = DBNull.Value;
-            }
-
-            return par;
-        }
-
-        /// <summary>
-        /// Gets the note parameter.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns>The note parameter.</returns>
-        public static OleDbParameter GetNoteParameter(
-            string name,
-            string value)
-        {
-            OleDbParameter par = new OleDbParameter(name, OleDbType.LongVarChar);
             if (!string.IsNullOrEmpty(value))
             {
                 par.Value = value;
