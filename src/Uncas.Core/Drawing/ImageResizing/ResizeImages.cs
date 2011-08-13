@@ -11,15 +11,8 @@
     /// </summary>
     public class ResizeImages : IDisposable, IResizeImages
     {
-        #region Private fields
-
-        private BackgroundWorker _resizeWorker;
-
-        private ImageHandler _imageHandler;
-
-        #endregion
-
-        #region Constructor
+        private readonly ImageHandler _imageHandler;
+        private readonly BackgroundWorker _resizeWorker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResizeImages"/> class.
@@ -31,40 +24,46 @@
             _resizeWorker.WorkerSupportsCancellation = true;
 
             _resizeWorker.DoWork
-                += new DoWorkEventHandler(ResizeWorkerDoWork);
+                += ResizeWorkerDoWork;
             _resizeWorker.ProgressChanged
-                += new ProgressChangedEventHandler(ResizeWorkerProgressChanged);
+                += ResizeWorkerProgressChanged;
             _resizeWorker.RunWorkerCompleted
-                += new RunWorkerCompletedEventHandler(ResizeWorkerRunWorkerCompleted);
+                += ResizeWorkerRunWorkerCompleted;
 
             _imageHandler = new ImageHandler();
         }
 
-        #endregion
-
-        #region Public events
-
-        /// <summary>
-        /// Occurs when resize progress changed.
-        /// </summary>
-        public event EventHandler<ResizeProgressEventArgs>
-            ResizeProgressChanged;
-
         /// <summary>
         /// Occurs when resize completed.
         /// </summary>
-        public event EventHandler<ResizeCompletedEventArgs>
-            ResizeCompleted;
+        public event EventHandler<ResizeCompletedEventArgs> ResizeCompleted;
 
         /// <summary>
         /// Occurs when resize failed.
         /// </summary>
-        public event EventHandler<ResizeFailedEventArgs>
-            ResizeFailed;
+        public event EventHandler<ResizeFailedEventArgs> ResizeFailed;
 
-        #endregion
+        /// <summary>
+        /// Occurs when resize progress changed.
+        /// </summary>
+        public event EventHandler<ResizeProgressEventArgs> ResizeProgressChanged;
 
-        #region Public methods
+        /// <summary>
+        /// Cancels the resize work.
+        /// </summary>
+        public void CancelResizeWork()
+        {
+            _resizeWorker.CancelAsync();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /// <summary>
         /// Does the resize work async.
@@ -88,41 +87,20 @@
             // Gets the list of images to resize:
             List<ImageToResize> imagesToResize =
                 GetListOfImages(
-                baseOutputFolder,
-                chooseFiles,
-                filePaths,
-                chooseFolder,
-                baseInputFolder,
-                includeSubfolders);
+                    baseOutputFolder,
+                    chooseFiles,
+                    filePaths,
+                    chooseFolder,
+                    baseInputFolder,
+                    includeSubfolders);
 
             // Resizes the images:
-            SelectedImagesInfo sfi = new SelectedImagesInfo
-            {
-                ImagesToResize = imagesToResize,
-                MaxImageSize = maxImageSize
-            };
+            var sfi = new SelectedImagesInfo
+                          {
+                              ImagesToResize = imagesToResize,
+                              MaxImageSize = maxImageSize
+                          };
             _resizeWorker.RunWorkerAsync(sfi);
-        }
-
-        /// <summary>
-        /// Cancels the resize work.
-        /// </summary>
-        public void CancelResizeWork()
-        {
-            _resizeWorker.CancelAsync();
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -136,8 +114,6 @@
                 _resizeWorker.Dispose();
             }
         }
-
-        #endregion
 
         private static void GetFilesByExtension(
             List<ImageToResize> imagesToResize,
@@ -157,31 +133,29 @@
                 string resizedImagePath
                     = Path.Combine(outputFolderPath, fi.Name);
                 imagesToResize.Add(new ImageToResize
-                {
-                    OriginalImagePath = originalImagePath,
-                    ResizedImagePath = resizedImagePath
-                });
+                                       {
+                                           OriginalImagePath = originalImagePath,
+                                           ResizedImagePath = resizedImagePath
+                                       });
             }
         }
-
-        #region The actual resizing methods
 
         private static List<ImageToResize> GetSelectedImages(
             string baseOutputFolder,
             IEnumerable filePaths)
         {
-            List<ImageToResize> imagesToResize
+            var imagesToResize
                 = new List<ImageToResize>();
             foreach (string filePath in filePaths)
             {
-                FileInfo fi = new FileInfo(filePath);
+                var fi = new FileInfo(filePath);
                 string smallerFilePath =
                     Path.Combine(baseOutputFolder, fi.Name);
                 imagesToResize.Add(new ImageToResize
-                {
-                    OriginalImagePath = filePath,
-                    ResizedImagePath = smallerFilePath
-                });
+                                       {
+                                           OriginalImagePath = filePath,
+                                           ResizedImagePath = smallerFilePath
+                                       });
             }
 
             return imagesToResize;
@@ -196,9 +170,9 @@
         {
             string outputFolderPath
                 = Path.Combine(
-                baseOutputFolder,
-                relativeInputFolderPath);
-            DirectoryInfo outputDirectoryInfo
+                    baseOutputFolder,
+                    relativeInputFolderPath);
+            var outputDirectoryInfo
                 = new DirectoryInfo(outputFolderPath);
 
             // Getting images in this folder
@@ -239,8 +213,8 @@
                 {
                     string childRelativePath
                         = Path.Combine(
-                        relativeInputFolderPath,
-                        childDirectoryInfo.Name);
+                            relativeInputFolderPath,
+                            childDirectoryInfo.Name);
                     GetImagesInSelectedFolder(
                         ref imagesToResize,
                         childRelativePath,
@@ -248,6 +222,54 @@
                         childDirectoryInfo,
                         includeSubFolders);
                 }
+            }
+        }
+
+        private List<ImageToResize> GetListOfImages(
+            string baseOutputFolder,
+            bool chooseFiles,
+            IEnumerable filePaths,
+            bool chooseFolder,
+            string baseInputFolder,
+            bool includeSubFolders)
+        {
+            var imagesToResize = new List<ImageToResize>();
+            if (chooseFiles)
+            {
+                imagesToResize
+                    = GetSelectedImages(
+                        baseOutputFolder,
+                        filePaths);
+            }
+            else if (chooseFolder)
+            {
+                var baseDirectoryInfo
+                    = new DirectoryInfo(baseInputFolder);
+                try
+                {
+                    GetImagesInSelectedFolder(
+                        ref imagesToResize,
+                        baseDirectoryInfo.Name,
+                        baseOutputFolder,
+                        baseDirectoryInfo,
+                        includeSubFolders);
+                }
+                catch (IOException ex)
+                {
+                    HandleException(ex);
+                }
+            }
+
+            return imagesToResize;
+        }
+
+        private void HandleException(Exception ex)
+        {
+            if (ResizeFailed != null)
+            {
+                ResizeFailed(
+                    this,
+                    new ResizeFailedEventArgs(ex));
             }
         }
 
@@ -277,31 +299,17 @@
             }
         }
 
-        #endregion
-
-        private void HandleException(Exception ex)
-        {
-            if (ResizeFailed != null)
-            {
-                ResizeFailed(
-                    this,
-                    new ResizeFailedEventArgs(ex));
-            }
-        }
-
-        #region Running in background thread
-
         private void ResizeWorkerDoWork(
             object sender,
             DoWorkEventArgs e)
         {
-            SelectedImagesInfo sfi = (SelectedImagesInfo)e.Argument;
+            var sfi = (SelectedImagesInfo)e.Argument;
             int filesCompleted = 0;
-            ProcessedImagesInfo pif = new ProcessedImagesInfo
-            {
-                TotalNumberOfImages = sfi.ImagesToResize.Count,
-                ResizedNumberOfImages = filesCompleted
-            };
+            var pif = new ProcessedImagesInfo
+                          {
+                              TotalNumberOfImages = sfi.ImagesToResize.Count,
+                              ResizedNumberOfImages = filesCompleted
+                          };
             foreach (ImageToResize itr in sfi.ImagesToResize)
             {
                 pif.ResizedNumberOfImages = filesCompleted;
@@ -327,7 +335,7 @@
             object sender,
             ProgressChangedEventArgs e)
         {
-            ProcessedImagesInfo pif
+            var pif
                 = (ProcessedImagesInfo)e.UserState;
             if (ResizeProgressChanged != null)
             {
@@ -351,48 +359,6 @@
             }
         }
 
-        #endregion
-
-        private List<ImageToResize> GetListOfImages(
-            string baseOutputFolder,
-            bool chooseFiles,
-            IEnumerable filePaths,
-            bool chooseFolder,
-            string baseInputFolder,
-            bool includeSubFolders)
-        {
-            var imagesToResize = new List<ImageToResize>();
-            if (chooseFiles)
-            {
-                imagesToResize
-                    = GetSelectedImages(
-                    baseOutputFolder,
-                    filePaths);
-            }
-            else if (chooseFolder)
-            {
-                DirectoryInfo baseDirectoryInfo
-                    = new DirectoryInfo(baseInputFolder);
-                try
-                {
-                    GetImagesInSelectedFolder(
-                        ref imagesToResize,
-                        baseDirectoryInfo.Name,
-                        baseOutputFolder,
-                        baseDirectoryInfo,
-                        includeSubFolders);
-                }
-                catch (IOException ex)
-                {
-                    HandleException(ex);
-                }
-            }
-
-            return imagesToResize;
-        }
-
-        #region Nested types
-
         private class ImageToResize
         {
             public string OriginalImagePath { get; set; }
@@ -406,7 +372,5 @@
 
             public List<ImageToResize> ImagesToResize { get; set; }
         }
-
-        #endregion
     }
 }
