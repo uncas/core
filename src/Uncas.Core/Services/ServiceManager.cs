@@ -226,6 +226,7 @@
                 {
                     return;
                 }
+
                 serviceController.Stop();
                 WaitForStatusChange(serviceController, ServiceControllerStatus.Stopped);
             }
