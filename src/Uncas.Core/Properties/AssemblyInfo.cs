@@ -6,7 +6,7 @@ using System.Web.UI;
 
 [assembly: AssemblyCompany("Uncas")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCopyright("Copyright © Ole Lynge Sørensen 2011")]
+[assembly: AssemblyCopyright("Copyright © Ole Lynge Sørensen 2012")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyDescription("Infrastructure that does *not* depend on external libraries")]
 [assembly: AssemblyProduct("Uncas.Core")]

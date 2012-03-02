@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Uncas")]
 [assembly: AssemblyProduct("Uncas.Core.External")]
-[assembly: AssemblyCopyright("Copyright © Ole Lynge Sørensen 2011")]
+[assembly: AssemblyCopyright("Copyright © Ole Lynge Sørensen 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
