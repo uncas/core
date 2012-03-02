@@ -10,8 +10,8 @@
     <projectUrl>http://github.com/uncas/core</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Core libraries.</releaseNotes>
+    <releaseNotes>Core libraries with external dependencies.</releaseNotes>
     <copyright>Copyright 2012</copyright>
-    <tags>core library</tags>
+    <tags>core library external</tags>
   </metadata>
 </package>

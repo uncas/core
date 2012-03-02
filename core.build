@@ -60,6 +60,7 @@
 
   <target name="generateNuGetPackages" depends="build">
     <exec program="nuget" commandline="pack src\Uncas.Core\Uncas.Core.csproj -Prop Configuration=Release" />
+    <exec program="nuget" commandline="pack src\Uncas.Core.External\Uncas.Core.External.csproj -Prop Configuration=Release" />
   </target>
 
   <target name="pushNuGetPackages" depends="generateNuGetPackages">
