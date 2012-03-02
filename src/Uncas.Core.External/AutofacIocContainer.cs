@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
     using Autofac;
-    using Autofac.Integration.Web.Mvc;
+    using Autofac.Integration.Mvc;
     using Uncas.Core.Ioc;
 
     /// <summary>
