@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Uncas.Core.External")]
-[assembly: AssemblyDescription("Infrastructure that depends on external libraries.")]
+[assembly: AssemblyDescription("This library contains core infrastructure logic that depends on external libraries.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
