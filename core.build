@@ -65,6 +65,7 @@
 
   <target name="pushNuGetPackages" depends="generateNuGetPackages">
     <exec program="nuget" commandline="push Uncas.Core.${version.string}.nupkg" />
+    <exec program="nuget" commandline="push Uncas.Core.External.${version.string}.nupkg" />
   </target>
 
 </project>
