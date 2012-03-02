@@ -6,7 +6,7 @@ using System.Web.UI;
 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyDescription("Infrastructure that does *not* depend on external libraries")]
+[assembly: AssemblyDescription("Infrastructure that does not depend on external libraries.")]
 [assembly: AssemblyTitle("Uncas.Core")]
 [assembly: AssemblyTrademark("")]
 [assembly: CLSCompliant(true)]
