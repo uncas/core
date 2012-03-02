@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using System.Web.Mvc;
     using Autofac;
     using Autofac.Integration.Mvc;
     using Uncas.Core.Ioc;
@@ -14,6 +15,15 @@
         private static ContainerBuilder _builder;
 
         private static IContainer _container;
+
+        /// <summary>
+        /// Gets the dependency resolver.
+        /// </summary>
+        /// <value>The dependency resolver.</value>
+        public static IDependencyResolver DependencyResolver
+        {
+            get { return new AutofacDependencyResolver(Container); }
+        }
 
         /// <summary>
         /// Gets the builder.
