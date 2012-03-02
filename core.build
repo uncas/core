@@ -62,4 +62,8 @@
     <exec program="nuget" commandline="pack src\Uncas.Core\Uncas.Core.csproj -Prop Configuration=Release" />
   </target>
 
+  <target name="pushNuGetPackages" depends="generateNuGetPackages">
+    <exec program="nuget" commandline="push Uncas.Core.${version.string}.nupkg" />
+  </target>
+
 </project>
