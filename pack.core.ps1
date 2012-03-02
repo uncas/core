@@ -1,0 +1,1 @@
+nuget pack src\Uncas.Core\Uncas.Core.csproj
