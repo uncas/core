@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project name="WebTester" default="build">
+
+  <property name="year" value="2012" />
+  <property name="version.major" value="1" />
+  <property name="version.minor" value="1" />
+  <property name="version.build" value="0" />
+  <property name="version.revision" value="0" />
+
+  <!-- External executable locations - depends on environment, can be changed in local.properties.xml -->
+  <property name="msbuild" value="C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe" />
+
+  <target name="init">
+    <mkdir dir="build" />
+  </target>
+
+  <target name="getRevision" depends="init">
+    <!-- Retrieve revision number -->
+    <echo message="Retrieving revision number" />
+    <property name="version.revision" value="0" />
+    <exec
+      program="CountRevisions.cmd"
+      failonerror="false" />
+    <property name="file.contents" value="0" />
+    <loadfile file="build\Revision.txt" property="file.contents" />
+    <property name="file.contents" value="${string::trim(file.contents)}" />
+    <echo message="contents of file is ${file.contents}"/>
+    <property name="version.revision" value="${file.contents}" />
+    <echo message="Using revision number: ${version.revision}" />
+
+    <exec program="git" commandline="rev-parse HEAD" output="build\hash.txt" />
+    <loadfile file="build\hash.txt" property="git.hash" />
+    <property name="git.hash" value="${string::trim(git.hash)}" />
+    <echo message="hash of the commit is ${git.hash}"/>
+  </target>
+
+  <target name="generateVersionInfoFile" depends="getRevision">
+    <if test="${property::exists('CCNetLabel')}">
+      <property name="version.build" value="${CCNetLabel}" />
+    </if>
+    <property name="version.string" value="${version.major}.${version.minor}.${version.build}.${version.revision}" />
+    <asminfo output="src\VersionInfo.cs" language="CSharp">
+      <attributes>
+        <attribute type="System.Reflection.AssemblyCompanyAttribute" value="Uncas" />
+        <attribute type="System.Reflection.AssemblyProductAttribute" value="Uncas.Core" />
+        <attribute type="System.Reflection.AssemblyCopyrightAttribute" value="Copyright (c) 2012, Ole Lynge Sørensen" />
+        <attribute type="System.Reflection.AssemblyVersionAttribute" value="${version.string}" />
+        <attribute type="System.Reflection.AssemblyInformationalVersionAttribute" value="${version.string} (${git.hash})" />
+        <attribute type="System.Reflection.AssemblyFileVersionAttribute" value="${version.string}" />
+      </attributes>
+    </asminfo>
+  </target>
+
+  <target name="build"
+      depends="generateVersionInfoFile"
+      description="compiles (msbuild) the solution (.sln file)">
+    <exec program="${msbuild}"
+        commandline="/p:Configuration=Release;RunCodeAnalysis=false Uncas.Core.sln" />
+  </target>
+
+  <target name="generateNuGetPackages" depends="build">
+    <exec program="nuget" commandline="pack src\Uncas.Core\Uncas.Core.csproj -Prop Configuration=Release" />
+  </target>
+
+</project>

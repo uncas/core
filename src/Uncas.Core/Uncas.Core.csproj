@@ -86,6 +86,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="BaseBootstrapper.cs" />
     <Compile Include="ConfigurationWrapper.cs" />
     <Compile Include="CoreText.Designer.cs">
