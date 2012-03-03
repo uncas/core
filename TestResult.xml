@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\Projects\UncasOpenSource\Core\tests\Uncas.Core.Tests\bin\Release\Uncas.Core.Tests.dll" total="22" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-03-03" time="11:21:01">
+  <environment nunit-version="2.6.0.12051" clr-version="2.0.50727.5448" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="D:\Projects\UncasOpenSource\Core" machine-name="KAROLINEWILLIAM" user="Ole" user-domain="KarolineWilliam" />
+  <culture-info current-culture="da-DK" current-uiculture="da-DK" />
+  <test-suite type="Assembly" name="D:\Projects\UncasOpenSource\Core\tests\Uncas.Core.Tests\bin\Release\Uncas.Core.Tests.dll" executed="True" result="Failure" success="False" time="6.442" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="Uncas" executed="True" result="Failure" success="False" time="6.401" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Core" executed="True" result="Failure" success="False" time="6.400" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Tests" executed="True" result="Failure" success="False" time="6.400" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="Data" executed="True" result="Success" success="True" time="1.606" asserts="0">
+                    <results>
+                      <test-suite type="Namespace" name="Migration" executed="True" result="Success" success="True" time="1.605" asserts="0">
+                        <results>
+                          <test-suite type="TestFixture" name="MigrationServiceTests" executed="True" result="Success" success="True" time="1.601" asserts="0">
+                            <results>
+                              <test-case name="Uncas.Core.Tests.Data.Migration.MigrationServiceTests.Migrate_NoChanges_NoMigration" executed="True" result="Success" success="True" time="1.369" asserts="0" />
+                              <test-case name="Uncas.Core.Tests.Data.Migration.MigrationServiceTests.Migrate_OneChange_IsMigrated" executed="True" result="Success" success="True" time="0.134" asserts="0" />
+                              <test-case name="Uncas.Core.Tests.Data.Migration.MigrationServiceTests.Migrate_OneOldAndTwoNewChanges_TwoAreMigrated" executed="True" result="Success" success="True" time="0.038" asserts="0" />
+                              <test-case name="Uncas.Core.Tests.Data.Migration.MigrationServiceTests.Migrate_OneOldChange_NotMigrated" executed="True" result="Success" success="True" time="0.015" asserts="0" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="Ioc" executed="True" result="Success" success="True" time="0.558" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="BaseBootstrapperTests" executed="True" result="Success" success="True" time="0.140" asserts="0">
+                        <results>
+                          <test-case name="Uncas.Core.Tests.Ioc.BaseBootstrapperTests.BaseBootstrapper_TestAssembly_LoggerRegisteredOnce" executed="True" result="Success" success="True" time="0.121" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Ioc.BaseBootstrapperTests.BaseBootstrapper_TestAssembly_RunsWithoutRegisteringMigrationChange" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Ioc.BaseBootstrapperTests.BaseBootstrapper_TestAssembly_RunsWithRegisteringMigrationService" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Ioc.BaseBootstrapperTests.BaseBootstrapper_WithBasicSetupOfTestAssembly_RunsWithoutFailing" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ConcreteBootstrapperTests" executed="True" result="Success" success="True" time="0.416" asserts="0">
+                        <results>
+                          <test-case name="Uncas.Core.Tests.Ioc.ConcreteBootstrapperTests.BaseBootstrapper_WithBasicSetupOfTestAssembly_RunsWithoutFailing" executed="True" result="Success" success="True" time="0.074" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Ioc.ConcreteBootstrapperTests.BaseBootstrapper_WithTestAssembly_ResolvesLogger" executed="True" result="Success" success="True" time="0.339" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="Logging" executed="True" result="Failure" success="False" time="4.216" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="LogEntryTests" executed="True" result="Success" success="True" time="0.180" asserts="0">
+                        <results>
+                          <test-case name="Uncas.Core.Tests.Logging.LogEntryTests.LogEntry_InnerException_DetailsFromInnerException" executed="True" result="Success" success="True" time="0.038" asserts="1" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogEntryTests.LogEntry_ThrownException_FileNameFromException" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogEntryTests.LogEntry_WithHttpContext_WithHttpState" executed="True" result="Success" success="True" time="0.125" asserts="2" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogEntryTests.LogEntry_WithoutException_FileNameFromCaller" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogEntryTests.LogEntry_WithoutHttpContext_WithoutHttpState" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="LoggerTests" executed="True" result="Success" success="True" time="0.139" asserts="0">
+                        <results>
+                          <test-case name="Uncas.Core.Tests.Logging.LoggerTests.Log_WithDescription_SavesDescription" executed="True" result="Success" success="True" time="0.116" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Logging.LoggerTests.Log_WithoutException_FileNameFromCaller" executed="True" result="Success" success="True" time="0.020" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="LogRepositoryTests" executed="True" result="Failure" success="False" time="3.890" asserts="0">
+                        <results>
+                          <test-case name="Uncas.Core.Tests.Logging.LogRepositoryTests.GetLogEntries_OneHourBack_ReturnsNone" executed="True" result="Success" success="True" time="1.721" asserts="1" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogRepositoryTests.GetLogEntries_SavedOne_ReturnsOne" executed="True" result="Failure" success="False" time="0.507" asserts="1">
+                            <failure>
+                              <message><![CDATA[  Expected: 1
+  But was:  0
+]]></message>
+                              <stack-trace><![CDATA[at Uncas.Core.Tests.Logging.LogRepositoryTests.GetLogEntries_SavedOne_ReturnsOne() in D:\Projects\UncasOpenSource\Core\tests\Uncas.Core.Tests\Logging\LogRepositoryTests.cs:line 75
+]]></stack-trace>
+                            </failure>
+                          </test-case>
+                          <test-case name="Uncas.Core.Tests.Logging.LogRepositoryTests.GetLogEntries_SavedOneDayAgo_ReturnsNone" executed="True" result="Success" success="True" time="0.486" asserts="1" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogRepositoryTests.Save_WhenGivenEntry_SavesWithoutErrors" executed="True" result="Success" success="True" time="0.644" asserts="0" />
+                          <test-case name="Uncas.Core.Tests.Logging.LogRepositoryTests.Save_WhenGivenEntryWithHttpState_SavesWithoutErrors" executed="True" result="Success" success="True" time="0.511" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

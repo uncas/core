@@ -9,6 +9,7 @@
 
   <!-- External executable locations - depends on environment, can be changed in local.properties.xml -->
   <property name="msbuild" value="C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe" />
+  <property name="nunit" value="packages\NUnit.Runners.2.6.0.12051\tools\nunit-console.exe" />
 
   <target name="init">
     <mkdir dir="build" />
@@ -58,7 +59,13 @@
         commandline="/p:Configuration=Release;RunCodeAnalysis=false Uncas.Core.sln" />
   </target>
 
-  <target name="generateNuGetPackages" depends="build">
+  <target name="test"
+      depends="build">
+    <exec program="${nunit}"
+        commandline="tests\Uncas.Core.Tests\bin\Release\Uncas.Core.Tests.dll" />
+  </target>
+
+  <target name="generateNuGetPackages" depends="test">
     <exec program="nuget" commandline="pack src\Uncas.Core\Uncas.Core.csproj -Prop Configuration=Release" />
     <exec program="nuget" commandline="pack src\Uncas.Core.External\Uncas.Core.External.csproj -Prop Configuration=Release" />
   </target>
