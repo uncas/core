@@ -13,3 +13,6 @@ _ReSharper.*/
 packages/
 *.nupkg
 src/VersionInfo.cs
+/src/Uncas.Core.External/StyleCop.Cache
+/src/Uncas.Core/StyleCop.Cache
+/tests/Uncas.Core.Tests/StyleCop.Cache

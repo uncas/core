@@ -8,28 +8,12 @@
     [TestFixture]
     public class MigrationServiceTests
     {
-        #region Setup/Teardown
+        private IMigrationService _migrationService;
 
         [SetUp]
         public void BeforeEach()
         {
             _migrationService = new MigrationService();
-        }
-
-        #endregion
-
-        private IMigrationService _migrationService;
-
-        private static IMigrationChange GetChange(string id)
-        {
-            var mock = new Mock<IMigrationChange>();
-            mock.Setup(x => x.Id).Returns(id);
-            return mock.Object;
-        }
-
-        private static MigrationChange GetConcreteChange(string id)
-        {
-            return new MigrationChange(id);
         }
 
         [Test]
@@ -124,6 +108,18 @@
             destinationMock.Verify(x => x.GetAppliedChanges(), Times.Once());
             destinationMock.Verify(
                 x => x.AddAppliedChange(It.IsAny<MigrationChange>()), Times.Never());
+        }
+
+        private static IMigrationChange GetChange(string id)
+        {
+            var mock = new Mock<IMigrationChange>();
+            mock.Setup(x => x.Id).Returns(id);
+            return mock.Object;
+        }
+
+        private static MigrationChange GetConcreteChange(string id)
+        {
+            return new MigrationChange(id);
         }
     }
 }

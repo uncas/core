@@ -11,7 +11,9 @@
     [TestFixture]
     public class LogRepositoryTests
     {
-        #region Setup/Teardown
+        private const string LogFileName = "Test.db";
+
+        private ILogRepository _logRepository;
 
         [SetUp]
         public void BeforeEach()
@@ -29,17 +31,6 @@
         public void AfterEach()
         {
             BeforeAndAfterEach();
-        }
-
-        #endregion
-
-        private const string LogFileName = "Test.db";
-        private ILogRepository _logRepository;
-
-        private void BeforeAndAfterEach()
-        {
-            SystemTime.Now = () => DateTime.Now;
-            File.Delete(LogFileName);
         }
 
         [Test]
@@ -113,6 +104,12 @@
                 "test");
 
             _logRepository.Save(logEntry);
+        }
+
+        private void BeforeAndAfterEach()
+        {
+            SystemTime.Now = () => DateTime.Now;
+            File.Delete(LogFileName);
         }
     }
 }

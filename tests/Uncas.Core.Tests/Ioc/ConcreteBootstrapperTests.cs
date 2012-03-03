@@ -8,7 +8,9 @@
     [TestFixture]
     public class ConcreteBootstrapperTests
     {
-        #region Setup/Teardown
+        private IIocContainer _container;
+
+        private BaseBootstrapper _bootstrapper;
 
         [SetUp]
         public void BeforeEach()
@@ -18,12 +20,6 @@
                 _container,
                 GetType().Assembly);
         }
-
-        #endregion
-
-        private IIocContainer _container;
-
-        private BaseBootstrapper _bootstrapper;
 
         [Test]
         public void BaseBootstrapper_WithBasicSetupOfTestAssembly_RunsWithoutFailing()
