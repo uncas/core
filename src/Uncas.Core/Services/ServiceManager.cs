@@ -98,6 +98,11 @@
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Needs to be robust - general exceptions are logged.")]
+        [SuppressMessage(
+            "Microsoft.Globalization",
+            "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.WriteLine(System.String,System.Object)",
+            Justification = "Not for UI.")]
         private void InstallService()
         {
             if (IsServiceInstalled())
@@ -173,6 +178,11 @@
         /// <summary>
         /// Starts the service.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Globalization",
+            "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.WriteLine(System.String,System.Object)",
+            Justification = "Not for UI.")]
         private void StartService()
         {
             if (!IsServiceInstalled())
@@ -208,6 +218,11 @@
         /// <summary>
         /// Stops the service.
         /// </summary>
+        [SuppressMessage(
+            "Microsoft.Globalization",
+            "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.WriteLine(System.String,System.Object)",
+            Justification = "Not for UI.")]
         private void StopService()
         {
             if (!IsServiceInstalled())
@@ -237,6 +252,11 @@
             "Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Needs to be robust - general exceptions are logged.")]
+        [SuppressMessage(
+            "Microsoft.Globalization",
+            "CA1303:Do not pass literals as localized parameters",
+            MessageId = "System.Console.WriteLine(System.String,System.Object)",
+            Justification = "Not for UI.")]
         private void UninstallService()
         {
             if (!IsServiceInstalled())
