@@ -62,7 +62,7 @@
   <target name="test"
       depends="build">
     <exec program="${nunit}"
-        commandline="tests\Uncas.Core.Tests\bin\Release\Uncas.Core.Tests.dll" />
+        commandline="tests\Uncas.Core.Tests\bin\Release\Uncas.Core.Tests.dll /xml=build\Uncas.Core.Tests.TestResult.xml" />
   </target>
 
   <target name="generateNuGetPackages" depends="test">
